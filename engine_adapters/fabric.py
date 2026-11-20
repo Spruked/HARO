@@ -29,7 +29,7 @@ from typing import Any, Callable, Mapping
 from .contract import (
     LIFECYCLE_ENGINE_MANAGED, LIFECYCLE_NONE, LIFECYCLE_OWNED_PROCESS, LOCATION_REMOTE,
     RESIDENCY_RESIDENT, STATUS_CANCELLED, STATUS_ERROR, STATUS_OK, STATUS_REFUSED, AdapterError, CancelToken,
-    Binding, EngineAdapter, InferenceRequest, InferenceResult, KNOWN_CAPABILITIES, KNOWN_WORK_TYPES,
+    Binding, CAP_CHAT, CAP_SPEECH_RECOGNITION, CAP_SPEECH_SYNTHESIS, EngineAdapter, InferenceRequest, InferenceResult, KNOWN_CAPABILITIES, KNOWN_WORK_TYPES,
     UnsupportedOperation,
     new_request_id,
 )
@@ -65,6 +65,10 @@ class CapabilityRequest:
             raise ValueError(f"unknown capability {self.capability!r}")
         if self.work_type not in KNOWN_WORK_TYPES:
             raise ValueError(f"unknown work_type {self.work_type!r}")
+        if self.priority not in (PRIORITY_INTERACTIVE, PRIORITY_USER_TASK, PRIORITY_BACKGROUND):
+            raise ValueError("priority must be interactive, user_task, or background")
+        if self.timeout_s <= 0 or self.queue_timeout_s <= 0:
+            raise ValueError("timeouts must be positive")
 
 
 @dataclass
@@ -224,6 +228,7 @@ class Fabric:
         # Models HARO itself made resident: (adapter_id, model) -> last-used monotonic time.
         self._haro_resident: dict[tuple[str, str], float] = {}
         self._in_use: dict[tuple[str, str], int] = {}
+        self._speech_active: set[str] = set()
         self._state_lock = threading.RLock()
         self._record_lock = threading.Lock()
         self._pool = ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="haro-fabric")
@@ -382,7 +387,12 @@ class Fabric:
             outcome.status, outcome.error = STATUS_ERROR, f"{type(exc).__name__}: {exc}"
         finally:
             outcome.timings["total_s"] = round(time.monotonic() - started, 4)
-            entry = self._record("capability_request", _operational_record(outcome))
+            try:
+                entry = self._record("capability_request", _operational_record(outcome))
+            except Exception as exc:
+                outcome.decisions.append({"recording_failure": {"kind": "capability_request",
+                                                                  "error_class": type(exc).__name__}})
+                entry = None
             if entry:
                 outcome.evidence_entry_ids.append(entry)
         return outcome
@@ -396,6 +406,10 @@ class Fabric:
                            "lifecycle": desc.lifecycle}
         local_device = desc.location != LOCATION_REMOTE and desc.device_id is not None
         gate = self._gates.get(desc.device_id) if local_device else None
+        if request.capability == CAP_CHAT and desc.device_id:
+            with self._state_lock:
+                if desc.device_id in self._speech_active:
+                    raise _Refused("local accelerator chat refused while speech is executing on the same device")
         if local_device and gate is None:
             raise _Refused(f"device {desc.device_id} has no live telemetry; refusing accelerator work")
 
@@ -439,16 +453,24 @@ class Fabric:
         with self._state_lock:
             self._in_use[key] = self._in_use.get(key, 0) + 1
         try:
+            speech_marked = request.capability in (CAP_SPEECH_RECOGNITION, CAP_SPEECH_SYNTHESIS) and bool(desc.device_id)
+            if speech_marked:
+                with self._state_lock:
+                    self._speech_active.add(desc.device_id)
             if need_load:
                 lifecycle = adapter.load(binding.model, keep_alive_s=binding.keep_alive_s, cancel=cancel)
                 outcome.decisions.append({"load": lifecycle.to_dict()})
-                self._record("model_load", {"adapter_id": binding.adapter_id, "model": binding.model,
-                                            "lifecycle": lifecycle.to_dict(), "for_request": request.request_id,
-                                            "planned_resident_mib": binding.resident_mib})
                 if lifecycle.status != STATUS_OK:
                     raise _Refused(f"load failed: {lifecycle.error}")
                 with self._state_lock:
                     self._haro_resident[key] = time.monotonic()
+                try:
+                    self._record("model_load", {"adapter_id": binding.adapter_id, "model": binding.model,
+                                                "lifecycle": lifecycle.to_dict(), "for_request": request.request_id,
+                                                "planned_resident_mib": binding.resident_mib})
+                except Exception as exc:
+                    outcome.decisions.append({"recording_failure": {"kind": "model_load",
+                                                                      "error_class": type(exc).__name__}})
                 outcome.timings["load_s"] = lifecycle.duration_s
                 if gate is not None:
                     # The loaded weights now appear in live telemetry; keep only the per-request reservation.
@@ -473,6 +495,9 @@ class Fabric:
                 if key in self._haro_resident:
                     self._haro_resident[key] = time.monotonic()
         finally:
+            if request.capability in (CAP_SPEECH_RECOGNITION, CAP_SPEECH_SYNTHESIS) and desc.device_id:
+                with self._state_lock:
+                    self._speech_active.discard(desc.device_id)
             with self._state_lock:
                 self._in_use[key] -= 1
             if gate is not None:
@@ -497,6 +522,9 @@ def _operational_record(outcome: FabricOutcome) -> dict[str, Any]:
     application; HARO's memory keeps their shape only.
     """
     record = outcome.to_dict()
+    if record.get("error"):
+        record["error"] = {"error_class": record["error"].split(":", 1)[0],
+                            "length": len(record["error"])}
     result = record.get("result")
     if result:
         result["output"] = {k: (v if k in ("bytes", "duration_s", "sample_rate", "channels", "format",

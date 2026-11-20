@@ -72,6 +72,9 @@ class LlamaServerAdapter:
         self.host = host
         self.gpu_layers = gpu_layers
         self.ctx_size = ctx_size
+        forbidden = {"--port", "--host", "-m", "--model", "--alias"}
+        if any(arg in forbidden for arg in extra_args):
+            raise ValueError("extra_args cannot override HARO-owned host, port, model, or alias flags")
         self.extra_args = tuple(extra_args)
         self.device_id = device_id
         self.telemetry = telemetry
@@ -178,7 +181,7 @@ class LlamaServerAdapter:
                     raise AdapterError(f"llama-server not healthy within {self.startup_timeout_s}s")
                 time.sleep(0.25)
             self._loaded_model = model
-        except (AdapterError, _LoadCancelled) as exc:
+        except (AdapterError, _LoadCancelled, OSError) as exc:
             self._stop_process()
             if sampler:
                 sampler.__exit__(None, None, None)
@@ -212,7 +215,10 @@ class LlamaServerAdapter:
                 proc.wait(timeout=15)
             except subprocess.TimeoutExpired:
                 proc.kill()
-                proc.wait(timeout=15)
+                try:
+                    proc.wait(timeout=15)
+                except subprocess.TimeoutExpired:
+                    return proc.returncode
         return proc.returncode
 
     def unload(self, model: str) -> LifecycleResult:

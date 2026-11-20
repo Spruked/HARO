@@ -148,6 +148,8 @@ class OllamaAdapter:
 
     def execute(self, request: InferenceRequest, cancel: CancelToken) -> InferenceResult:
         def body(result: InferenceResult, started: float) -> None:
+            if "keep_alive" in request.options:
+                raise ValueError("keep_alive is controlled by HARO lifecycle and cannot be supplied in options")
             options: dict[str, Any] = {}
             if request.max_output_tokens is not None:
                 options["num_predict"] = request.max_output_tokens
@@ -156,7 +158,7 @@ class OllamaAdapter:
             if request.seed is not None:
                 options["seed"] = request.seed
             options.update(request.options.get("engine_options", {}))
-            extra = {k: v for k, v in request.options.items() if k in ("keep_alive", "format", "think")}
+            extra = {k: v for k, v in request.options.items() if k in ("format", "think")}
             if request.capability == "embedding":
                 data = transport.request("POST", self.base_url, "/api/embed",
                                          json_body={"model": request.model, "input": request.inputs.get("input"), **extra},

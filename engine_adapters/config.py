@@ -21,7 +21,8 @@ from .ollama import OllamaAdapter
 from .openai_audio import OpenAIAudioAdapter
 from .openai_compatible import OpenAICompatibleAdapter
 
-SECRET_KEYS = {"api_key", "token", "password", "secret", "authorization"}
+SECRET_KEYS = {"api_key", "token", "password", "secret", "authorization", "apikey", "access_token",
+               "client_secret", "bearer", "private_key", "credential"}
 
 ADAPTER_KEYS = {
     "ollama": {"id", "type", "base_url", "device", "capabilities", "lifecycle_timeout_s"},
@@ -30,14 +31,16 @@ ADAPTER_KEYS = {
     "openai_compatible": {"id", "type", "base_url", "location", "api_key_env", "capabilities",
                           "include_usage_in_stream", "device", "health_timeout_s"},
     "openai_audio": {"id", "type", "base_url", "location", "api_key_env", "capabilities",
-                     "health_path", "device"},
+                     "health_path", "device", "max_response_bytes", "max_upload_bytes", "output_dir"},
 }
 
 
 def _reject_secrets(node: Any, path: str = "") -> None:
     if isinstance(node, Mapping):
         for key, value in node.items():
-            if str(key).lower() in SECRET_KEYS:
+            normalized = str(key).lower()
+            if normalized in SECRET_KEYS or (normalized.endswith(("_key", "_token", "_secret"))
+                                             and not normalized.endswith("_env")):
                 raise ValueError(f"inline credential at {path}{key}; reference an environment variable instead")
             _reject_secrets(value, f"{path}{key}.")
     elif isinstance(node, list):
@@ -86,15 +89,23 @@ def build_adapter(spec: Mapping[str, Any], telemetry: DeviceTelemetry | None) ->
         return OllamaAdapter(spec["id"], spec["base_url"], device_id=device_id,
                              lifecycle_timeout_s=spec.get("lifecycle_timeout_s", 300.0), **common)
     if kind == "openai_compatible":
-        return OpenAICompatibleAdapter(spec["id"], spec["base_url"], location=spec.get("location", LOCATION_REMOTE),
+        location = spec.get("location", LOCATION_REMOTE)
+        if location == LOCATION_REMOTE and not spec["base_url"].lower().startswith("https://"):
+            raise ValueError("remote adapters require an https base_url")
+        return OpenAICompatibleAdapter(spec["id"], spec["base_url"], location=location,
                                        api_key_env=spec.get("api_key_env"),
                                        include_usage_in_stream=spec.get("include_usage_in_stream", False),
                                        device_id=device_id, health_timeout_s=spec.get("health_timeout_s", 10.0),
                                        **common)
     if kind == "openai_audio":
-        return OpenAIAudioAdapter(spec["id"], spec["base_url"], location=spec.get("location", LOCATION_LOCAL),
+        location = spec.get("location", LOCATION_LOCAL)
+        if location == LOCATION_REMOTE and not spec["base_url"].lower().startswith("https://"):
+            raise ValueError("remote adapters require an https base_url")
+        return OpenAIAudioAdapter(spec["id"], spec["base_url"], location=location,
                                   api_key_env=spec.get("api_key_env"), health_path=spec.get("health_path", "/models"),
-                                  device_id=device_id, **common)
+                                  device_id=device_id, max_response_bytes=spec.get("max_response_bytes", 16 * 1024 * 1024),
+                                  max_upload_bytes=spec.get("max_upload_bytes", 50 * 1024 * 1024),
+                                  output_dir=spec.get("output_dir"), **common)
     device_env: dict[str, str] = {}
     if spec.get("server_path") and device_id and isinstance(telemetry, NvidiaSmiTelemetry):
         # NVIDIA-specific pinning; CUDA's default order can differ from nvidia-smi's.
@@ -134,9 +145,14 @@ def build_fabric(config: Mapping[str, Any], *, subsystems: Any = None) -> Fabric
     options = config.get("fabric", {})
     device_concurrency = {}
     for ref, limit in (options.get("device_concurrency") or {}).items():
+        if isinstance(limit, bool) or int(limit) < 1:
+            raise ValueError(f"device_concurrency for {ref!r} must be >= 1")
         device_concurrency[resolve_device({"index": ref} if str(ref).isdigit() else {"id": ref}, telemetry)] = int(limit)
+    safety_margin = int(options.get("safety_margin_mib", 256))
+    if safety_margin < 0:
+        raise ValueError("safety_margin_mib must be >= 0")
     return Fabric(adapters, bindings, telemetry=telemetry, subsystems=subsystems,
                   device_concurrency=device_concurrency,
-                  safety_margin_mib=int(options.get("safety_margin_mib", 256)),
+                  safety_margin_mib=safety_margin,
                   allow_eviction=bool(options.get("allow_eviction", False)),
                   test_mode=bool(options.get("test_mode", False)))

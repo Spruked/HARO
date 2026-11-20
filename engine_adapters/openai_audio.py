@@ -48,7 +48,8 @@ class OpenAIAudioAdapter:
     def __init__(self, adapter_id: str, base_url: str, *, location: str = LOCATION_LOCAL,
                  capabilities: tuple[str, ...] = (CAP_SPEECH_SYNTHESIS, CAP_SPEECH_RECOGNITION),
                  api_key_env: str | None = None, health_path: str = "/models",
-                 device_id: str | None = None):
+                 device_id: str | None = None, max_response_bytes: int = 16 * 1024 * 1024,
+                 max_upload_bytes: int = 50 * 1024 * 1024, output_dir: str | None = None):
         transport.split_base_url(base_url)
         unsupported = set(capabilities) - {CAP_SPEECH_SYNTHESIS, CAP_SPEECH_RECOGNITION}
         if unsupported:
@@ -60,6 +61,9 @@ class OpenAIAudioAdapter:
         self.api_key_env = api_key_env
         self.health_path = health_path
         self.device_id = device_id if location == LOCATION_LOCAL else None
+        self.max_response_bytes = max_response_bytes
+        self.max_upload_bytes = max_upload_bytes
+        self.output_dir = Path(output_dir).resolve() if output_dir else None
 
     def describe(self) -> AdapterDescriptor:
         return AdapterDescriptor(
@@ -90,6 +94,9 @@ class OpenAIAudioAdapter:
 
     def execute(self, request: InferenceRequest, cancel: CancelToken) -> InferenceResult:
         def synthesize(result: InferenceResult) -> None:
+            protected = {"model", "voice", "input"} & request.options.keys()
+            if protected:
+                raise ValueError(f"protected audio option(s): {sorted(protected)}")
             text, voice = request.inputs.get("text"), request.inputs.get("voice")
             fmt = request.inputs.get("format", "wav")
             output_path = request.inputs.get("output_path")
@@ -99,17 +106,20 @@ class OpenAIAudioAdapter:
                 raise ValueError("speech_synthesis requires an explicit voice")
             if not output_path:
                 raise ValueError("speech_synthesis requires output_path")
-            payload = {"model": request.model, "voice": voice, "input": text, "response_format": fmt,
-                       **request.options}
+            path = Path(output_path).resolve()
+            if self.output_dir is not None and self.output_dir not in path.parents:
+                raise ValueError("output_path must be under the configured output directory")
+            payload = {"model": request.model, "voice": voice, "input": text, "response_format": fmt}
             resp = transport.request("POST", self.base_url, "/audio/speech", json_body=payload,
                                      headers=bearer_headers(self.api_key_env),
                                      timeout_s=request.timeout_s, cancel=cancel)
             if not resp.body:
                 raise AdapterError("engine returned empty audio")
+            if len(resp.body) > self.max_response_bytes:
+                raise AdapterError("engine audio response exceeds configured size limit")
             if resp.headers.get("content-type", "").startswith("application/json"):
                 raise AdapterError(f"engine returned JSON instead of audio: {resp.body[:300]!r}")
             audio = describe_wav(resp.body) if fmt == "wav" else {}
-            path = Path(output_path)
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(resp.body)
             result.output = {"audio_path": str(path), "bytes": len(resp.body), "format": fmt,
@@ -118,10 +128,15 @@ class OpenAIAudioAdapter:
                 result.engine_metrics["real_time_factor"] = None  # filled below from HARO timing
 
         def transcribe(result: InferenceResult) -> None:
+            protected = {"model", "input", "voice"} & request.options.keys()
+            if protected:
+                raise ValueError(f"protected audio option(s): {sorted(protected)}")
             audio_path = request.inputs.get("audio_path")
             if not audio_path or not Path(audio_path).is_file():
                 raise ValueError("speech_recognition requires an existing audio_path")
             path = Path(audio_path)
+            if path.stat().st_size > self.max_upload_bytes:
+                raise ValueError("audio upload exceeds configured size limit")
             fields = {"model": request.model, "response_format": "json"}
             if request.inputs.get("language"):
                 fields["language"] = str(request.inputs["language"])
