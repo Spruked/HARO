@@ -118,7 +118,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--server-path", help="Path to llama-server executable: start isolated process")
-    mode.add_argument("--url", help="Existing local llama-server URL, e.g. http://127.0.0.1:16520")
+    mode.add_argument("--url", help="Existing local llama-server URL, e.g. http://127.0.0.1:<configured-port>")
     parser.add_argument("--model", help="GGUF model path, required with --server-path")
     parser.add_argument("--gpu-index", type=int, default=0, help="NVIDIA GPU index on this machine")
     parser.add_argument("--port", type=int, default=17666, help="Port for owned server (launch mode)")

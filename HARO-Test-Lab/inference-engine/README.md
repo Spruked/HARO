@@ -17,7 +17,7 @@ For a different port, pass `--port 17667`. For a smaller GPU, test partial offlo
 ## Alternative: connect to existing local llama-server (read-only)
 
 ```powershell
-python .\inference_probe.py --url http://127.0.0.1:16520 --gpu-index 0 --output existing-server-result.json
+python .\inference_probe.py --url http://127.0.0.1:<configured-port> --gpu-index 0 --output existing-server-result.json
 ```
 
 This does not launch, stop or reconfigure the existing server. It **does send one inference request** to it. Use this mode only if that is acceptable for the service. Existing-server mode cannot measure model loading, and its VRAM delta is **not** the model's total residency.
