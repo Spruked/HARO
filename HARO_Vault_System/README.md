@@ -4,6 +4,22 @@
 
 *Universal, modular blueprint now with cognitive tracing, persistent memory, and observability layers. Inspired by emergent AI symbol systems (glyphs for latent space mapping), memory-augmented architectures (e.g., Neural Turing Machines with external matrices), and telemetry patterns for modular AI (e.g., MCP for prompt optimization and agent traces).*
 
+## Independent upstream and host-deployment contract
+
+**HARO's complete Vault Logic System is derived directly from the independent [`Spruked/Vault-Logic-System-Template`](https://github.com/Spruked/Vault-Logic-System-Template) repository.** The `HARO_Vault_System/` directory is a HARO-owned deployment of that system, with a host-specific title and data domain. Its nested Git metadata was removed so the deployment is versioned by the HARO repository; it must not be treated as automatically synchronized to its upstream.
+
+- **Correct Vault Logic upstream:** `Spruked/Vault-Logic-System-Template`.
+- **Correct A.I.M.S. upstream:** `Spruked/AIMS` (private, independent sibling system).
+- **Never use as upstream:** `Spruked/Orbot`. ORBOT is an example host, not a source or required dependency. Never retrieve Vault Logic or A.I.M.S. doctrine from ORBOT or block this HARO deployment merely because ORBOT cannot be accessed.
+
+The full Vault Logic architecture remains intact; only host-specific naming, saved logic, rule classifications, stored data, and supported configuration change. The complete `AIMS/` deployment stands beside `HARO_Vault_System/` as a separate system. Neither is rebuilt, cherry-picked, nor silently consolidated into a shared service.
+
+**Verification:** Before architectural work, read HARO's [repository-level source map](../DOCTRINE_SOURCE_MAP.md), this directory's [frozen doctrine](docs/COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.md) and [checksum manifest](docs/COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.sha256). The required source Markdown SHA-256 is `83a48f537c0084cb919e439989aae4473f6a0c0e8b953815d85018da88759f82`. Use the correct Vault template upstream if online comparison is possible; ORBOT access is never required for this check.
+
+**Canonical rule: REUSE THE SYSTEM, NOT THE COMPONENTS.**
+
+---
+
 ## Ratified and hash-sealed deployment doctrine (v1.0)
 
 **REUSE THE SYSTEM, NOT THE COMPONENTS.** A.I.M.S. and the Vault Logic System are each deployed as a **complete, host-owned system**, not one shared cross-product service and not a selection of reusable files. Their architecture remains intact. The host may change its deployment title, data names, directories, collections, vault labels, and stored content, subject to verified preservation of imports, historical identifiers, schema contracts, and integrity references. When both systems are used, each remains a complete sibling subsystem.
