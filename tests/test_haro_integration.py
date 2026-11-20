@@ -50,6 +50,26 @@ class HaroIntegrationTests(unittest.TestCase):
             self.assertTrue((Path(directory) / "vault_logic_telemetry.jsonl").exists())
             system.close()
 
+    def test_every_early_denial_is_audited_and_safety_types_are_strict(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            system = HaroSubsystems(root)
+            contexts = [
+                {"capability": "llama", "requested_memory_mib": 6800, "available_memory_mib": 751},
+                {"capability": "llama"},
+                {"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024, "requires_model_residency": True},
+                {"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024, "unsafe": "true"},
+                {"requested_memory_mib": 512, "available_memory_mib": 1024},
+            ]
+            for context in contexts:
+                result = evaluate_haro_context(context, memory_matrix=system.vault_memory, telemetry=system.telemetry)
+                self.assertFalse(result["allowed"])
+                self.assertIn("glyph_trace", result)
+                self.assertTrue(result["telemetry_recorded"])
+            self.assertEqual(len((root / "vault_logic_telemetry.jsonl").read_text(encoding="utf-8").splitlines()), len(contexts))
+            self.assertEqual(len(system.vault_memory._read()["matrices"]["haro_evaluations"]), len(contexts))
+            system.close()
+
         unsafe = evaluate_haro_context({"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024, "unsafe": True})
         self.assertFalse(unsafe["allowed"])
         self.assertEqual(unsafe["decision"], "deny")

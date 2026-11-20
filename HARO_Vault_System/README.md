@@ -25,6 +25,8 @@ The full Vault Logic architecture remains intact; only host-specific naming, sav
 
 The active HARO host rules are in `vaults/haro/`: capability eligibility, resource limits, execution safety, and model-residency checks. `engine/evaluator.py` provides the bounded deterministic evaluation path and returns trace and telemetry without acquiring execution authority. Generic template examples remain examples; they are not HARO policy.
 
+All outcomes, including fail-closed validation failures, are traced through the native glyph, memory-matrix, and telemetry surfaces. The HARO matrix keeps an append-only evaluation history; it is not A.I.M.S. evidence storage.
+
 ---
 
 ## Ratified and hash-sealed deployment doctrine (v1.0)

@@ -61,12 +61,26 @@ def _validate_rules(rules: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
     return validated
 
 
-def _deny(reason: str, started: float, rule_count: int, *, decision: str = "deny") -> dict[str, Any]:
-    return {
+def _finalize(result: dict[str, Any], context: Mapping[str, Any], started: float,
+              active_rules: list[dict[str, Any]], memory_matrix: Any, telemetry: Any) -> dict[str, Any]:
+    from HARO_Vault_System.glyphs.trace import generate_haro_trace
+    result["glyph_trace"] = generate_haro_trace(result, context)
+    if memory_matrix is not None:
+        memory_matrix.record("last_haro_evaluation", {"decision": result["decision"], "matched_rules": result["matched_rules"], "glyph_trace": result["glyph_trace"]})
+        result["memory_matrix_key"] = "last_haro_evaluation"
+    if telemetry is not None:
+        telemetry.record({"event": "vault_evaluation", "decision": result["decision"], "rule_count": len(active_rules), "telemetry": result["telemetry"], "glyph_trace": result["glyph_trace"]})
+        result["telemetry_recorded"] = True
+    return result
+
+
+def _deny(reason: str, started: float, rule_count: int, context: Mapping[str, Any],
+          memory_matrix: Any, telemetry: Any, *, decision: str = "deny") -> dict[str, Any]:
+    return _finalize({
         "decision": decision, "allowed": False, "reason": reason, "matched_rules": [],
         "telemetry": {"evaluation_ms": round((time.perf_counter() - started) * 1000, 3), "rule_count": rule_count},
         "execution_authority": "HARO host; Vault Logic does not execute or admit resources",
-    }
+    }, context, started, [], memory_matrix, telemetry)
 
 
 def evaluate_haro_context(
@@ -78,17 +92,18 @@ def evaluate_haro_context(
     try:
         active_rules = _validate_rules(list(rules) if rules is not None else load_haro_rules())
     except (TypeError, ValueError, json.JSONDecodeError) as error:
-        return _deny(f"invalid HARO rule set: {error}", started, 0, decision="unresolved")
+        return _deny(f"invalid HARO rule set: {error}", started, 0, context, memory_matrix, telemetry, decision="unresolved")
     if context.get("capability") in (None, ""):
-        return _deny("HARO operation has no declared capability", started, len(active_rules))
+        return _deny("HARO operation has no declared capability", started, len(active_rules), context, memory_matrix, telemetry)
+    for key in ("unsafe", "requires_model_residency", "model_resident"):
+        if key in context and not isinstance(context[key], bool):
+            return _deny(f"invalid boolean safety/residency field: {key}", started, len(active_rules), context, memory_matrix, telemetry)
     for key in ("requested_memory_mib", "available_memory_mib"):
         value = context.get(key)
         if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0:
-            return _deny(f"missing or invalid numeric resource measurement: {key}", started, len(active_rules))
+            return _deny(f"missing or invalid numeric resource measurement: {key}", started, len(active_rules), context, memory_matrix, telemetry)
     if context.get("requires_model_residency") and not isinstance(context.get("model_resident"), bool):
-        return _deny("required model-residency evidence is missing or invalid", started, len(active_rules))
-    if context["requested_memory_mib"] > context["available_memory_mib"]:
-        return _deny("requested memory exceeds available memory", started, len(active_rules))
+        return _deny("required model-residency evidence is missing or invalid", started, len(active_rules), context, memory_matrix, telemetry)
     matched = [rule for rule in active_rules if _matches(rule, context)]
     denied = [rule for rule in matched if rule.get("action") == "deny"]
     if denied:
@@ -97,7 +112,7 @@ def evaluate_haro_context(
         mandatory = [rule for rule in active_rules if rule.get("mandatory")]
         missing = [rule for rule in mandatory if rule not in matched]
         if missing:
-            return _deny("mandatory HARO conditions were not satisfied", started, len(active_rules))
+            return _deny("mandatory HARO conditions were not satisfied", started, len(active_rules), context, memory_matrix, telemetry)
         actions = {rule.get("action") for rule in matched}
         priorities = {int(rule.get("priority", 0)) for rule in matched}
         if len(matched) > 1 and len(priorities) == 1:
@@ -118,15 +133,7 @@ def evaluate_haro_context(
         "telemetry": {"evaluation_ms": round((time.perf_counter() - started) * 1000, 3), "rule_count": len(active_rules)},
         "execution_authority": "HARO host; Vault Logic does not execute or admit resources",
     }
-    from HARO_Vault_System.glyphs.trace import generate_haro_trace
-    result["glyph_trace"] = generate_haro_trace(result, context)
-    if memory_matrix is not None:
-        memory_matrix.record("last_haro_evaluation", {"decision": decision, "matched_rules": trace})
-        result["memory_matrix_key"] = "last_haro_evaluation"
-    if telemetry is not None:
-        telemetry.record({"event": "vault_evaluation", "decision": decision, "rule_count": len(active_rules), "telemetry": result["telemetry"]})
-        result["telemetry_recorded"] = True
-    return result
+    return _finalize(result, context, started, active_rules, memory_matrix, telemetry)
 
 
 def evaluate_condition(input_data):

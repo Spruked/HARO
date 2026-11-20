@@ -53,6 +53,7 @@ This is a **real inference baseline**, not yet HARO orchestration. After it work
 - `AIMS/` receives committed HARO operational events under a caller-supplied isolated store path, preserving provenance, restart recovery, retrieval receipts, and feedback interfaces.
 - `HARO_Vault_System/` evaluates `vaults/haro/rules.json` through its existing evaluator, returning a deterministic decision, matched-rule trace, and telemetry. It fails closed when capability context is missing or no rule applies.
 - Vault Logic evaluations use its own glyph trace definitions, persistent memory matrix, and telemetry collector under `HARO_Vault_System/`; these remain separate from A.I.M.S. memory and retrieval.
+- Every evaluation outcome, including early denials and unresolved policy input, is passed through the native Vault Logic audit path. The matrix uses an append-only `matrices.haro_evaluations` history with atomic replacement, and telemetry records one JSONL event per evaluation.
 - HARO retains authority for authorization, live resource admission, scheduling, execution, cancellation, and hardware measurement. Neither subsystem executes work or grants permission by itself.
 
 The integration uses controlled events and does not claim live inference. See `tests/test_haro_integration.py` for isolated boundary verification.
