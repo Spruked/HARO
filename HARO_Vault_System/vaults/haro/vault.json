@@ -1,0 +1,14 @@
+{
+  "name": "HARO Operational Rules",
+  "id": "haro-operational-rules",
+  "version": "1.0.0",
+  "type": "host-deployment",
+  "priority": 100,
+  "author": "HARO",
+  "description": "Host-specific eligibility and safety rules evaluated by Vault Logic.",
+  "tags": ["haro", "capability", "admission", "safety"],
+  "enabled": true,
+  "applies_to": ["haro_operation"],
+  "glyph_tags": ["haro_evaluation"],
+  "memory_key": "haro_vault_matrix"
+}

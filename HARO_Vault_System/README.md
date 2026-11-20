@@ -21,6 +21,10 @@ The full Vault Logic architecture remains intact; only host-specific naming, sav
 
 **Canonical rule: REUSE THE SYSTEM, NOT THE COMPONENTS.**
 
+## HARO active deployment
+
+The active HARO host rules are in `vaults/haro/`: capability eligibility, resource limits, execution safety, and model-residency checks. `engine/evaluator.py` provides the bounded deterministic evaluation path and returns trace and telemetry without acquiring execution authority. Generic template examples remain examples; they are not HARO policy.
+
 ---
 
 ## Ratified and hash-sealed deployment doctrine (v1.0)

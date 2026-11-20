@@ -1,0 +1,37 @@
+{
+  "vault_id": "haro-operational-rules",
+  "rules": [
+    {
+      "id": "capability-required",
+      "priority": 10,
+      "domain": "capability_eligibility",
+      "when": {"capability_present": true},
+      "action": "allow",
+      "reason": "an operation declares a capability"
+    },
+    {
+      "id": "memory-limit",
+      "priority": 20,
+      "domain": "resource_admission",
+      "when": {"requested_memory_mib_lte_available": true},
+      "action": "allow",
+      "reason": "requested memory is within the reported live availability"
+    },
+    {
+      "id": "unsafe-operation",
+      "priority": 100,
+      "domain": "execution_safety",
+      "when": {"unsafe": true},
+      "action": "deny",
+      "reason": "operation is marked unsafe"
+    },
+    {
+      "id": "model-residency-required",
+      "priority": 100,
+      "domain": "model_residency",
+      "when": {"requires_model_residency": true, "model_resident": false},
+      "action": "deny",
+      "reason": "required model is not resident"
+    }
+  ]
+}

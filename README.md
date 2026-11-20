@@ -45,3 +45,13 @@ The JSON report contains:
 4. Use two distinct results filenames; share both JSON outputs for comparison.
 
 This is a **real inference baseline**, not yet HARO orchestration. After it works, a bounded adapter can wrap this same server endpoint and compare direct vs scheduled access. No claim is made that either PC was tested here; actual GPU testing happens on those machines.
+
+## HARO subsystem integration
+
+`haro_integration.py` is the explicit host boundary for the two complete sibling systems:
+
+- `AIMS/` receives committed HARO operational events under a caller-supplied isolated store path, preserving provenance, restart recovery, retrieval receipts, and feedback interfaces.
+- `HARO_Vault_System/` evaluates `vaults/haro/rules.json` through its existing evaluator, returning a deterministic decision, matched-rule trace, and telemetry. It fails closed when capability context is missing or no rule applies.
+- HARO retains authority for authorization, live resource admission, scheduling, execution, cancellation, and hardware measurement. Neither subsystem executes work or grants permission by itself.
+
+The integration uses controlled events and does not claim live inference. See `tests/test_haro_integration.py` for isolated boundary verification.

@@ -3,11 +3,17 @@ HARO-One-Inference-Engine/
 ├── README.md
 ├── haro_inference_probe.code-workspace
 ├── inference_probe.py
+├── haro_integration.py
+├── tests/
+│   └── test_haro_integration.py
 ├── AIMS/
 │   ├── DEV_LOG.md
 │   ├── HARDENING_CONTRACT.md
 │   ├── LICENSE
 │   ├── README.md
+│   ├── docs/
+│   │   ├── architecture.md
+│   │   └── COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.md
 │   ├── memory_core/
 │   ├── tests/
 │   └── service.py
@@ -24,6 +30,9 @@ HARO-One-Inference-Engine/
 │   ├── telemetry/
 │   ├── tests/
 │   ├── vaults/
+│   │   └── haro/
+│   │       ├── vault.json
+│   │       └── rules.json
 │   └── examples/
 └── HARO-Test-Lab/
     ├── README.md
