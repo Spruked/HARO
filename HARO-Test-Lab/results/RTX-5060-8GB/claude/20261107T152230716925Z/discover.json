@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py",
+    "discover",
+    "--memory-mib",
+    "128",
+    "--concurrency",
+    "2",
+    "--audit",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\claude\\20261107T152230716925Z\\discover.audit.jsonl"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"os\": \"Windows\",\n  \"cpu_count\": 12,\n  \"available_ram_mib\": null,\n  \"gpus\": [\n    {\n      \"index\": \"0\",\n      \"uuid\": \"GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c\",\n      \"name\": \"NVIDIA GeForce RTX 5060\",\n      \"total_mib\": 8151,\n      \"free_mib\": 1422,\n      \"driver\": \"621.14\",\n      \"execution_capability\": \"host_fixture\",\n      \"reason\": \"VRAM usable for admission accounting only; no GPU inference adapter\"\n    }\n  ],\n  \"total_vram_mib\": 8151,\n  \"free_vram_mib\": 1422,\n  \"gpu_telemetry_ok\": true,\n  \"warnings\": [\n    \"RAM/cgroup discovery incomplete; supply an explicit --memory-mib budget.\"\n  ]\n}\n",
+  "stderr": "",
+  "started_utc": "2026-11-07T15:22:31.012685+00:00",
+  "elapsed_s": 0.231387
+}

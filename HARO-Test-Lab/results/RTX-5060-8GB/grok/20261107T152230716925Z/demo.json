@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-grok\\haro.py",
+    "demo",
+    "--memory-mib",
+    "128",
+    "--concurrency",
+    "2",
+    "--audit",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\grok\\20261107T152230716925Z\\demo.audit.jsonl"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"results\": {\n    \"transcription-placeholder\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"384d5a9202cf6b22eec343790e313e73946a88775c412f2fb80e4c79c44f1c55\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"simulated_gpu_accounting\",\n        \"verified_execution\": false,\n        \"capability\": \"gpu_sim\",\n        \"backend_note\": \"VRAM capacity accounting via gpu0; host worker only \\u2014 not genuine GPU acceleration\"\n      },\n      \"execution_s\": 0.06299999996554106,\n      \"end_to_end_s\": 0.125,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": false,\n      \"capability\": \"gpu_sim\"\n    },\n    \"reasoning-placeholder\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"b207c0e084a0d6c51e7c5fec05900f03c5760fd023614d658fce026c4aaf6fa4\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"simulated_gpu_accounting\",\n        \"verified_execution\": false,\n        \"capability\": \"gpu_sim\",\n        \"backend_note\": \"VRAM capacity accounting via gpu0; host worker only \\u2014 not genuine GPU acceleration\"\n      },\n      \"execution_s\": 0.07900000002700835,\n      \"end_to_end_s\": 0.07900000002700835,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": false,\n      \"capability\": \"gpu_sim\"\n    },\n    \"synthesis-placeholder\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"a88ad8a0869fd262fa1a24dddf5a00e39007b9bec49e5fb27525e131bf15d1d9\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"simulated_gpu_accounting\",\n        \"verified_execution\": false,\n        \"capability\": \"gpu_sim\",\n        \"backend_note\": \"VRAM capacity accounting via gpu0; host worker only \\u2014 not genuine GPU acceleration\"\n      },\n      \"execution_s\": 0.0779999999795109,\n      \"end_to_end_s\": 0.0779999999795109,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": false,\n      \"capability\": \"gpu_sim\"\n    }\n  },\n  \"backends\": [\n    {\n      \"name\": \"cpu\",\n      \"capacity_mib\": 128,\n      \"capability\": \"cpu\",\n      \"verified_execution\": true\n    },\n    {\n      \"name\": \"gpu0\",\n      \"capacity_mib\": 1422,\n      \"capability\": \"gpu_sim\",\n      \"verified_execution\": false\n    }\n  ],\n  \"note\": \"Hash fixtures only. GPU backends perform VRAM accounting + host worker; verified_execution=False until a real adapter is registered.\"\n}\n",
+  "stderr": "",
+  "started_utc": "2026-11-07T15:22:34.526463+00:00",
+  "elapsed_s": 0.531614
+}

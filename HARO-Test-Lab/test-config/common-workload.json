@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "model": null,
+  "prompt": "In two sentences, explain why reliable resource accounting matters for a local AI voice assistant.",
+  "max_tokens": 96,
+  "ctx_size": 2048,
+  "gpu_layers": 999,
+  "temperature": 0,
+  "seed": 7,
+  "stream": true,
+  "cache_prompt": false,
+  "timeout": 120,
+  "interval": 0.25
+}

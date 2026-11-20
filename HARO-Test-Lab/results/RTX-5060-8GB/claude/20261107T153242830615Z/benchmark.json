@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haro.py",
+    "benchmark",
+    "--memory-mib",
+    "128",
+    "--concurrency",
+    "2",
+    "--audit",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\claude\\20261107T153242830615Z\\benchmark.audit.jsonl"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"direct_sequential_s\": 1.4209999999729916,\n  \"scheduled_s\": 0.8440000000409782,\n  \"ratio_direct_over_scheduled\": 1.6836492889857806,\n  \"host_concurrency\": 2,\n  \"identical_outputs\": true,\n  \"backends_used\": [\n    \"cpu\",\n    \"gpu0\"\n  ],\n  \"note\": \"Single trial. Any speedup comes from host_concurrency, not GPU. All execution is the fixed host worker (hash/sleep fixtures). GPU backends provide VRAM admission accounting only; no GPU inference.\"\n}\n",
+  "stderr": "",
+  "started_utc": "2026-11-07T15:32:50.382917+00:00",
+  "elapsed_s": 3.01389
+}

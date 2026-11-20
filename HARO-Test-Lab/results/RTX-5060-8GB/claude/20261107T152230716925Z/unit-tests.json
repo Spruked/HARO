@@ -1,0 +1,15 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-v"
+  ],
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "test_haroclaude (unittest.loader._FailedTest.test_haroclaude) ... ERROR\n\n======================================================================\nERROR: test_haroclaude (unittest.loader._FailedTest.test_haroclaude)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_haroclaude\nTraceback (most recent call last):\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\unittest\\loader.py\", line 419, in _find_test_path\n    module = self._get_module_from_name(name)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\unittest\\loader.py\", line 362, in _get_module_from_name\n    __import__(name)\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\test_haroclaude.py\", line 5, in <module>\n    from haro import (\nModuleNotFoundError: No module named 'haro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+  "started_utc": "2026-11-07T15:22:30.801912+00:00",
+  "elapsed_s": 0.210773
+}

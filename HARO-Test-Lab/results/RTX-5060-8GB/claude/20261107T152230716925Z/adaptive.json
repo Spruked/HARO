@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py",
+    "adaptive",
+    "--memory-mib",
+    "128",
+    "--concurrency",
+    "2",
+    "--audit",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\claude\\20261107T152230716925Z\\adaptive.audit.jsonl"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"discovery_summary\": {\n    \"available_ram_mib\": null,\n    \"gpu_count\": 1,\n    \"total_vram_mib\": 8151,\n    \"free_vram_mib\": 1422,\n    \"gpu_telemetry_ok\": true,\n    \"warnings\": [\n      \"RAM/cgroup discovery incomplete; supply an explicit --memory-mib budget.\"\n    ]\n  },\n  \"host_concurrency\": 2,\n  \"backends\": [\n    {\n      \"name\": \"cpu\",\n      \"capacity_mib\": 128,\n      \"observed_free_mib\": null,\n      \"max_concurrency\": 2,\n      \"device_class\": \"cpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"host_ram\",\n      \"hardware_inference\": false\n    },\n    {\n      \"name\": \"gpu0\",\n      \"capacity_mib\": 1422,\n      \"observed_free_mib\": 1422,\n      \"max_concurrency\": 1,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    }\n  ],\n  \"results\": {\n    \"gpu-prefer\": {\n      \"status\": \"error\",\n      \"backend\": \"gpu0\",\n      \"error\": \"RuntimeError: C:\\\\Users\\\\bryan\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe: can't open file 'C:\\\\\\\\Users\\\\\\\\bryan\\\\\\\\Desktop\\\\\\\\HARO-One-Inference-Engine\\\\\\\\haro_inference_probe\\\\\\\\HARO-Test-Lab\\\\\\\\candidates\\\\\\\\haro-claude\\\\\\\\worker.py': [Errno 2] No such file or directory\\r\\n\",\n      \"execution_s\": 0.030999999959021807,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    },\n    \"cpu-light\": {\n      \"status\": \"error\",\n      \"backend\": \"cpu\",\n      \"error\": \"RuntimeError: C:\\\\Users\\\\bryan\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe: can't open file 'C:\\\\\\\\Users\\\\\\\\bryan\\\\\\\\Desktop\\\\\\\\HARO-One-Inference-Engine\\\\\\\\haro_inference_probe\\\\\\\\HARO-Test-Lab\\\\\\\\candidates\\\\\\\\haro-claude\\\\\\\\worker.py': [Errno 2] No such file or directory\\r\\n\",\n      \"execution_s\": 0.045999999972991645,\n      \"device_class\": \"cpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"host_ram\",\n      \"hardware_inference\": false\n    },\n    \"large-reservation\": {\n      \"status\": \"error\",\n      \"backend\": \"gpu0\",\n      \"error\": \"RuntimeError: C:\\\\Users\\\\bryan\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe: can't open file 'C:\\\\\\\\Users\\\\\\\\bryan\\\\\\\\Desktop\\\\\\\\HARO-One-Inference-Engine\\\\\\\\haro_inference_probe\\\\\\\\HARO-Test-Lab\\\\\\\\candidates\\\\\\\\haro-claude\\\\\\\\worker.py': [Errno 2] No such file or directory\\r\\n\",\n      \"execution_s\": 0.03200000000651926,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    }\n  },\n  \"note\": \"Prefers gpu-class backends when headroom allows, else CPU. All execution is the fixed host worker (hash/sleep fixtures). GPU backends provide VRAM admission accounting only; no GPU inference.\"\n}\n",
+  "stderr": "",
+  "started_utc": "2026-11-07T15:22:31.823477+00:00",
+  "elapsed_s": 0.351058
+}

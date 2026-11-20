@@ -1,0 +1,302 @@
+{
+  "timestamp": "20261107T152230716925Z",
+  "gpu": "NVIDIA GeForce RTX 5060",
+  "telemetry": "0, NVIDIA GeForce RTX 5060, 8151, 6487\n",
+  "workload": {
+    "schema_version": 1,
+    "model": null,
+    "prompt": "In two sentences, explain why reliable resource accounting matters for a local AI voice assistant.",
+    "max_tokens": 96,
+    "ctx_size": 2048,
+    "gpu_layers": 999,
+    "temperature": 0,
+    "seed": 7,
+    "stream": true,
+    "cache_prompt": false,
+    "timeout": 120,
+    "interval": 0.25
+  },
+  "candidates": {
+    "claude": {
+      "source_hashes": {
+        "haroclaude.py": "b56c739f8ec74b4ca3b8e243bc3732681a65f05f6b01492ada88166f2b3a2e33",
+        "READMEHAROClaude.md": "e4bdbe37dfdbc5301a4055b14594a867d1f2160ef5fa92c9bad64e90f5eaf00d",
+        "test_haroclaude.py": "19eef0a2216d8945e0c6500aa72db6bc08faf8e22b77d60f484a8846e3c6b618"
+      },
+      "files_unchanged": true,
+      "unit_tests": {
+        "command": [
+          "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-v"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "test_haroclaude (unittest.loader._FailedTest.test_haroclaude) ... ERROR\n\n======================================================================\nERROR: test_haroclaude (unittest.loader._FailedTest.test_haroclaude)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_haroclaude\nTraceback (most recent call last):\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\unittest\\loader.py\", line 419, in _find_test_path\n    module = self._get_module_from_name(name)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\unittest\\loader.py\", line 362, in _get_module_from_name\n    __import__(name)\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\test_haroclaude.py\", line 5, in <module>\n    from haro import (\nModuleNotFoundError: No module named 'haro'\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+        "started_utc": "2026-11-07T15:22:30.801912+00:00",
+        "elapsed_s": 0.210773
+      },
+      "cli": {
+        "discover": {
+          "command": [
+            "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "-B",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py",
+            "discover",
+            "--memory-mib",
+            "128",
+            "--concurrency",
+            "2",
+            "--audit",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\claude\\20261107T152230716925Z\\discover.audit.jsonl"
+          ],
+          "exit_code": 0,
+          "stdout": "{\n  \"os\": \"Windows\",\n  \"cpu_count\": 12,\n  \"available_ram_mib\": null,\n  \"gpus\": [\n    {\n      \"index\": \"0\",\n      \"uuid\": \"GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c\",\n      \"name\": \"NVIDIA GeForce RTX 5060\",\n      \"total_mib\": 8151,\n      \"free_mib\": 1422,\n      \"driver\": \"621.14\",\n      \"execution_capability\": \"host_fixture\",\n      \"reason\": \"VRAM usable for admission accounting only; no GPU inference adapter\"\n    }\n  ],\n  \"total_vram_mib\": 8151,\n  \"free_vram_mib\": 1422,\n  \"gpu_telemetry_ok\": true,\n  \"warnings\": [\n    \"RAM/cgroup discovery incomplete; supply an explicit --memory-mib budget.\"\n  ]\n}\n",
+          "stderr": "",
+          "started_utc": "2026-11-07T15:22:31.012685+00:00",
+          "elapsed_s": 0.231387
+        },
+        "demo": {
+          "command": [
+            "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "-B",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py",
+            "demo",
+            "--memory-mib",
+            "128",
+            "--concurrency",
+            "2",
+            "--audit",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\claude\\20261107T152230716925Z\\demo.audit.jsonl"
+          ],
+          "exit_code": 0,
+          "stdout": "{\n  \"results\": {\n    \"transcription-placeholder\": {\n      \"status\": \"error\",\n      \"backend\": \"gpu0\",\n      \"error\": \"RuntimeError: C:\\\\Users\\\\bryan\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe: can't open file 'C:\\\\\\\\Users\\\\\\\\bryan\\\\\\\\Desktop\\\\\\\\HARO-One-Inference-Engine\\\\\\\\haro_inference_probe\\\\\\\\HARO-Test-Lab\\\\\\\\candidates\\\\\\\\haro-claude\\\\\\\\worker.py': [Errno 2] No such file or directory\\r\\n\",\n      \"execution_s\": 0.015999999945051968,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    }\n  },\n  \"backends\": [\n    {\n      \"name\": \"cpu\",\n      \"capacity_mib\": 128,\n      \"observed_free_mib\": null,\n      \"max_concurrency\": 2,\n      \"device_class\": \"cpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"host_ram\",\n      \"hardware_inference\": false\n    },\n    {\n      \"name\": \"gpu0\",\n      \"capacity_mib\": 1422,\n      \"observed_free_mib\": 1422,\n      \"max_concurrency\": 1,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    }\n  ],\n  \"note\": \"Hash fixtures, not speech or language inference. All execution is the fixed host worker (hash/sleep fixtures). GPU backends provide VRAM admission accounting only; no GPU inference.\"\n}\n",
+          "stderr": "",
+          "started_utc": "2026-11-07T15:22:31.245071+00:00",
+          "elapsed_s": 0.312305
+        },
+        "benchmark": {
+          "command": [
+            "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "-B",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py",
+            "benchmark",
+            "--memory-mib",
+            "128",
+            "--concurrency",
+            "2",
+            "--audit",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\claude\\20261107T152230716925Z\\benchmark.audit.jsonl"
+          ],
+          "exit_code": 1,
+          "stdout": "",
+          "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 833, in <module>\n    main()\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 829, in main\n    asyncio.run(cli(args))\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\asyncio\\runners.py\", line 190, in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\asyncio\\base_events.py\", line 654, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 766, in cli\n    outputs = [await direct.execute(j) for j in jobs]\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 766, in <listcomp>\n    outputs = [await direct.execute(j) for j in jobs]\n               ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 223, in execute\n    return await _run_fixture(job)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 193, in _run_fixture\n    raise RuntimeError(err.decode(errors=\"replace\")[-1000:])\nRuntimeError: C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe: can't open file 'C:\\\\Users\\\\bryan\\\\Desktop\\\\HARO-One-Inference-Engine\\\\haro_inference_probe\\\\HARO-Test-Lab\\\\candidates\\\\haro-claude\\\\worker.py': [Errno 2] No such file or directory\n\n\n",
+          "started_utc": "2026-11-07T15:22:31.558379+00:00",
+          "elapsed_s": 0.264096
+        },
+        "adaptive": {
+          "command": [
+            "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "-B",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py",
+            "adaptive",
+            "--memory-mib",
+            "128",
+            "--concurrency",
+            "2",
+            "--audit",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\claude\\20261107T152230716925Z\\adaptive.audit.jsonl"
+          ],
+          "exit_code": 0,
+          "stdout": "{\n  \"discovery_summary\": {\n    \"available_ram_mib\": null,\n    \"gpu_count\": 1,\n    \"total_vram_mib\": 8151,\n    \"free_vram_mib\": 1422,\n    \"gpu_telemetry_ok\": true,\n    \"warnings\": [\n      \"RAM/cgroup discovery incomplete; supply an explicit --memory-mib budget.\"\n    ]\n  },\n  \"host_concurrency\": 2,\n  \"backends\": [\n    {\n      \"name\": \"cpu\",\n      \"capacity_mib\": 128,\n      \"observed_free_mib\": null,\n      \"max_concurrency\": 2,\n      \"device_class\": \"cpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"host_ram\",\n      \"hardware_inference\": false\n    },\n    {\n      \"name\": \"gpu0\",\n      \"capacity_mib\": 1422,\n      \"observed_free_mib\": 1422,\n      \"max_concurrency\": 1,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    }\n  ],\n  \"results\": {\n    \"gpu-prefer\": {\n      \"status\": \"error\",\n      \"backend\": \"gpu0\",\n      \"error\": \"RuntimeError: C:\\\\Users\\\\bryan\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe: can't open file 'C:\\\\\\\\Users\\\\\\\\bryan\\\\\\\\Desktop\\\\\\\\HARO-One-Inference-Engine\\\\\\\\haro_inference_probe\\\\\\\\HARO-Test-Lab\\\\\\\\candidates\\\\\\\\haro-claude\\\\\\\\worker.py': [Errno 2] No such file or directory\\r\\n\",\n      \"execution_s\": 0.030999999959021807,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    },\n    \"cpu-light\": {\n      \"status\": \"error\",\n      \"backend\": \"cpu\",\n      \"error\": \"RuntimeError: C:\\\\Users\\\\bryan\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe: can't open file 'C:\\\\\\\\Users\\\\\\\\bryan\\\\\\\\Desktop\\\\\\\\HARO-One-Inference-Engine\\\\\\\\haro_inference_probe\\\\\\\\HARO-Test-Lab\\\\\\\\candidates\\\\\\\\haro-claude\\\\\\\\worker.py': [Errno 2] No such file or directory\\r\\n\",\n      \"execution_s\": 0.045999999972991645,\n      \"device_class\": \"cpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"host_ram\",\n      \"hardware_inference\": false\n    },\n    \"large-reservation\": {\n      \"status\": \"error\",\n      \"backend\": \"gpu0\",\n      \"error\": \"RuntimeError: C:\\\\Users\\\\bryan\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe: can't open file 'C:\\\\\\\\Users\\\\\\\\bryan\\\\\\\\Desktop\\\\\\\\HARO-One-Inference-Engine\\\\\\\\haro_inference_probe\\\\\\\\HARO-Test-Lab\\\\\\\\candidates\\\\\\\\haro-claude\\\\\\\\worker.py': [Errno 2] No such file or directory\\r\\n\",\n      \"execution_s\": 0.03200000000651926,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    }\n  },\n  \"note\": \"Prefers gpu-class backends when headroom allows, else CPU. All execution is the fixed host worker (hash/sleep fixtures). GPU backends provide VRAM admission accounting only; no GPU inference.\"\n}\n",
+          "stderr": "",
+          "started_utc": "2026-11-07T15:22:31.823477+00:00",
+          "elapsed_s": 0.351058
+        }
+      }
+    },
+    "grok": {
+      "source_hashes": {
+        "haro.py": "75cbc0e15a70dfa16bbee5451190d01df2a06382423a72daa2362f646f38913f",
+        "README.md": "e8d564b783a8c1cd17bc5a61c634844d5cc439ef0056e3635194aa4099603327",
+        "test_haro.py": "1bfa7740662bea5c5b6d3314cb23b0df1e53ffe42dbf38fc581af832d1e29130",
+        "worker.py": "98436c041f3cf12a48a944e2eb2038b121b0a750c0102a7b9432afac961e6d47"
+      },
+      "files_unchanged": true,
+      "unit_tests": {
+        "command": [
+          "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-v"
+        ],
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "test_backend_restriction (test_haro.Tests.test_backend_restriction) ... ok\ntest_build_backends_injectable (test_haro.Tests.test_build_backends_injectable)\nbuild_backends with an explicit report never calls live discovery. ... ok\ntest_cancellation (test_haro.Tests.test_cancellation) ... ok\ntest_capability_preference_over_name (test_haro.Tests.test_capability_preference_over_name)\nPreference uses explicit capability, not name.startswith. ... ok\ntest_concurrency (test_haro.Tests.test_concurrency) ... ok\ntest_cpu (test_haro.Tests.test_cpu) ... ok\ntest_cpu_only_capability (test_haro.Tests.test_cpu_only_capability) ... ok\ntest_discover (test_haro.Tests.test_discover) ... ok\ntest_duplicates (test_haro.Tests.test_duplicates) ... ok\ntest_extreme_request_rejected (test_haro.Tests.test_extreme_request_rejected) ... ok\ntest_failure_releases (test_haro.Tests.test_failure_releases) ... ok\ntest_host_rss_vs_device_vram_separation (test_haro.Tests.test_host_rss_vs_device_vram_separation) ... ok\ntest_large_logical_capacity_accepted (test_haro.Tests.test_large_logical_capacity_accepted)\nAccounting accepts capacity values up to the safety bound. ... ok\ntest_multi_gpu_selects_fitting (test_haro.Tests.test_multi_gpu_selects_fitting) ... ok\ntest_one_gpu_prefers_sim (test_haro.Tests.test_one_gpu_prefers_sim) ... ok\ntest_oversized (test_haro.Tests.test_oversized) ... ok\ntest_priority_and_budget (test_haro.Tests.test_priority_and_budget) ... ok\ntest_refresh_during_reservation_no_double_count (test_haro.Tests.test_refresh_during_reservation_no_double_count)\nRefresh must not invent capacity; outstanding is already accounted. ... ok\ntest_reservation_reduces_mock_capacity (test_haro.Tests.test_reservation_reduces_mock_capacity)\nOutstanding reservation is subtracted from mock capacity immediately. ... ok\ntest_shared_cpu_budget_for_simulated_gpu (test_haro.Tests.test_shared_cpu_budget_for_simulated_gpu)\nSimulated GPU work consumes the shared CPU concurrency budget. ... ok\ntest_simulated_never_claims_verified (test_haro.Tests.test_simulated_never_claims_verified) ... ok\ntest_target (test_haro.Tests.test_target) ... ok\ntest_telemetry_unavailable_conservative (test_haro.Tests.test_telemetry_unavailable_conservative) ... FAIL\ntest_timeout (test_haro.Tests.test_timeout) ... ok\ntest_unauthorized (test_haro.Tests.test_unauthorized) ... ok\ntest_unique_names_mixed_real_and_mock (test_haro.Tests.test_unique_names_mixed_real_and_mock) ... ok\ntest_zero_gpu_still_works (test_haro.Tests.test_zero_gpu_still_works) ... ok\n\n======================================================================\nFAIL: test_telemetry_unavailable_conservative (test_haro.Tests.test_telemetry_unavailable_conservative)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\unittest\\async_case.py\", line 90, in _callTestMethod\n    if self._callMaybeAsync(method) is not None:\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\unittest\\async_case.py\", line 112, in _callMaybeAsync\n    return self._asyncioRunner.run(\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\asyncio\\base_events.py\", line 654, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-grok\\test_haro.py\", line 255, in test_telemetry_unavailable_conservative\n    self.assertEqual(d[\"gpus\"], [])\nAssertionError: Lists differ: [{'index': '0', 'uuid': 'GPU-a96299dc-a636[215 chars]ed'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'index': '0', 'uuid': 'GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c', 'name': 'NVIDIA GeForce RTX 5060', 'total_mib': 8151, 'free_mib': 1422, 'driver': '621.14', 'executable': False, 'reason': 'Detected by telemetry; no verified GPU execution adapter registered'}\n\n+ []\n- [{'driver': '621.14',\n-   'executable': False,\n-   'free_mib': 1422,\n-   'index': '0',\n-   'name': 'NVIDIA GeForce RTX 5060',\n-   'reason': 'Detected by telemetry; no verified GPU execution adapter '\n-             'registered',\n-   'total_mib': 8151,\n-   'uuid': 'GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c'}]\n\n----------------------------------------------------------------------\nRan 27 tests in 1.923s\n\nFAILED (failures=1)\n",
+        "started_utc": "2026-11-07T15:22:32.209080+00:00",
+        "elapsed_s": 2.084534
+      },
+      "cli": {
+        "discover": {
+          "command": [
+            "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "-B",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-grok\\haro.py",
+            "discover",
+            "--memory-mib",
+            "128",
+            "--concurrency",
+            "2",
+            "--audit",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\grok\\20261107T152230716925Z\\discover.audit.jsonl"
+          ],
+          "exit_code": 0,
+          "stdout": "{\n  \"os\": \"Windows\",\n  \"cpu_count\": 12,\n  \"available_ram_mib\": null,\n  \"gpus\": [\n    {\n      \"index\": \"0\",\n      \"uuid\": \"GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c\",\n      \"name\": \"NVIDIA GeForce RTX 5060\",\n      \"total_mib\": 8151,\n      \"free_mib\": 1422,\n      \"driver\": \"621.14\",\n      \"executable\": false,\n      \"reason\": \"Detected by telemetry; no verified GPU execution adapter registered\"\n    }\n  ],\n  \"total_vram_mib\": 8151,\n  \"free_vram_mib\": 1422,\n  \"warnings\": [\n    \"RAM/cgroup discovery incomplete; supply an explicit --memory-mib budget.\"\n  ]\n}\n",
+          "stderr": "",
+          "started_utc": "2026-11-07T15:22:34.294614+00:00",
+          "elapsed_s": 0.23085
+        },
+        "demo": {
+          "command": [
+            "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "-B",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-grok\\haro.py",
+            "demo",
+            "--memory-mib",
+            "128",
+            "--concurrency",
+            "2",
+            "--audit",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\grok\\20261107T152230716925Z\\demo.audit.jsonl"
+          ],
+          "exit_code": 0,
+          "stdout": "{\n  \"results\": {\n    \"transcription-placeholder\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"384d5a9202cf6b22eec343790e313e73946a88775c412f2fb80e4c79c44f1c55\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"simulated_gpu_accounting\",\n        \"verified_execution\": false,\n        \"capability\": \"gpu_sim\",\n        \"backend_note\": \"VRAM capacity accounting via gpu0; host worker only \\u2014 not genuine GPU acceleration\"\n      },\n      \"execution_s\": 0.06299999996554106,\n      \"end_to_end_s\": 0.125,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": false,\n      \"capability\": \"gpu_sim\"\n    },\n    \"reasoning-placeholder\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"b207c0e084a0d6c51e7c5fec05900f03c5760fd023614d658fce026c4aaf6fa4\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"simulated_gpu_accounting\",\n        \"verified_execution\": false,\n        \"capability\": \"gpu_sim\",\n        \"backend_note\": \"VRAM capacity accounting via gpu0; host worker only \\u2014 not genuine GPU acceleration\"\n      },\n      \"execution_s\": 0.07900000002700835,\n      \"end_to_end_s\": 0.07900000002700835,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": false,\n      \"capability\": \"gpu_sim\"\n    },\n    \"synthesis-placeholder\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"a88ad8a0869fd262fa1a24dddf5a00e39007b9bec49e5fb27525e131bf15d1d9\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"simulated_gpu_accounting\",\n        \"verified_execution\": false,\n        \"capability\": \"gpu_sim\",\n        \"backend_note\": \"VRAM capacity accounting via gpu0; host worker only \\u2014 not genuine GPU acceleration\"\n      },\n      \"execution_s\": 0.0779999999795109,\n      \"end_to_end_s\": 0.0779999999795109,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": false,\n      \"capability\": \"gpu_sim\"\n    }\n  },\n  \"backends\": [\n    {\n      \"name\": \"cpu\",\n      \"capacity_mib\": 128,\n      \"capability\": \"cpu\",\n      \"verified_execution\": true\n    },\n    {\n      \"name\": \"gpu0\",\n      \"capacity_mib\": 1422,\n      \"capability\": \"gpu_sim\",\n      \"verified_execution\": false\n    }\n  ],\n  \"note\": \"Hash fixtures only. GPU backends perform VRAM accounting + host worker; verified_execution=False until a real adapter is registered.\"\n}\n",
+          "stderr": "",
+          "started_utc": "2026-11-07T15:22:34.526463+00:00",
+          "elapsed_s": 0.531614
+        },
+        "benchmark": {
+          "command": [
+            "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "-B",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-grok\\haro.py",
+            "benchmark",
+            "--memory-mib",
+            "128",
+            "--concurrency",
+            "2",
+            "--audit",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\grok\\20261107T152230716925Z\\benchmark.audit.jsonl"
+          ],
+          "exit_code": 0,
+          "stdout": "{\n  \"direct_sequential_s\": 0.5310000000754371,\n  \"scheduled_s\": 0.1559999999590218,\n  \"ratio_direct_over_scheduled\": 3.40384615522385,\n  \"identical_outputs\": false,\n  \"backends_used\": [\n    \"cpu\",\n    \"gpu0\"\n  ],\n  \"note\": \"Single trial. Digests must match. GPU path is simulated accounting only.\"\n}\n",
+          "stderr": "",
+          "started_utc": "2026-11-07T15:22:35.058077+00:00",
+          "elapsed_s": 0.932086
+        },
+        "adaptive": {
+          "command": [
+            "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+            "-B",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-grok\\haro.py",
+            "adaptive",
+            "--memory-mib",
+            "128",
+            "--concurrency",
+            "2",
+            "--audit",
+            "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\grok\\20261107T152230716925Z\\adaptive.audit.jsonl"
+          ],
+          "exit_code": 0,
+          "stdout": "{\n  \"discovery_summary\": {\n    \"available_ram_mib\": null,\n    \"gpu_count\": 1,\n    \"total_vram_mib\": 8151,\n    \"free_vram_mib\": 1422,\n    \"warnings\": [\n      \"RAM/cgroup discovery incomplete; supply an explicit --memory-mib budget.\"\n    ]\n  },\n  \"backends\": [\n    {\n      \"name\": \"cpu\",\n      \"capacity_mib\": 128,\n      \"max_concurrency\": 2,\n      \"capability\": \"cpu\",\n      \"verified_execution\": true\n    },\n    {\n      \"name\": \"gpu0\",\n      \"capacity_mib\": 1422,\n      \"max_concurrency\": 1,\n      \"capability\": \"gpu_sim\",\n      \"verified_execution\": false\n    }\n  ],\n  \"results\": {\n    \"cpu-light\": {\n      \"status\": \"ok\",\n      \"backend\": \"cpu\",\n      \"output\": {\n        \"digest\": \"974349f9052ac7721120819fefa0335c6189d7679b12efefbaff41d5fe4c60e7\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"cpu_host\",\n        \"verified_execution\": true,\n        \"capability\": \"cpu\"\n      },\n      \"execution_s\": 0.0470000000204891,\n      \"end_to_end_s\": 0.09399999992456287,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": true,\n      \"capability\": \"cpu\"\n    },\n    \"gpu-prefer\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"dec315af2ff726f8fd0b07d42873932e09845ba3307f04c4f6be4224a14847b7\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"simulated_gpu_accounting\",\n        \"verified_execution\": false,\n        \"capability\": \"gpu_sim\",\n        \"backend_note\": \"VRAM capacity accounting via gpu0; host worker only \\u2014 not genuine GPU acceleration\"\n      },\n      \"execution_s\": 0.062000000034458935,\n      \"end_to_end_s\": 0.10899999993853271,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": false,\n      \"capability\": \"gpu_sim\"\n    },\n    \"large-reservation\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"d36afe99675c8d5e8b48e0bf9cfb45434b9234361393e6b23202f56314a11fdf\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"simulated_gpu_accounting\",\n        \"verified_execution\": false,\n        \"capability\": \"gpu_sim\",\n        \"backend_note\": \"VRAM capacity accounting via gpu0; host worker only \\u2014 not genuine GPU acceleration\"\n      },\n      \"execution_s\": 0.0470000000204891,\n      \"end_to_end_s\": 0.1559999999590218,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": false,\n      \"capability\": \"gpu_sim\"\n    }\n  },\n  \"note\": \"Capability preference: gpu_real > gpu_sim > cpu. All current GPU backends are gpu_sim (simulated accounting only).\"\n}\n",
+          "stderr": "",
+          "started_utc": "2026-11-07T15:22:35.991162+00:00",
+          "elapsed_s": 0.370667
+        }
+      }
+    }
+  },
+  "inference_comparison": "not_available: stock candidates execute host fixtures, not llama inference",
+  "baseline_mode": "existing_server: model/context/offload are controlled by running server; loading time and total model residency not measured",
+  "baseline": {
+    "command": [
+      "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+      "-B",
+      "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\inference-engine\\inference_probe.py",
+      "--url",
+      "http://127.0.0.1:16520",
+      "--gpu-index",
+      "0",
+      "--output",
+      "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\direct-baseline\\20261107T152230716925Z\\inference.json",
+      "--prompt",
+      "In two sentences, explain why reliable resource accounting matters for a local AI voice assistant.",
+      "--max-tokens",
+      "96",
+      "--timeout",
+      "120",
+      "--interval",
+      "0.25"
+    ],
+    "exit_code": 0,
+    "stdout": "{\n  \"schema_version\": \"1.0\",\n  \"timestamp\": \"2026-11-07T15:22:36.531833+00:00\",\n  \"machine\": \"ORBSSPRUKED\",\n  \"mode\": \"existing_server\",\n  \"gpu\": {\n    \"index\": 0,\n    \"uuid\": \"GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c\",\n    \"name\": \"NVIDIA GeForce RTX 5060\",\n    \"total_mib\": 8151,\n    \"used_mib\": 6474,\n    \"free_mib\": 1422\n  },\n  \"server_url\": \"http://127.0.0.1:16520\",\n  \"model\": null,\n  \"note\": \"nvidia-smi measures total device memory, NOT necessarily memory attributable to this process. Other GPU activity can affect readings.\",\n  \"pre_server_used_mib\": 6474,\n  \"server_ready_s\": 0.313,\n  \"before_inference_used_mib\": 6474,\n  \"inference\": {\n    \"text\": \" Reliable resource accounting is crucial for a local AI voice assistant to ensure efficient use of hardware resources, preventing overuse and potential damage to the device. It also helps in optimizing performance by managing power consumption and ensuring smooth operation, which is essential for a seamless user experience.\",\n    \"time_to_first_text_s\": 0.562,\n    \"completion_s\": 1.484,\n    \"server_timings\": {\n      \"cache_n\": 0,\n      \"prompt_n\": 17,\n      \"prompt_ms\": 194.181,\n      \"prompt_per_token_ms\": 11.422411764705883,\n      \"prompt_per_second\": 87.54718535799074,\n      \"predicted_n\": 54,\n      \"predicted_ms\": 857.586,\n      \"predicted_per_token_ms\": 16.180867924528304,\n      \"predicted_per_second\": 61.8013820188296\n    },\n    \"completed_at\": \"2026-11-07T15:22:38.318935+00:00\"\n  },\n  \"after_inference_used_mib\": 6478,\n  \"status\": \"ok\",\n  \"vram_device_measurement\": {\n    \"samples\": 7,\n    \"min_used_mib\": 6474,\n    \"max_used_mib\": 6478,\n    \"last_used_mib\": 6478\n  },\n  \"peak_device_delta_from_pre_server_mib\": 4,\n  \"telemetry_errors\": [],\n  \"telemetry_error_count\": 0,\n  \"sample_interval_s\": 0.25,\n  \"gpu_memory_measurement_kind\": \"whole_device_nvidia_smi\"\n}\n",
+    "stderr": "",
+    "started_utc": "2026-11-07T15:22:36.363819+00:00",
+    "elapsed_s": 2.241055
+  },
+  "baseline_measurement": {
+    "schema_version": "1.0",
+    "timestamp": "2026-11-07T15:22:36.531833+00:00",
+    "machine": "ORBSSPRUKED",
+    "mode": "existing_server",
+    "gpu": {
+      "index": 0,
+      "uuid": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+      "name": "NVIDIA GeForce RTX 5060",
+      "total_mib": 8151,
+      "used_mib": 6474,
+      "free_mib": 1422
+    },
+    "server_url": "http://127.0.0.1:16520",
+    "model": null,
+    "note": "nvidia-smi measures total device memory, NOT necessarily memory attributable to this process. Other GPU activity can affect readings.",
+    "pre_server_used_mib": 6474,
+    "server_ready_s": 0.313,
+    "before_inference_used_mib": 6474,
+    "inference": {
+      "text": " Reliable resource accounting is crucial for a local AI voice assistant to ensure efficient use of hardware resources, preventing overuse and potential damage to the device. It also helps in optimizing performance by managing power consumption and ensuring smooth operation, which is essential for a seamless user experience.",
+      "time_to_first_text_s": 0.562,
+      "completion_s": 1.484,
+      "server_timings": {
+        "cache_n": 0,
+        "prompt_n": 17,
+        "prompt_ms": 194.181,
+        "prompt_per_token_ms": 11.422411764705883,
+        "prompt_per_second": 87.54718535799074,
+        "predicted_n": 54,
+        "predicted_ms": 857.586,
+        "predicted_per_token_ms": 16.180867924528304,
+        "predicted_per_second": 61.8013820188296
+      },
+      "completed_at": "2026-11-07T15:22:38.318935+00:00"
+    },
+    "after_inference_used_mib": 6478,
+    "status": "ok",
+    "vram_device_measurement": {
+      "samples": 7,
+      "min_used_mib": 6474,
+      "max_used_mib": 6478,
+      "last_used_mib": 6478
+    },
+    "peak_device_delta_from_pre_server_mib": 4,
+    "telemetry_errors": [],
+    "telemetry_error_count": 0,
+    "sample_interval_s": 0.25,
+    "gpu_memory_measurement_kind": "whole_device_nvidia_smi"
+  }
+}

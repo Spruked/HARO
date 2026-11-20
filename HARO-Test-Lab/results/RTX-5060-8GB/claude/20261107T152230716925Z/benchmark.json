@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py",
+    "benchmark",
+    "--memory-mib",
+    "128",
+    "--concurrency",
+    "2",
+    "--audit",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\claude\\20261107T152230716925Z\\benchmark.audit.jsonl"
+  ],
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 833, in <module>\n    main()\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 829, in main\n    asyncio.run(cli(args))\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\asyncio\\runners.py\", line 190, in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\asyncio\\base_events.py\", line 654, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 766, in cli\n    outputs = [await direct.execute(j) for j in jobs]\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 766, in <listcomp>\n    outputs = [await direct.execute(j) for j in jobs]\n               ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 223, in execute\n    return await _run_fixture(job)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py\", line 193, in _run_fixture\n    raise RuntimeError(err.decode(errors=\"replace\")[-1000:])\nRuntimeError: C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe: can't open file 'C:\\\\Users\\\\bryan\\\\Desktop\\\\HARO-One-Inference-Engine\\\\haro_inference_probe\\\\HARO-Test-Lab\\\\candidates\\\\haro-claude\\\\worker.py': [Errno 2] No such file or directory\n\n\n",
+  "started_utc": "2026-11-07T15:22:31.558379+00:00",
+  "elapsed_s": 0.264096
+}

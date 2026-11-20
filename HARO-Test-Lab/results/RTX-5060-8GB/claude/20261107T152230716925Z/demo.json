@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haroclaude.py",
+    "demo",
+    "--memory-mib",
+    "128",
+    "--concurrency",
+    "2",
+    "--audit",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\claude\\20261107T152230716925Z\\demo.audit.jsonl"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"results\": {\n    \"transcription-placeholder\": {\n      \"status\": \"error\",\n      \"backend\": \"gpu0\",\n      \"error\": \"RuntimeError: C:\\\\Users\\\\bryan\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python311\\\\python.exe: can't open file 'C:\\\\\\\\Users\\\\\\\\bryan\\\\\\\\Desktop\\\\\\\\HARO-One-Inference-Engine\\\\\\\\haro_inference_probe\\\\\\\\HARO-Test-Lab\\\\\\\\candidates\\\\\\\\haro-claude\\\\\\\\worker.py': [Errno 2] No such file or directory\\r\\n\",\n      \"execution_s\": 0.015999999945051968,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    }\n  },\n  \"backends\": [\n    {\n      \"name\": \"cpu\",\n      \"capacity_mib\": 128,\n      \"observed_free_mib\": null,\n      \"max_concurrency\": 2,\n      \"device_class\": \"cpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"host_ram\",\n      \"hardware_inference\": false\n    },\n    {\n      \"name\": \"gpu0\",\n      \"capacity_mib\": 1422,\n      \"observed_free_mib\": 1422,\n      \"max_concurrency\": 1,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    }\n  ],\n  \"note\": \"Hash fixtures, not speech or language inference. All execution is the fixed host worker (hash/sleep fixtures). GPU backends provide VRAM admission accounting only; no GPU inference.\"\n}\n",
+  "stderr": "",
+  "started_utc": "2026-11-07T15:22:31.245071+00:00",
+  "elapsed_s": 0.312305
+}

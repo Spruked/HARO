@@ -1,0 +1,44 @@
+{
+  "candidate": "grok",
+  "adapter": "external host dispatch; no candidate source edits",
+  "scope": "existing services; no HARO GPU residency/admission validation",
+  "results": {
+    "llm": {
+      "status": "ok",
+      "backend": "cpu",
+      "output": {
+        "text": " Reliable resource accounting is crucial for a local AI voice assistant to ensure efficient use of hardware resources, preventing overuse and potential damage to the device. It also helps in optimizing performance by managing power consumption and ensuring smooth operation, which is essential for a seamless user experience.",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 17,
+          "prompt_ms": 22.912,
+          "prompt_per_token_ms": 1.347764705882353,
+          "prompt_per_second": 741.9692737430169,
+          "predicted_n": 54,
+          "predicted_ms": 680.833,
+          "predicted_per_token_ms": 12.845905660377358,
+          "predicted_per_second": 77.84581534678843
+        },
+        "request_s": 0.7227411998901516,
+        "execution": "external_shared_service",
+        "attributed_device_vram_mib": null
+      },
+      "execution_s": 0.7179999999934807,
+      "end_to_end_s": 0.7339999999385327,
+      "target_met": true,
+      "estimate_exceeded": false,
+      "verified_execution": false,
+      "capability": "cpu",
+      "wall_s": 0.7262960999505594
+    },
+    "tts": {
+      "status": "error",
+      "backend": "cpu",
+      "error": "TypeError: stat: path should be string, bytes, os.PathLike or integer, not NoneType",
+      "execution_s": 1.1570000000065193,
+      "wall_s": 1.1601538999238983
+    }
+  },
+  "source_sha256": "75cbc0e15a70dfa16bbee5451190d01df2a06382423a72daa2362f646f38913f",
+  "source_unchanged": true
+}

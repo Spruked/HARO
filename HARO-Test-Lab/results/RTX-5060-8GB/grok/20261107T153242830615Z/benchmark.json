@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-grok\\haro.py",
+    "benchmark",
+    "--memory-mib",
+    "128",
+    "--concurrency",
+    "2",
+    "--audit",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\grok\\20261107T153242830615Z\\benchmark.audit.jsonl"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"direct_sequential_s\": 0.5470000000204891,\n  \"scheduled_s\": 0.1720000000204891,\n  \"ratio_direct_over_scheduled\": 3.18023255787982,\n  \"identical_outputs\": false,\n  \"backends_used\": [\n    \"cpu\",\n    \"gpu0\"\n  ],\n  \"note\": \"Single trial. Digests must match. GPU path is simulated accounting only.\"\n}\n",
+  "stderr": "",
+  "started_utc": "2026-11-07T15:32:58.639414+00:00",
+  "elapsed_s": 0.954582
+}

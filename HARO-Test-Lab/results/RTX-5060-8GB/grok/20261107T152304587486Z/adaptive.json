@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-grok\\haro.py",
+    "adaptive",
+    "--memory-mib",
+    "128",
+    "--concurrency",
+    "2",
+    "--audit",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\grok\\20261107T152304587486Z\\adaptive.audit.jsonl"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"discovery_summary\": {\n    \"available_ram_mib\": null,\n    \"gpu_count\": 1,\n    \"total_vram_mib\": 8151,\n    \"free_vram_mib\": 1445,\n    \"warnings\": [\n      \"RAM/cgroup discovery incomplete; supply an explicit --memory-mib budget.\"\n    ]\n  },\n  \"backends\": [\n    {\n      \"name\": \"cpu\",\n      \"capacity_mib\": 128,\n      \"max_concurrency\": 2,\n      \"capability\": \"cpu\",\n      \"verified_execution\": true\n    },\n    {\n      \"name\": \"gpu0\",\n      \"capacity_mib\": 1445,\n      \"max_concurrency\": 1,\n      \"capability\": \"gpu_sim\",\n      \"verified_execution\": false\n    }\n  ],\n  \"results\": {\n    \"cpu-light\": {\n      \"status\": \"ok\",\n      \"backend\": \"cpu\",\n      \"output\": {\n        \"digest\": \"974349f9052ac7721120819fefa0335c6189d7679b12efefbaff41d5fe4c60e7\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"cpu_host\",\n        \"verified_execution\": true,\n        \"capability\": \"cpu\"\n      },\n      \"execution_s\": 0.06299999996554106,\n      \"end_to_end_s\": 0.10999999998603016,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": true,\n      \"capability\": \"cpu\"\n    },\n    \"gpu-prefer\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"dec315af2ff726f8fd0b07d42873932e09845ba3307f04c4f6be4224a14847b7\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"simulated_gpu_accounting\",\n        \"verified_execution\": false,\n        \"capability\": \"gpu_sim\",\n        \"backend_note\": \"VRAM capacity accounting via gpu0; host worker only \\u2014 not genuine GPU acceleration\"\n      },\n      \"execution_s\": 0.06299999996554106,\n      \"end_to_end_s\": 0.10999999998603016,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": false,\n      \"capability\": \"gpu_sim\"\n    },\n    \"large-reservation\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"d36afe99675c8d5e8b48e0bf9cfb45434b9234361393e6b23202f56314a11fdf\",\n        \"peak_rss_mib\": null,\n        \"peak_vram_mib\": null,\n        \"execution_mode\": \"simulated_gpu_accounting\",\n        \"verified_execution\": false,\n        \"capability\": \"gpu_sim\",\n        \"backend_note\": \"VRAM capacity accounting via gpu0; host worker only \\u2014 not genuine GPU acceleration\"\n      },\n      \"execution_s\": 0.0470000000204891,\n      \"end_to_end_s\": 0.15700000000651926,\n      \"target_met\": true,\n      \"estimate_exceeded\": false,\n      \"verified_execution\": false,\n      \"capability\": \"gpu_sim\"\n    }\n  },\n  \"note\": \"Capability preference: gpu_real > gpu_sim > cpu. All current GPU backends are gpu_sim (simulated accounting only).\"\n}\n",
+  "stderr": "",
+  "started_utc": "2026-11-07T15:23:11.114384+00:00",
+  "elapsed_s": 0.365868
+}

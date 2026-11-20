@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "timestamp": "2026-11-07T15:33:00.196687+00:00",
+  "machine": "ORBSSPRUKED",
+  "mode": "existing_server",
+  "gpu": {
+    "index": 0,
+    "uuid": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+    "name": "NVIDIA GeForce RTX 5060",
+    "total_mib": 8151,
+    "used_mib": 6428,
+    "free_mib": 1468
+  },
+  "server_url": "http://127.0.0.1:16520",
+  "model": null,
+  "note": "nvidia-smi measures total device memory, NOT necessarily memory attributable to this process. Other GPU activity can affect readings.",
+  "pre_server_used_mib": 6428,
+  "server_ready_s": 0.281,
+  "before_inference_used_mib": 6428,
+  "inference": {
+    "text": " Reliable resource accounting is crucial for a local AI voice assistant to ensure efficient use of hardware resources, preventing overuse and potential damage to the device. It also helps in optimizing performance by managing power consumption and ensuring smooth operation, which is essential for a seamless user experience.",
+    "time_to_first_text_s": 0.125,
+    "completion_s": 0.828,
+    "server_timings": {
+      "cache_n": 0,
+      "prompt_n": 17,
+      "prompt_ms": 113.15,
+      "prompt_per_token_ms": 6.655882352941177,
+      "prompt_per_second": 150.24304021210781,
+      "predicted_n": 54,
+      "predicted_ms": 707.442,
+      "predicted_per_token_ms": 13.347962264150944,
+      "predicted_per_second": 74.91780244882266
+    },
+    "completed_at": "2026-11-07T15:33:01.305682+00:00"
+  },
+  "after_inference_used_mib": 6419,
+  "status": "ok",
+  "vram_device_measurement": {
+    "samples": 5,
+    "min_used_mib": 6419,
+    "max_used_mib": 6428,
+    "last_used_mib": 6419
+  },
+  "peak_device_delta_from_pre_server_mib": 0,
+  "telemetry_errors": [],
+  "telemetry_error_count": 0,
+  "sample_interval_s": 0.25,
+  "gpu_memory_measurement_kind": "whole_device_nvidia_smi"
+}

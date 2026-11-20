@@ -1,0 +1,26 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\inference-engine\\inference_probe.py",
+    "--url",
+    "http://127.0.0.1:16520",
+    "--gpu-index",
+    "0",
+    "--output",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\direct-baseline\\20261107T152304587486Z\\inference.json",
+    "--prompt",
+    "In two sentences, explain why reliable resource accounting matters for a local AI voice assistant.",
+    "--max-tokens",
+    "96",
+    "--timeout",
+    "120",
+    "--interval",
+    "0.25"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"schema_version\": \"1.0\",\n  \"timestamp\": \"2026-11-07T15:23:11.637491+00:00\",\n  \"machine\": \"ORBSSPRUKED\",\n  \"mode\": \"existing_server\",\n  \"gpu\": {\n    \"index\": 0,\n    \"uuid\": \"GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c\",\n    \"name\": \"NVIDIA GeForce RTX 5060\",\n    \"total_mib\": 8151,\n    \"used_mib\": 6451,\n    \"free_mib\": 1445\n  },\n  \"server_url\": \"http://127.0.0.1:16520\",\n  \"model\": null,\n  \"note\": \"nvidia-smi measures total device memory, NOT necessarily memory attributable to this process. Other GPU activity can affect readings.\",\n  \"pre_server_used_mib\": 6451,\n  \"server_ready_s\": 0.313,\n  \"before_inference_used_mib\": 6451,\n  \"inference\": {\n    \"text\": \" Reliable resource accounting is crucial for a local AI voice assistant to ensure efficient use of hardware resources, preventing overuse and potential damage to the device. It also helps in optimizing performance by managing power consumption and ensuring smooth operation, which is essential for a seamless user experience.\",\n    \"time_to_first_text_s\": 0.25,\n    \"completion_s\": 0.922,\n    \"server_timings\": {\n      \"cache_n\": 0,\n      \"prompt_n\": 17,\n      \"prompt_ms\": 238.344,\n      \"prompt_per_token_ms\": 14.020235294117647,\n      \"prompt_per_second\": 71.32547913939517,\n      \"predicted_n\": 54,\n      \"predicted_ms\": 664.316,\n      \"predicted_per_token_ms\": 12.534264150943397,\n      \"predicted_per_second\": 79.78130889516434\n    },\n    \"completed_at\": \"2026-11-07T15:23:12.863347+00:00\"\n  },\n  \"after_inference_used_mib\": 6451,\n  \"status\": \"ok\",\n  \"vram_device_measurement\": {\n    \"samples\": 5,\n    \"min_used_mib\": 6451,\n    \"max_used_mib\": 6451,\n    \"last_used_mib\": 6451\n  },\n  \"peak_device_delta_from_pre_server_mib\": 0,\n  \"telemetry_errors\": [],\n  \"telemetry_error_count\": 0,\n  \"sample_interval_s\": 0.25,\n  \"gpu_memory_measurement_kind\": \"whole_device_nvidia_smi\"\n}\n",
+  "stderr": "",
+  "started_utc": "2026-11-07T15:23:11.482256+00:00",
+  "elapsed_s": 1.67046
+}

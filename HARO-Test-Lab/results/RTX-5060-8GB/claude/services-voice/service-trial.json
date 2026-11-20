@@ -1,0 +1,55 @@
+{
+  "candidate": "claude",
+  "adapter": "external host dispatch; no candidate source edits",
+  "scope": "existing services; no HARO GPU residency/admission validation",
+  "results": {
+    "llm": {
+      "status": "ok",
+      "backend": "cpu",
+      "output": {
+        "text": " Reliable resource accounting is crucial for a local AI voice assistant to ensure efficient use of hardware resources, preventing overuse and potential damage to the device. It also helps in optimizing performance by managing power consumption and ensuring smooth operation, which is essential for a seamless user experience.",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 17,
+          "prompt_ms": 172.41,
+          "prompt_per_token_ms": 10.141764705882352,
+          "prompt_per_second": 98.60216924772345,
+          "predicted_n": 54,
+          "predicted_ms": 662.579,
+          "predicted_per_token_ms": 12.501490566037734,
+          "predicted_per_second": 79.99046151477786
+        },
+        "request_s": 0.8554204000392929,
+        "execution": "external_shared_service",
+        "attributed_device_vram_mib": null
+      },
+      "execution_s": 0.859000000054948,
+      "end_to_end_s": 0.859000000054948,
+      "target_met": true,
+      "reserved_mib": 64,
+      "host_peak_rss_mib": null,
+      "device_vram_peak_mib": null,
+      "estimate_exceeded": null,
+      "device_class": "cpu",
+      "execution": "external_shared_service",
+      "simulated": false,
+      "reserved_resource": "host_ram",
+      "hardware_inference": false,
+      "wall_s": 0.8595127000007778
+    },
+    "tts": {
+      "status": "error",
+      "backend": "cpu",
+      "error": "TypeError: stat: path should be string, bytes, os.PathLike or integer, not NoneType",
+      "execution_s": 1.5469999999040738,
+      "device_class": "cpu",
+      "execution": "external_shared_service",
+      "simulated": false,
+      "reserved_resource": "host_ram",
+      "hardware_inference": false,
+      "wall_s": 1.5440942000132054
+    }
+  },
+  "source_sha256": "b56c739f8ec74b4ca3b8e243bc3732681a65f05f6b01492ada88166f2b3a2e33",
+  "source_unchanged": true
+}

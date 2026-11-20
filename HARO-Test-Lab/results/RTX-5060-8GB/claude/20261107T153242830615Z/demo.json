@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Users\\bryan\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+    "-B",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\candidates\\haro-claude\\haro.py",
+    "demo",
+    "--memory-mib",
+    "128",
+    "--concurrency",
+    "2",
+    "--audit",
+    "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060-8GB\\claude\\20261107T153242830615Z\\demo.audit.jsonl"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"results\": {\n    \"transcription-placeholder\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"384d5a9202cf6b22eec343790e313e73946a88775c412f2fb80e4c79c44f1c55\",\n        \"peak_rss_mib\": null,\n        \"backend_note\": \"gpu0: host fixture worker; VRAM admission accounting only; no GPU inference\"\n      },\n      \"execution_s\": 0.17199999990407377,\n      \"end_to_end_s\": 0.2809999999590218,\n      \"target_met\": true,\n      \"reserved_mib\": 64,\n      \"host_peak_rss_mib\": null,\n      \"device_vram_peak_mib\": null,\n      \"estimate_exceeded\": null,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    },\n    \"reasoning-placeholder\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"b207c0e084a0d6c51e7c5fec05900f03c5760fd023614d658fce026c4aaf6fa4\",\n        \"peak_rss_mib\": null,\n        \"backend_note\": \"gpu0: host fixture worker; VRAM admission accounting only; no GPU inference\"\n      },\n      \"execution_s\": 0.1720000000204891,\n      \"end_to_end_s\": 0.2970000000204891,\n      \"target_met\": true,\n      \"reserved_mib\": 128,\n      \"host_peak_rss_mib\": null,\n      \"device_vram_peak_mib\": null,\n      \"estimate_exceeded\": null,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    },\n    \"synthesis-placeholder\": {\n      \"status\": \"ok\",\n      \"backend\": \"gpu0\",\n      \"output\": {\n        \"digest\": \"a88ad8a0869fd262fa1a24dddf5a00e39007b9bec49e5fb27525e131bf15d1d9\",\n        \"peak_rss_mib\": null,\n        \"backend_note\": \"gpu0: host fixture worker; VRAM admission accounting only; no GPU inference\"\n      },\n      \"execution_s\": 0.1720000000204891,\n      \"end_to_end_s\": 0.2970000000204891,\n      \"target_met\": true,\n      \"reserved_mib\": 64,\n      \"host_peak_rss_mib\": null,\n      \"device_vram_peak_mib\": null,\n      \"estimate_exceeded\": null,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    }\n  },\n  \"backends\": [\n    {\n      \"name\": \"cpu\",\n      \"capacity_mib\": 128,\n      \"observed_free_mib\": null,\n      \"max_concurrency\": 2,\n      \"device_class\": \"cpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"host_ram\",\n      \"hardware_inference\": false\n    },\n    {\n      \"name\": \"gpu0\",\n      \"capacity_mib\": 1468,\n      \"observed_free_mib\": 1468,\n      \"max_concurrency\": 1,\n      \"device_class\": \"gpu\",\n      \"execution\": \"host_fixture\",\n      \"simulated\": false,\n      \"reserved_resource\": \"device_vram\",\n      \"hardware_inference\": false\n    }\n  ],\n  \"note\": \"Hash fixtures, not speech or language inference. All execution is the fixed host worker (hash/sleep fixtures). GPU backends provide VRAM admission accounting only; no GPU inference.\"\n}\n",
+  "stderr": "",
+  "started_utc": "2026-11-07T15:32:48.567878+00:00",
+  "elapsed_s": 1.814037
+}

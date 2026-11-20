@@ -1,0 +1,51 @@
+[
+  {
+    "candidate": "claude",
+    "original": "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\claude_haro\\haroclaude.py",
+    "lab_file": "haro.py",
+    "sha256": "b56c739f8ec74b4ca3b8e243bc3732681a65f05f6b01492ada88166f2b3a2e33",
+    "identical": true
+  },
+  {
+    "candidate": "claude",
+    "original": "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\claude_haro\\test_haroclaude.py",
+    "lab_file": "test_haro.py",
+    "sha256": "19eef0a2216d8945e0c6500aa72db6bc08faf8e22b77d60f484a8846e3c6b618",
+    "identical": true
+  },
+  {
+    "candidate": "claude",
+    "original": "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\claude_haro\\READMEHAROClaude.md",
+    "lab_file": "README.md",
+    "sha256": "e4bdbe37dfdbc5301a4055b14594a867d1f2160ef5fa92c9bad64e90f5eaf00d",
+    "identical": true
+  },
+  {
+    "candidate": "grok",
+    "original": "C:\\Users\\bryan\\Desktop\\runtime\\final cut\\haro.py",
+    "lab_file": "haro.py",
+    "sha256": "75cbc0e15a70dfa16bbee5451190d01df2a06382423a72daa2362f646f38913f",
+    "identical": true
+  },
+  {
+    "candidate": "grok",
+    "original": "C:\\Users\\bryan\\Desktop\\runtime\\final cut\\worker.py",
+    "lab_file": "worker.py",
+    "sha256": "98436c041f3cf12a48a944e2eb2038b121b0a750c0102a7b9432afac961e6d47",
+    "identical": true
+  },
+  {
+    "candidate": "grok",
+    "original": "C:\\Users\\bryan\\Desktop\\runtime\\final cut\\test_haro.py",
+    "lab_file": "test_haro.py",
+    "sha256": "1bfa7740662bea5c5b6d3314cb23b0df1e53ffe42dbf38fc581af832d1e29130",
+    "identical": true
+  },
+  {
+    "candidate": "grok",
+    "original": "C:\\Users\\bryan\\Desktop\\runtime\\final cut\\README.md",
+    "lab_file": "README.md",
+    "sha256": "e8d564b783a8c1cd17bc5a61c634844d5cc439ef0056e3635194aa4099603327",
+    "identical": true
+  }
+]

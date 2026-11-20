@@ -1,0 +1,14 @@
+{
+  "fresh_cuda_probe": {
+    "stdout": "{\"torch\": \"2.11.0+cu128\", \"compiled_cuda\": \"12.8\", \"cuda_available\": true, \"device\": \"NVIDIA GeForce RTX 5060\", \"sum\": 16.0, \"status\": \"ok\"}\n",
+    "stderr": "",
+    "exit_code": 0
+  },
+  "packages": {
+    "torch": "2.11.0+cu128",
+    "qwen-tts": "0.1.1",
+    "transformers": "4.57.3",
+    "gradio": "6.17.3",
+    "gradio_client": "2.5.0"
+  }
+}
