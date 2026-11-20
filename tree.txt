@@ -3,10 +3,28 @@ HARO-One-Inference-Engine/
 ├── README.md
 ├── haro_inference_probe.code-workspace
 ├── inference_probe.py
+├── AIMS/
+│   ├── DEV_LOG.md
+│   ├── HARDENING_CONTRACT.md
+│   ├── LICENSE
+│   ├── README.md
+│   ├── memory_core/
+│   ├── tests/
+│   └── service.py
 ├── claude_haro/
 │   ├── READMEHAROClaude.md
 │   ├── haroclaude.py
 │   └── test_haroclaude.py
+├── HARO_Vault_System/
+│   ├── README.md
+│   ├── engine/
+│   ├── interfaces/
+│   ├── memory/
+│   ├── scripts/
+│   ├── telemetry/
+│   ├── tests/
+│   ├── vaults/
+│   └── examples/
 └── HARO-Test-Lab/
     ├── README.md
     ├── compare_inference.py
