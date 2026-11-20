@@ -1,5 +1,7 @@
 # HARO Real Inference Experiment — one llama.cpp engine
 
+> **Canonical subsystem source map:** Before working on A.I.M.S. or Vault Logic, read [DOCTRINE_SOURCE_MAP.md](DOCTRINE_SOURCE_MAP.md). The independent reference repositories are **Spruked/AIMS** (private) and **Spruked/Vault-Logic-System-Template** (public), **not Spruked/Orbot**. Both complete HARO subsystem deployments include the verified frozen v1.0 doctrine and checksum locally. **Reuse the system, not the components.**
+
 This experiment runs **one actual llama.cpp GGUF inference engine** and samples **real NVIDIA device VRAM** via `nvidia-smi`. The same script works on either Windows PC and does **not** edit HARO or Orbot. Python 3.11+ standard library only. No model is downloaded or installed.
 
 ## Best first test: owned, isolated server
