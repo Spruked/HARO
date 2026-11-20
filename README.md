@@ -16,7 +16,27 @@ A replaceable adapter should report capabilities, modalities, health, resource d
 
 Remote execution is permitted only by explicit per-request governance, never as a silent fallback. Logical reservations are not observed device memory. Memory and logic evaluations cannot bypass current host authorization.
 
-**Status:** `haro_integration.py` connects the two independent subsystems. An engine-neutral adapter registry and real multi-engine execution have not yet been proven or deployed.
+**Status:** `haro_integration.py` connects the two independent subsystems. `engine_adapters/` implements the engine-neutral contract, four protocol adapters and the capability fabric; they are tested against simulated protocol servers only. Real multi-engine execution is unproven until `engine_adapters.live_validation` has been run on a machine with the engines.
+
+## Engine adapters and capability fabric
+
+- `engine_adapters/contract.py` — the only interface the fabric depends on: capabilities, execution location, lifecycle control (HARO-owned process, engine-managed residency, or none), residency, memory-measurement provenance, cancellation, explicit `UnsupportedOperation`.
+- Protocol adapters, named for the wire protocol they speak: `ollama.py` (Ollama native), `llama_cpp.py` (llama-server, owned or external), `openai_compatible.py` (OpenAI-compatible chat; remote providers use environment-variable credentials), `openai_audio.py` (OpenAI-compatible speech synthesis and transcription).
+- `fabric.py` — capability routing from deployment bindings; remote execution only with explicit per-request permission; no silent fallback; priority admission (interactive before user tasks before background) against live device memory minus reservations; refusal when a memory figure or live telemetry is missing; load/unload only through adapter lifecycle; eviction limited to idle models HARO itself loaded and off by default; Vault Logic evaluation and A.I.M.S. experience records through `haro_integration.py`. Prompts, outputs and transcripts are not stored in HARO's memory, only their shape.
+- `config.py` + `deployment/*.json` — the only place engines, endpoints, models and devices are named. Inline credentials are rejected.
+- `device_telemetry.py` — vendor-neutral device interface; NVIDIA provider via `nvidia-smi`.
+
+Run the tests from the repository root: `python -m unittest tests.test_engine_adapters` (simulated engines; one recorded RTX 5060 reading).
+
+Run live validation on the engine machine (PowerShell, repository root):
+
+```powershell
+python -m engine_adapters.live_validation --config deployment\test-machine.json --voice <voice-id> --ollama-model <installed-model> --allow-remote
+# optional HARO-owned process test:
+#   --llama-server C:\path\to\llama-server.exe --llama-model C:\path\to\model.gguf --llama-port 17667
+```
+
+It writes `HARO-Test-Lab/results/<device>/adapters-<timestamp>/report.json`, labelling every figure by source. It loads and unloads only the model named by `--ollama-model` (restoring prior residency), starts a llama-server only on `--llama-port`, and only calls the speech service, any separately managed llama-server and (with `--allow-remote`) the remote provider.
 
 ## Verification and experiments
 

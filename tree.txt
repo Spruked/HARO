@@ -3,7 +3,18 @@ HARO/
 ├── DOCTRINE_SOURCE_MAP.md
 ├── haro_inference_probe.code-workspace
 ├── haro_integration.py
+├── engine_adapters/           # engine-neutral contract, protocol adapters, capability fabric
+│   ├── contract.py
+│   ├── fabric.py
+│   ├── config.py
+│   ├── device_telemetry.py
+│   ├── transport.py, base.py
+│   ├── ollama.py, llama_cpp.py, openai_compatible.py, openai_audio.py
+│   └── live_validation.py     # run on the engine machine; writes Test-Lab evidence
+├── deployment/test-machine.json
 ├── tests/test_haro_integration.py
+├── tests/test_engine_adapters.py
+├── tests/engine_protocol_servers.py   # simulated protocol servers for tests only
 ├── AIMS/                      # complete independent memory subsystem; sealed doctrine
 ├── HARO_Vault_System/         # complete independent logic subsystem; sealed doctrine
 └── HARO-Test-Lab/             # test fixtures and historical measurement evidence

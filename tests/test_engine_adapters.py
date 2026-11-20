@@ -464,6 +464,46 @@ class FabricTests(unittest.TestCase):
             subsystems.close()
 
 
+class LiveValidationSmokeTests(unittest.TestCase):
+    """[simulated] The live-validation tool's own code paths, run against protocol servers.
+
+    This proves the tool runs end to end and writes a labelled report. It is not a
+    live validation: the report it produces here describes simulated engines.
+    """
+
+    def test_tool_runs_every_step_and_writes_report(self):
+        import json
+        from engine_adapters import live_validation
+        with SimulatedEngine() as ollama, SimulatedEngine() as voice, SimulatedEngine(require_bearer="k") as remote, \
+                tempfile.TemporaryDirectory() as tmp:
+            config = {"telemetry": None, "adapters": [
+                {"id": "o", "type": "ollama", "base_url": ollama.url},
+                {"id": "v", "type": "openai_audio", "base_url": voice.url + "/v1"},
+                {"id": "r", "type": "openai_compatible", "base_url": remote.url + "/v1", "location": "remote",
+                 "api_key_env": "HARO_SMOKE_KEY"}],
+                "bindings": [{"capability": "chat", "adapter": "r", "model": "remote-model"},
+                             {"capability": "speech_synthesis", "adapter": "v", "model": "tts"},
+                             {"capability": "speech_recognition", "adapter": "v", "model": "stt"}]}
+            path = Path(tmp) / "config.json"
+            path.write_text(json.dumps(config))
+            os.environ["HARO_SMOKE_KEY"] = "k"
+            ollama.slow_tokens_s = 0.4
+            try:
+                code = live_validation.main(["--config", str(path), "--output", str(Path(tmp) / "out"),
+                                             "--voice", "profile-1", "--ollama-model", "model-a", "--allow-remote"])
+            finally:
+                del os.environ["HARO_SMOKE_KEY"]
+            report = json.loads((Path(tmp) / "out" / "report.json").read_text())
+            summary = report["summary"]
+            self.assertEqual(summary["speech:round_trip"], "passed")
+            self.assertEqual(summary["engine_managed:lifecycle"], "passed", report["steps"])
+            self.assertEqual(summary["remote:r"], "passed")
+            self.assertEqual(summary["fabric:voice_turn"], "passed", report["steps"][-1])
+            self.assertEqual(summary["owned_process:lifecycle"], "not_run")
+            self.assertEqual(report["environment"]["config"], str(path.resolve()))   # provenance of the run
+            self.assertEqual(code, 0)
+
+
 class ConfigTests(unittest.TestCase):
     def test_inline_secret_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
