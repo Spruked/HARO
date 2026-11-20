@@ -16,7 +16,7 @@ What it touches:
 
 Example (PowerShell, from the HARO repository root):
   python -m engine_adapters.live_validation --config deployment\\test-machine.json `
-      --voice 40d388b3 --ollama-model <installed-model> --allow-remote
+      --voice <voice-id> --ollama-model <installed-model> --allow-remote
 """
 from __future__ import annotations
 
