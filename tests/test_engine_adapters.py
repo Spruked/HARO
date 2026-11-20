@@ -565,6 +565,8 @@ class HardeningTests(unittest.TestCase):
         record = _operational_record(outcome)
         self.assertNotIn("SECRET", repr(record))
         self.assertEqual(record["result"]["error"]["length"], 13)
+        outcome.decisions.append({"refused": "load failed: prompt SECRET"})
+        self.assertNotIn("SECRET", repr(_operational_record(outcome)))
 
     def test_remote_adapters_require_tls_by_default(self):
         with self.assertRaises(ValueError):
@@ -621,6 +623,21 @@ class HardeningTests(unittest.TestCase):
         self.assertEqual(fabric._speech_active["gpu"], 1)
         fabric._speech_active["gpu"] -= 1
         self.assertEqual(fabric._speech_active["gpu"], 0)
+
+    def test_tracked_unmeasured_speech_binding_executes_without_memory_gate(self):
+        with SimulatedEngine() as engine, tempfile.TemporaryDirectory() as tmp:
+            device = SimulatedDevice(used_mib=1000)
+            voice = OpenAIAudioAdapter("voice", engine.url + "/v1", device_id=device.device_id)
+            binding = Binding(CAP_SPEECH_SYNTHESIS, "voice", "tts", approved_work_types=("voice_output",),
+                              memory_gating="tracked_unmeasured")
+            fabric = Fabric({"voice": voice}, [binding], telemetry=device, safety_margin_mib=0, test_mode=True)
+            request = CapabilityRequest(CAP_SPEECH_SYNTHESIS,
+                {"text": "x", "voice": "v", "output_path": str(Path(tmp) / "x.wav")},
+                "test", "voice_output")
+            outcome = fabric.run(request)
+            self.assertEqual(outcome.status, STATUS_OK, outcome.error)
+            self.assertTrue(any(d.get("memory", {}).get("status") == "tracked_unmeasured" for d in outcome.decisions))
+            fabric.close()
 
     def test_unload_without_confirmed_exit_is_error(self):
         self.assertTrue(True)  # exercised by the lifecycle implementation; live process test remains platform-specific

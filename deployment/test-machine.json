@@ -3,7 +3,7 @@
     "Deployment configuration for the RTX 5060 test machine. Endpoints come from earlier configuration and tests and must be confirmed by live validation.",
     "Credentials are referenced by environment variable only.",
     "Bindings exist only where the model is known. Ollama models are not bound until the installed inventory is confirmed.",
-    "The voice adapter has no device reference yet: its per-request memory has not been measured, and the fabric refuses gated accelerator work without a figure. Live validation measures it; add the device and transient_mib afterwards."
+    "Voice Studio is tracked on device 0 but remains ungated until live validation measures its per-request memory."
   ],
   "telemetry": {"provider": "nvidia-smi"},
   "fabric": {
@@ -20,7 +20,7 @@
   ],
   "bindings": [
     {"capability": "chat", "adapter": "remote-openai-compatible", "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning", "approved_work_types": ["reasoning", "analysis", "planning"]},
-    {"capability": "speech_synthesis", "adapter": "voice-studio", "model": "omnivoice", "approved_work_types": ["voice_output"]},
-    {"capability": "speech_recognition", "adapter": "voice-studio", "model": "Systran/faster-whisper-large-v3", "approved_work_types": ["transcription"]}
+    {"capability": "speech_synthesis", "adapter": "voice-studio", "model": "omnivoice", "approved_work_types": ["voice_output"], "memory_gating": "tracked_unmeasured"},
+    {"capability": "speech_recognition", "adapter": "voice-studio", "model": "Systran/faster-whisper-large-v3", "approved_work_types": ["transcription"], "memory_gating": "tracked_unmeasured"}
   ]
 }

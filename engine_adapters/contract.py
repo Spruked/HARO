@@ -111,12 +111,15 @@ class Binding:
     transient_mib: int | None = None
     keep_alive_s: float | None = None
     approved_work_types: tuple[str, ...] = ()
+    memory_gating: str = "required"
 
     def validate(self) -> None:
         if self.capability not in KNOWN_CAPABILITIES:
             raise ValueError(f"binding has unknown capability {self.capability!r}")
         if not self.approved_work_types:
             raise ValueError(f"binding {self.adapter_id}/{self.model}: approved_work_types must be declared")
+        if self.memory_gating not in {"required", "tracked_unmeasured"}:
+            raise ValueError(f"binding {self.adapter_id}/{self.model}: unsupported memory_gating {self.memory_gating!r}")
         unknown_work = set(self.approved_work_types) - KNOWN_WORK_TYPES
         if unknown_work:
             raise ValueError(f"binding {self.adapter_id}/{self.model}: unknown work types {sorted(unknown_work)}")

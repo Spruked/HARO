@@ -405,12 +405,15 @@ class Fabric:
         outcome.binding = {**asdict(binding), "protocol": desc.protocol, "location": desc.location,
                            "lifecycle": desc.lifecycle}
         local_device = desc.location != LOCATION_REMOTE and desc.device_id is not None
-        gate = self._gates.get(desc.device_id) if local_device else None
+        memory_gated = binding.memory_gating == "required"
+        gate = self._gates.get(desc.device_id) if local_device and memory_gated else None
+        if local_device and not memory_gated:
+            outcome.decisions.append({"memory": {"status": "tracked_unmeasured", "device_id": desc.device_id}})
         if request.capability == CAP_CHAT and desc.device_id:
             with self._state_lock:
                 if self._speech_active.get(desc.device_id, 0) > 0:
                     raise _Refused("local accelerator chat refused while speech is executing on the same device")
-        if local_device and gate is None:
+        if local_device and memory_gated and gate is None:
             raise _Refused(f"device {desc.device_id} has no live telemetry; refusing accelerator work")
 
         resident = self._is_resident(adapter, binding.model) if desc.lifecycle != LIFECYCLE_NONE else None
@@ -423,9 +426,9 @@ class Fabric:
         if local_device:
             if need_load and binding.resident_mib is None:
                 raise _Refused("no resident memory figure configured for a model that must be loaded")
-            if binding.transient_mib is None:
+            if memory_gated and binding.transient_mib is None:
                 raise _Refused("no per-request memory figure configured for local accelerator work")
-            need = (binding.resident_mib if need_load else 0) + binding.transient_mib
+            need = (binding.resident_mib if need_load else 0) + (binding.transient_mib or 0)
 
         available = gate.headroom_mib() if gate else 0
         evaluation = self._govern({
@@ -540,6 +543,8 @@ def _sanitize_errors(node: Any) -> None:
                 prefix = value.split(":", 1)[0]
                 error_class = prefix if prefix.endswith(("Error", "Exception")) else "engine_error"
                 node[key] = {"error_class": error_class, "length": len(value)}
+            elif key in {"refused", "skipped"} and isinstance(value, str):
+                node[key] = {"error_class": "decision_text", "length": len(value)}
             else:
                 _sanitize_errors(value)
     elif isinstance(node, list):
