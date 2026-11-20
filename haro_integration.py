@@ -42,6 +42,12 @@ class HaroSubsystems:
         return {"evaluation": evaluation, "evidence_entry_id": entry.entry_id}
 
     def retrieve_experience(self, query: str, limit: int = 20) -> dict[str, Any]:
+        """Retrieve validated A.I.M.S. atoms, not raw long-term events.
+
+        ``record_event`` commits evidence only. A caller must explicitly derive
+        and reinforce an A Posteriori atom through A.I.M.S. before it becomes
+        active and searchable; raw evidence remains available in the ledger.
+        """
         return self.memory.retrieve(query, mode="COLLECTIVE", limit=limit)
 
     def close(self) -> None:

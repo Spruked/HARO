@@ -4,6 +4,7 @@
     {
       "id": "capability-required",
       "priority": 10,
+      "mandatory": true,
       "domain": "capability_eligibility",
       "when": {"capability_present": true},
       "action": "allow",
@@ -12,6 +13,7 @@
     {
       "id": "memory-limit",
       "priority": 20,
+      "mandatory": true,
       "domain": "resource_admission",
       "when": {"requested_memory_mib_lte_available": true},
       "action": "allow",

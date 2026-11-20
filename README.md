@@ -55,3 +55,7 @@ This is a **real inference baseline**, not yet HARO orchestration. After it work
 - HARO retains authority for authorization, live resource admission, scheduling, execution, cancellation, and hardware measurement. Neither subsystem executes work or grants permission by itself.
 
 The integration uses controlled events and does not claim live inference. See `tests/test_haro_integration.py` for isolated boundary verification.
+
+### Evidence-to-retrieval lifecycle
+
+`record_event()` writes an immutable A.I.M.S. long-term experience record only. It does not automatically create an authoritative or searchable claim. A host explicitly interprets a committed entry with `derive_aposteriori()`, validates it through the existing Vault reinforcement path, and rebuilds the derived indexes; only then can `retrieve_experience()` return it with an A.I.M.S. retrieval receipt. The original evidence, derived atom, confidence history, and retrieval receipt remain distinct and survive restart.
