@@ -71,3 +71,14 @@ Earlier documentation confused a downstream consumer deployment with an independ
 **Canonical rule: REUSE THE SYSTEM, NOT THE COMPONENTS.**
 
 **Sealed-document exception:** Legacy product names within canonical v1.0 doctrine are historical examples only; they do not define HARO dependencies. The sealed texts remain byte-for-byte identical to upstream to preserve their SHA-256. Any textual amendment requires a separately ratified version.
+
+
+## Documented host-specific documentation divergences
+
+The installed A.I.M.S. deployment is a complete subsystem, but **not every descriptive Markdown file is byte-identical to its upstream**. Do not report full repository identity on the strength of the doctrine checksum alone.
+
+- `AIMS/system_outline.md`: The independent upstream at review has Git blob `82a59d4c3170506579dad18edaf58118ba20f8df`; the HARO-installed version at the decoupling checkpoint has Git blob `55b5cd8a934e7c6eea025b52d0b8fb40f3080c54`. Three passages naming illustrative host applications were rewritten to generic examples in HARO. This is a *HARO-only documentation adaptation*, not a verified upstream update or a change to A.I.M.S. runtime code. Compare with the canonical upstream before future documentation synchronization.
+- `AIMS/README.md`: The installed deployment already included a HARO-specific wrapper and integration guidance. Its illustrative host and deployment-name examples were made generic during decoupling. At review the upstream Git blob is `39604e8949ffdfe5ecb7003d91135e9eb274820b` and the installed Git blob is `81232ae29080aecad23caefb72741d217df9972a`. Do not present these README files as byte-identical.
+- The frozen doctrine files, checksum manifests, A.I.M.S. code, and evidence records are not covered by these documentation adaptations.
+
+**Source-of-truth rule:** The independent A.I.M.S. repository remains canonical. Do not propagate HARO-specific wording into upstream merely to erase a documented difference. Keep any future host adaptation explicit and reviewable.

@@ -3,7 +3,7 @@
 This directory preserves independent scheduler candidates, an engine-specific baseline probe, original measurements, and configurable experiment harnesses. None defines a required consumer application, model, provider or development agent for HARO.
 
 - `candidates/candidate-alpha/`, `candidates/candidate-beta/`: source-identical candidate snapshots, presented with neutral names.
-- `archive/initial-candidate-alpha/`: separately preserved initial source.
+- `archive/initial-candidate-alpha/`: separately preserved initial source. This original snapshot intentionally has no `worker.py`; running its test suite independently produces the pre-existing fixture/import failures. Use the complete active candidate snapshot for runnable regression tests; do not patch the archival source or mislabel its historic failure as a new regression.
 - `inference-engine/`: historical provider-specific baseline fixture, not a HARO core adapter.
 - `test-config/`: common workload definitions.
 - `results/`: original benchmark reports and source-integrity records, unchanged to preserve provenance.
