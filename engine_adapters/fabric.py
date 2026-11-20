@@ -29,7 +29,8 @@ from typing import Any, Callable, Mapping
 from .contract import (
     LIFECYCLE_ENGINE_MANAGED, LIFECYCLE_NONE, LIFECYCLE_OWNED_PROCESS, LOCATION_REMOTE,
     RESIDENCY_RESIDENT, STATUS_CANCELLED, STATUS_ERROR, STATUS_OK, STATUS_REFUSED, AdapterError, CancelToken,
-    EngineAdapter, InferenceRequest, InferenceResult, KNOWN_CAPABILITIES, UnsupportedOperation,
+    EngineAdapter, InferenceRequest, InferenceResult, KNOWN_CAPABILITIES, KNOWN_WORK_TYPES,
+    WORK_CONVERSATION, UnsupportedOperation,
     new_request_id,
 )
 from .device_telemetry import DeviceSampler, DeviceTelemetry, find_device
@@ -50,10 +51,14 @@ class Binding:
     resident_mib: int | None = None     # memory the model occupies once loaded
     transient_mib: int | None = None    # extra memory one request needs (KV cache, scratch)
     keep_alive_s: float | None = None   # residency hint passed to engine-managed adapters
+    approved_work_types: tuple[str, ...] = (WORK_CONVERSATION,)
 
     def validate(self) -> None:
         if self.capability not in KNOWN_CAPABILITIES:
             raise ValueError(f"binding has unknown capability {self.capability!r}")
+        unknown_work = set(self.approved_work_types) - KNOWN_WORK_TYPES
+        if unknown_work:
+            raise ValueError(f"binding {self.adapter_id}/{self.model}: unknown work types {sorted(unknown_work)}")
         for name in ("resident_mib", "transient_mib"):
             value = getattr(self, name)
             if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
@@ -67,6 +72,7 @@ class CapabilityRequest:
     capability: str
     inputs: dict[str, Any]
     client_id: str
+    work_type: str = WORK_CONVERSATION
     priority: int = PRIORITY_USER_TASK
     allow_remote: bool = False
     allow_fallback: bool = False
@@ -78,6 +84,12 @@ class CapabilityRequest:
     stream: bool = True
     options: dict[str, Any] = field(default_factory=dict)
     request_id: str = field(default_factory=new_request_id)
+
+    def validate(self) -> None:
+        if self.capability not in KNOWN_CAPABILITIES:
+            raise ValueError(f"unknown capability {self.capability!r}")
+        if self.work_type not in KNOWN_WORK_TYPES:
+            raise ValueError(f"unknown work_type {self.work_type!r}")
 
 
 @dataclass
@@ -305,6 +317,10 @@ class Fabric:
     def _candidates(self, request: CapabilityRequest, outcome: FabricOutcome) -> list[Binding]:
         eligible = []
         for binding in (b for b in self.bindings if b.capability == request.capability):
+            if request.work_type not in binding.approved_work_types:
+                outcome.decisions.append({"binding": f"{binding.adapter_id}/{binding.model}",
+                                          "skipped": f"work type {request.work_type!r} is not owner-approved"})
+                continue
             desc = self.adapters[binding.adapter_id].describe()
             if desc.location == LOCATION_REMOTE and not request.allow_remote:
                 outcome.decisions.append({"binding": f"{binding.adapter_id}/{binding.model}",
@@ -360,6 +376,7 @@ class Fabric:
         try:
             if request.capability not in KNOWN_CAPABILITIES:
                 raise _Refused(f"unknown capability {request.capability!r}")
+            request.validate()
             candidates = self._candidates(request, outcome)
             if not candidates:
                 raise _Refused("no eligible binding for this capability")
@@ -415,6 +432,7 @@ class Fabric:
         available = gate.headroom_mib() if gate else 0
         evaluation = self._govern({
             "capability": request.capability,
+            "work_type": request.work_type,
             "requested_memory_mib": need,
             "available_memory_mib": available if available is not None else -1,
             "requires_model_residency": False,
@@ -453,6 +471,7 @@ class Fabric:
                     gate.adjust(ticket, binding.transient_mib or 0)
             inference = InferenceRequest(
                 capability=request.capability, model=binding.model, inputs=request.inputs,
+                work_type=request.work_type,
                 request_id=request.request_id, max_output_tokens=request.max_output_tokens,
                 temperature=request.temperature, seed=request.seed, timeout_s=request.timeout_s,
                 stream=request.stream, options=request.options)

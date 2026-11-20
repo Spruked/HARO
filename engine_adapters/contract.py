@@ -37,6 +37,18 @@ KNOWN_CAPABILITIES = frozenset({
     CAP_TEXT_GENERATION, CAP_CHAT, CAP_EMBEDDING, CAP_SPEECH_SYNTHESIS, CAP_SPEECH_RECOGNITION,
 })
 
+WORK_REASONING = "reasoning"
+WORK_ANALYSIS = "analysis"
+WORK_PLANNING = "planning"
+WORK_CONVERSATION = "conversation"
+WORK_TRANSCRIPTION = "transcription"
+WORK_VOICE_OUTPUT = "voice_output"
+WORK_RETRIEVAL_EMBEDDING = "retrieval_embedding"
+KNOWN_WORK_TYPES = frozenset({
+    WORK_REASONING, WORK_ANALYSIS, WORK_PLANNING, WORK_CONVERSATION,
+    WORK_TRANSCRIPTION, WORK_VOICE_OUTPUT, WORK_RETRIEVAL_EMBEDDING,
+})
+
 # --- Execution location ----------------------------------------------------
 LOCATION_LOCAL = "local"
 LOCATION_REMOTE = "remote"
@@ -189,6 +201,7 @@ class InferenceRequest:
     capability: str
     model: str
     inputs: dict[str, Any]
+    work_type: str = WORK_CONVERSATION
     request_id: str = field(default_factory=new_request_id)
     max_output_tokens: int | None = None
     temperature: float | None = None
@@ -200,6 +213,8 @@ class InferenceRequest:
     def validate(self) -> None:
         if self.capability not in KNOWN_CAPABILITIES:
             raise ValueError(f"unknown capability: {self.capability!r}")
+        if self.work_type not in KNOWN_WORK_TYPES:
+            raise ValueError(f"unknown work_type: {self.work_type!r}")
         if not self.model:
             raise ValueError("model is required")
         if not isinstance(self.inputs, dict):

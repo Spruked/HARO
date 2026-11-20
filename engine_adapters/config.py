@@ -124,7 +124,8 @@ def build_fabric(config: Mapping[str, Any], *, subsystems: Any = None) -> Fabric
         adapters[spec["id"]] = adapter
     bindings = [Binding(capability=b["capability"], adapter_id=b["adapter"], model=b["model"],
                         resident_mib=b.get("resident_mib"), transient_mib=b.get("transient_mib"),
-                        keep_alive_s=b.get("keep_alive_s"))
+                        keep_alive_s=b.get("keep_alive_s"),
+                        approved_work_types=tuple(b.get("approved_work_types", ("conversation",))))
                 for b in config.get("bindings", [])]
     options = config.get("fabric", {})
     device_concurrency = {}
