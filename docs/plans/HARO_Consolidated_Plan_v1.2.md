@@ -1,6 +1,6 @@
-# HARO — Consolidated Implementation Plan v1.2 (draft, for owner approval)
+# HARO — Consolidated Implementation Plan v1.2 (APPROVED)
 
-**Status:** Draft by Claude, revised after GPT-6 review (v1.1: knowledge projection, lease recovery, side-effect-free governance; v1.2: fingerprint applicability, attestation limits, development-mode service) → owner approval → Codex implementation.
+**Status:** **APPROVED by the owner, Bryan Spruk, on 2026-11-20** as the implementation baseline. Architecture agreed by Claude and GPT-6 (v1.1 and v1.2 incorporate GPT-6's review). Approval authorizes the plan and its checkpoint order; it does not assert that anything is implemented. Each checkpoint must pass its tests and independent review before the next begins. Changes to this plan require owner approval.
 **Repository:** `Spruked/HARO`, base `e3269a8`.
 **Doctrine:** PPSAI-CSD-001 v1.0. Verify both local copies hash to
 `83a48f537c0084cb919e439989aae4473f6a0c0e8b953815d85018da88759f82` before every checkpoint.
