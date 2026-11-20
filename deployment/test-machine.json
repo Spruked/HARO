@@ -1,0 +1,26 @@
+{
+  "notes": [
+    "Deployment configuration for the RTX 5060 test machine. Endpoints come from earlier configuration and tests and must be confirmed by live validation.",
+    "Credentials are referenced by environment variable only.",
+    "Bindings exist only where the model is known. Ollama models are not bound until the installed inventory is confirmed.",
+    "The voice adapter has no device reference yet: its per-request memory has not been measured, and the fabric refuses gated accelerator work without a figure. Live validation measures it; add the device and transient_mib afterwards."
+  ],
+  "telemetry": {"provider": "nvidia-smi"},
+  "fabric": {
+    "safety_margin_mib": 256,
+    "allow_eviction": false,
+    "device_concurrency": {"0": 1}
+  },
+  "adapters": [
+    {"id": "local-ollama", "type": "ollama", "base_url": "http://127.0.0.1:11434", "device": {"index": 0}},
+    {"id": "local-llama-server", "type": "llama_cpp", "base_url": "http://127.0.0.1:16520"},
+    {"id": "voice-studio", "type": "openai_audio", "base_url": "http://127.0.0.1:3900/v1"},
+    {"id": "remote-openai-compatible", "type": "openai_compatible", "base_url": "https://integrate.api.nvidia.com/v1",
+     "location": "remote", "api_key_env": "NVIDIA_API_KEY"}
+  ],
+  "bindings": [
+    {"capability": "chat", "adapter": "remote-openai-compatible", "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"},
+    {"capability": "speech_synthesis", "adapter": "voice-studio", "model": "omnivoice"},
+    {"capability": "speech_recognition", "adapter": "voice-studio", "model": "Systran/faster-whisper-large-v3"}
+  ]
+}
