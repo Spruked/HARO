@@ -14,7 +14,7 @@
   "adapters": [
     {"id": "local-ollama", "type": "ollama", "base_url": "http://127.0.0.1:11434", "device": {"index": 0}},
     {"id": "local-llama-server", "type": "llama_cpp", "base_url": "http://127.0.0.1:16520"},
-    {"id": "voice-studio", "type": "openai_audio", "base_url": "http://127.0.0.1:3900/v1"},
+    {"id": "voice-studio", "type": "openai_audio", "base_url": "http://127.0.0.1:3900/v1", "device": {"index": 0}},
     {"id": "remote-openai-compatible", "type": "openai_compatible", "base_url": "https://integrate.api.nvidia.com/v1",
      "location": "remote", "api_key_env": "NVIDIA_API_KEY"}
   ],

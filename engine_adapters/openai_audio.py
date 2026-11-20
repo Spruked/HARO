@@ -49,8 +49,11 @@ class OpenAIAudioAdapter:
                  capabilities: tuple[str, ...] = (CAP_SPEECH_SYNTHESIS, CAP_SPEECH_RECOGNITION),
                  api_key_env: str | None = None, health_path: str = "/models",
                  device_id: str | None = None, max_response_bytes: int = 16 * 1024 * 1024,
-                 max_upload_bytes: int = 50 * 1024 * 1024, output_dir: str | None = None):
+                 max_upload_bytes: int = 50 * 1024 * 1024, output_dir: str | None = None,
+                 require_tls: bool = True):
         transport.split_base_url(base_url)
+        if location == LOCATION_REMOTE and require_tls and not base_url.lower().startswith("https://"):
+            raise ValueError("remote adapters require an https base_url")
         unsupported = set(capabilities) - {CAP_SPEECH_SYNTHESIS, CAP_SPEECH_RECOGNITION}
         if unsupported:
             raise ValueError(f"capabilities not served by this protocol: {sorted(unsupported)}")

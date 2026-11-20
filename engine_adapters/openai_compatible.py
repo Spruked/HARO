@@ -40,13 +40,15 @@ class OpenAICompatibleAdapter:
     def __init__(self, adapter_id: str, base_url: str, *, location: str = LOCATION_REMOTE,
                  api_key_env: str | None = None, capabilities: tuple[str, ...] = (CAP_CHAT,),
                  include_usage_in_stream: bool = False, device_id: str | None = None,
-                 health_timeout_s: float = 10.0):
+                 health_timeout_s: float = 10.0, require_tls: bool = True):
         if location not in (LOCATION_LOCAL, LOCATION_REMOTE):
             raise ValueError("location must be local or remote")
         unsupported = set(capabilities) - {CAP_CHAT, CAP_TEXT_GENERATION, CAP_EMBEDDING}
         if unsupported:
             raise ValueError(f"capabilities not served by this protocol: {sorted(unsupported)}")
         transport.split_base_url(base_url)
+        if location == LOCATION_REMOTE and require_tls and not base_url.lower().startswith("https://"):
+            raise ValueError("remote adapters require an https base_url")
         self.adapter_id = adapter_id
         self.base_url = base_url.rstrip("/")
         self.location = location

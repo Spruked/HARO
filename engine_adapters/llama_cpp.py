@@ -242,8 +242,11 @@ class LlamaServerAdapter:
         released, measurement = None, MEASURE_NOT_MEASURABLE
         if device and device["first_used_mib"] is not None and device["last_used_mib"] is not None:
             released, measurement = max(0, device["first_used_mib"] - device["last_used_mib"]), MEASURE_DEVICE_DELTA
-        return LifecycleResult(model, "unload", STATUS_OK, round(time.monotonic() - started, 4), RESIDENCY_COLD,
+        status = STATUS_OK if returncode is not None else STATUS_ERROR
+        error = None if returncode is not None else "owned llama-server process did not confirm exit"
+        return LifecycleResult(model, "unload", status, round(time.monotonic() - started, 4), RESIDENCY_COLD,
                                released, measurement,
+                               error=error,
                                details={"pid": pid, "exit_code": returncode, "device": device,
                                         "note": "device_memory_mib is the whole-device decrease observed"})
 

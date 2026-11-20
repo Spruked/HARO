@@ -228,7 +228,7 @@ class Fabric:
         # Models HARO itself made resident: (adapter_id, model) -> last-used monotonic time.
         self._haro_resident: dict[tuple[str, str], float] = {}
         self._in_use: dict[tuple[str, str], int] = {}
-        self._speech_active: set[str] = set()
+        self._speech_active: dict[str, int] = {}
         self._state_lock = threading.RLock()
         self._record_lock = threading.Lock()
         self._pool = ThreadPoolExecutor(max_workers=max_workers, thread_name_prefix="haro-fabric")
@@ -408,7 +408,7 @@ class Fabric:
         gate = self._gates.get(desc.device_id) if local_device else None
         if request.capability == CAP_CHAT and desc.device_id:
             with self._state_lock:
-                if desc.device_id in self._speech_active:
+                if self._speech_active.get(desc.device_id, 0) > 0:
                     raise _Refused("local accelerator chat refused while speech is executing on the same device")
         if local_device and gate is None:
             raise _Refused(f"device {desc.device_id} has no live telemetry; refusing accelerator work")
@@ -456,7 +456,7 @@ class Fabric:
             speech_marked = request.capability in (CAP_SPEECH_RECOGNITION, CAP_SPEECH_SYNTHESIS) and bool(desc.device_id)
             if speech_marked:
                 with self._state_lock:
-                    self._speech_active.add(desc.device_id)
+                    self._speech_active[desc.device_id] = self._speech_active.get(desc.device_id, 0) + 1
             if need_load:
                 lifecycle = adapter.load(binding.model, keep_alive_s=binding.keep_alive_s, cancel=cancel)
                 outcome.decisions.append({"load": lifecycle.to_dict()})
@@ -497,7 +497,7 @@ class Fabric:
         finally:
             if request.capability in (CAP_SPEECH_RECOGNITION, CAP_SPEECH_SYNTHESIS) and desc.device_id:
                 with self._state_lock:
-                    self._speech_active.discard(desc.device_id)
+                    self._speech_active[desc.device_id] = max(0, self._speech_active.get(desc.device_id, 1) - 1)
             with self._state_lock:
                 self._in_use[key] -= 1
             if gate is not None:
@@ -522,12 +522,26 @@ def _operational_record(outcome: FabricOutcome) -> dict[str, Any]:
     application; HARO's memory keeps their shape only.
     """
     record = outcome.to_dict()
-    if record.get("error"):
-        record["error"] = {"error_class": record["error"].split(":", 1)[0],
-                            "length": len(record["error"])}
+    _sanitize_errors(record)
     result = record.get("result")
     if result:
         result["output"] = {k: (v if k in ("bytes", "duration_s", "sample_rate", "channels", "format",
                                            "finish_reason", "frames", "sample_width_bytes") else _shape(v))
                             for k, v in (result.get("output") or {}).items()}
     return record
+
+
+def _sanitize_errors(node: Any) -> None:
+    """Remove engine/error text from every A.I.M.S.-bound nested record."""
+    if isinstance(node, dict):
+        for key in list(node):
+            value = node[key]
+            if key in {"error", "cancel_reason"} and isinstance(value, str):
+                prefix = value.split(":", 1)[0]
+                error_class = prefix if prefix.endswith(("Error", "Exception")) else "engine_error"
+                node[key] = {"error_class": error_class, "length": len(value)}
+            else:
+                _sanitize_errors(value)
+    elif isinstance(node, list):
+        for value in node:
+            _sanitize_errors(value)
