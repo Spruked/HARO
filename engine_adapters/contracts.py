@@ -15,6 +15,8 @@ LEASE_STATES = frozenset({"held", "release_pending", "released", "suspect", "rel
 MEMORY_MODELS = frozenset({"undeclared", "engine_managed_residency", "standing_service", "transient_per_request"})
 PROVENANCE_KINDS = frozenset({"owner_declared", "engine_reported", "device_measured", "externally_evaluated", "client_reported"})
 FINGERPRINT_FIELDS = frozenset({"device_id", "driver_version", "runtime_version", "model_digest", "quantization", "context_size", "binding_config_hash"})
+FINGERPRINT_TOKENS = frozenset({"not_applicable", "unreported"})
+PRE_GOVERNANCE_REFUSALS = frozenset({"invalid request", "unknown capability", "no eligible binding", "governance unavailable"})
 CANCELLATION_LEVELS = frozenset({"requested", "transport_closed", "engine_acknowledged",
                                  "computation_stopped", "resources_released"})
 CANCELLATION_STATUSES = frozenset({"verified", "unverified", "unsupported"})
@@ -27,7 +29,7 @@ TICKET_TRANSITIONS = {
 }
 LEASE_TRANSITIONS = {
     "held": {"release_pending", "suspect"},
-    "release_pending": {"release_unverified", "release_attested", "suspect"},
+    "release_pending": {"released", "release_unverified", "release_attested", "suspect"},
     "suspect": {"release_pending", "release_attested"},
     "release_unverified": {"release_attested", "released"},
     "release_attested": {"released"}, "released": set(),
@@ -38,6 +40,17 @@ RELEASE_BASES = frozenset({"engine_idle", "telemetry_returned", "cancellation_ve
 def _nonempty(value: str, name: str) -> None:
     if not isinstance(value, str) or not value:
         raise ValueError(f"{name} must be non-empty")
+
+
+def _validate_fingerprint(fingerprint: Mapping[str, str], kind: str) -> None:
+    if not FINGERPRINT_FIELDS.issubset(fingerprint):
+        raise ValueError("fingerprint is missing required identity fields")
+    if any(not isinstance(value, str) or not value for value in fingerprint.values()):
+        raise ValueError("fingerprint values must be non-empty")
+    if kind in {"engine_reported", "device_measured"}:
+        if fingerprint["model_digest"] == "unreported" and fingerprint["quantization"] == "unreported":
+            # Engines may truthfully report neither; this remains explicitly inapplicable evidence.
+            pass
 
 
 @dataclass(frozen=True)
@@ -52,8 +65,7 @@ class ProvenanceRecord:
             raise ValueError(f"unsupported provenance kind {self.kind!r}")
         _nonempty(self.source, "provenance source")
         _nonempty(self.observed_at, "observed_at")
-        if not self.fingerprint or not FINGERPRINT_FIELDS.issubset(self.fingerprint):
-            raise ValueError("provenance fingerprint is missing required identity fields")
+        _validate_fingerprint(self.fingerprint, self.kind)
 
 
 @dataclass(frozen=True)
@@ -70,8 +82,7 @@ class ObservationRecord:
         _nonempty(self.event_id, "event_id")
         _nonempty(self.population, "population")
         _nonempty(self.status, "status")
-        if not self.fingerprint or not FINGERPRINT_FIELDS.issubset(self.fingerprint):
-            raise ValueError("observation fingerprint is missing required identity fields")
+        _validate_fingerprint(self.fingerprint, self.provenance.kind)
 
 
 @dataclass(frozen=True)
@@ -151,7 +162,8 @@ class DecisionRecord:
 
     def __post_init__(self) -> None:
         _nonempty(self.decision_id, "decision_id")
-        if not self.test_mode and (not self.rules_hash or not self.verdicts):
+        if not self.test_mode and not any(reason in PRE_GOVERNANCE_REFUSALS for reason in self.reason_codes) \
+                and (not self.rules_hash or not self.verdicts):
             raise ValueError("production decision records require rules_hash and at least one verdict")
 
 
@@ -171,8 +183,11 @@ class AdmissionExplanation:
     alternatives: tuple[str, ...] = ()
 
     def text(self) -> str:
-        facts = [f"required memory {self.required_memory_mib} MiB ({self.memory_source})",
-                 f"live available {self.live_available_mib} MiB", f"reserved {self.reserved_mib} MiB",
+        required = "unmeasured" if self.required_memory_mib is None else f"{self.required_memory_mib} MiB"
+        source = self.memory_source or "unmeasured"
+        available = "unmeasured" if self.live_available_mib is None else f"{self.live_available_mib} MiB"
+        facts = [f"required memory {required} ({source})",
+                 f"live available {available}", f"reserved {self.reserved_mib} MiB",
                  f"safety margin {self.safety_margin_mib} MiB", f"Vault verdict {self.vault_verdict}",
                  f"matched rules {', '.join(self.matched_rules) or 'none'}",
                  f"invariants {', '.join(self.invariants_checked) or 'none'}"]

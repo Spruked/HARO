@@ -24,8 +24,7 @@ class ContractTests(unittest.TestCase):
             ticket.transition("received")
 
     def test_lease_generation_and_legal_transitions(self):
-        lease = LeaseRecord("l", 3).transition("release_pending").transition("release_unverified").transition("release_attested", owner_attestation="owner")
-        lease = lease.transition("released", release_basis="telemetry_returned")
+        lease = LeaseRecord("l", 3).transition("release_pending").transition("released", release_basis="completed_normally")
         self.assertEqual((lease.generation, lease.state), (3, "released"))
         with self.assertRaises(ValueError):
             lease.transition("held")
@@ -57,10 +56,27 @@ class ContractTests(unittest.TestCase):
             ObservationRecord("e", self.provenance, {"device_id": "gpu"}, "all", True, "ok")
         with self.assertRaises(ValueError):
             DecisionRecord(test_mode=False)
+        DecisionRecord(test_mode=False, reason_codes=("invalid request",))
         with self.assertRaises(ValueError):
             LeaseRecord("l", 1).transition("release_pending").transition("release_unverified").transition("released")
         with self.assertRaises(ValueError):
             QualityEvidenceRecord("q", "task", "evaluator", 0.8, 2, self.provenance, self.fingerprint, "", "0-1")
+
+    def test_remote_voice_owner_fingerprints_and_empty_values(self):
+        remote = dict(self.fingerprint, device_id="not_applicable", driver_version="not_applicable", context_size="not_applicable")
+        ProvenanceRecord("engine_reported", "remote", "now", remote)
+        voice = dict(self.fingerprint, device_id="gpu", driver_version="unreported", runtime_version="unreported",
+                     model_digest="unreported", quantization="unreported", context_size="unreported")
+        ObservationRecord("voice", ProvenanceRecord("engine_reported", "voice", "now", voice), voice, "all", True, "ok")
+        owner = dict(self.fingerprint, device_id="not_applicable", driver_version="not_applicable", runtime_version="not_applicable",
+                     model_digest="not_applicable", quantization="not_applicable", context_size="not_applicable")
+        ProvenanceRecord("owner_declared", "owner", "now", owner)
+        with self.assertRaises(ValueError):
+            ProvenanceRecord("owner_declared", "owner", "now", dict(owner, device_id=""))
+
+    def test_unmeasured_explanation_is_explicit(self):
+        text = AdmissionExplanation("d", "refuse").text()
+        self.assertIn("required memory unmeasured (unmeasured)", text)
 
 
 if __name__ == "__main__":
