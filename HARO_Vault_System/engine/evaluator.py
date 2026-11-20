@@ -70,7 +70,8 @@ def _deny(reason: str, started: float, rule_count: int, *, decision: str = "deny
 
 
 def evaluate_haro_context(
-    context: Mapping[str, Any], rules: Iterable[Mapping[str, Any]] | None = None
+    context: Mapping[str, Any], rules: Iterable[Mapping[str, Any]] | None = None,
+    *, memory_matrix: Any = None, telemetry: Any = None,
 ) -> dict[str, Any]:
     """Evaluate a HARO operational context using active Vault Logic rules."""
     started = time.perf_counter()
@@ -109,7 +110,7 @@ def evaluate_haro_context(
         {"rule_id": rule.get("id"), "domain": rule.get("domain"), "action": rule.get("action")}
         for rule in matched
     ]
-    return {
+    result = {
         "decision": decision,
         "allowed": decision == "allow",
         "reason": reason,
@@ -117,6 +118,15 @@ def evaluate_haro_context(
         "telemetry": {"evaluation_ms": round((time.perf_counter() - started) * 1000, 3), "rule_count": len(active_rules)},
         "execution_authority": "HARO host; Vault Logic does not execute or admit resources",
     }
+    from HARO_Vault_System.glyphs.trace import generate_haro_trace
+    result["glyph_trace"] = generate_haro_trace(result, context)
+    if memory_matrix is not None:
+        memory_matrix.record("last_haro_evaluation", {"decision": decision, "matched_rules": trace})
+        result["memory_matrix_key"] = "last_haro_evaluation"
+    if telemetry is not None:
+        telemetry.record({"event": "vault_evaluation", "decision": decision, "rule_count": len(active_rules), "telemetry": result["telemetry"]})
+        result["telemetry_recorded"] = True
+    return result
 
 
 def evaluate_condition(input_data):

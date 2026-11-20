@@ -24,8 +24,10 @@ HARO-One-Inference-Engine/
 ├── HARO_Vault_System/
 │   ├── README.md
 │   ├── engine/
+│   ├── glyphs/
 │   ├── interfaces/
 │   ├── memory/
+│   │   └── matrix.py
 │   ├── scripts/
 │   ├── telemetry/
 │   ├── tests/

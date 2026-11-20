@@ -37,6 +37,19 @@ class HaroIntegrationTests(unittest.TestCase):
         self.assertTrue(safe["allowed"])
         self.assertTrue(safe["matched_rules"])
 
+        with tempfile.TemporaryDirectory() as directory:
+            system = HaroSubsystems(Path(directory))
+            integrated = system.evaluate_and_record(
+                {"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024},
+                provenance={"source": "isolated-test", "operation_id": "op-2"},
+            )
+            self.assertTrue(integrated["evaluation"]["glyph_trace"] == [])
+            self.assertTrue(integrated["evaluation"]["memory_matrix_key"])
+            self.assertTrue(integrated["evaluation"]["telemetry_recorded"])
+            self.assertTrue((Path(directory) / "vault_logic_matrix.json").exists())
+            self.assertTrue((Path(directory) / "vault_logic_telemetry.jsonl").exists())
+            system.close()
+
         unsafe = evaluate_haro_context({"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024, "unsafe": True})
         self.assertFalse(unsafe["allowed"])
         self.assertEqual(unsafe["decision"], "deny")

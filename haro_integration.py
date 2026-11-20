@@ -11,12 +11,16 @@ from typing import Any, Mapping
 
 from AIMS.memory_core import AIMSMemorySystem, EntryType
 from HARO_Vault_System.engine.evaluator import evaluate_haro_context
+from HARO_Vault_System.memory.matrix import MemoryMatrix
+from HARO_Vault_System.telemetry.collector import TelemetryCollector
 
 
 class HaroSubsystems:
     def __init__(self, memory_root: Path, vault_rules: Path | None = None):
         self.memory = AIMSMemorySystem(Path(memory_root), matrix_id="haro_operational_memory")
         self.vault_rules = vault_rules
+        self.vault_memory = MemoryMatrix(Path(memory_root) / "vault_logic_matrix.json")
+        self.telemetry = TelemetryCollector(Path(memory_root) / "vault_logic_telemetry.jsonl")
 
     def record_event(self, event: Mapping[str, Any], *, provenance: Mapping[str, Any]) -> dict[str, Any]:
         entry = self.memory.commit(
@@ -32,7 +36,7 @@ class HaroSubsystems:
         if self.vault_rules is not None:
             from HARO_Vault_System.engine.evaluator import load_haro_rules
             rules = load_haro_rules(self.vault_rules)
-        evaluation = evaluate_haro_context(context, rules)
+        evaluation = evaluate_haro_context(context, rules, memory_matrix=self.vault_memory, telemetry=self.telemetry)
         entry = self.memory.commit(
             EntryType.DECISION,
             content={"host": "HARO", "vault_evaluation": evaluation, "context": dict(context)},
