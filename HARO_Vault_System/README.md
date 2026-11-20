@@ -1,8 +1,11 @@
 # HARO Vault Logic System — Complete Host Deployment
 
 > **HARO deployment identity:** **HARO Vault Logic System**, copied as a complete system from [`Spruked/Vault-Logic-System-Template`](https://github.com/Spruked/Vault-Logic-System-Template). Host-specific names and stored content may change; underlying architecture and contracts must remain intact. The local immutable-by-version doctrine copy is at [`docs/COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.md`](docs/COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.md) with adjacent SHA-256 manifest. Template examples below remain illustrative and do not claim production readiness.
+Vault Logic System Template – Enhanced with Glyph Trace, Memory Matrix, & Telemetry
+Universal, modular blueprint now with cognitive tracing, persistent memory, and observability layers. Inspired by emergent AI symbol systems (glyphs for latent space mapping), memory-augmented architectures (e.g., Neural Turing Machines with external matrices), and telemetry patterns for modular AI (e.g., MCP for prompt optimization and agent traces).
 
-*Universal, modular blueprint now with cognitive tracing, persistent memory, and observability layers. Inspired by emergent AI symbol systems (glyphs for latent space mapping), memory-augmented architectures (e.g., Neural Turing Machines with external matrices), and telemetry patterns for modular AI (e.g., MCP for prompt optimization and agent traces).*
+Ratified and hash-sealed deployment doctrine (v1.0)
+REUSE THE SYSTEM, NOT THE COMPONENTS. A.I.M.S. and the Vault Logic System are each deployed as a complete, host-owned system, not one shared cross-product service and not a selection of reusable files. Their architecture remains intact. The host may change its deployment title, data names, directories, collections, vault labels, and stored content, subject to verified preservation of imports, historical identifiers, schema contracts, and integrity references. When both systems are used, each remains a complete sibling subsystem.
 
 ## Independent upstream and host-deployment contract
 
@@ -98,12 +101,66 @@ This repository is a **template and example framework**. Some committed engine f
 > - **Glyph Trace:** Symbolic "breadcrumbs" for visualizing decision paths – like attention glyphs in cross-model AI interpretability or recursive symbols for conceptual drift .
 > - **Memory Matrix:** A dynamic, external store for stateful recall – drawing from cognitive architectures like Jarvis or DNCs .
 > - **Telemetry:** Real-time metrics & traces for monitoring – adapted from Vault observability and multi-agent LLM strategies .
+Canonical authority: Complete-System Deployment Doctrine v1.0 (PPSAI-CSD-001; frozen 2026-11-19). SHA-256 (UTF-8 file bytes): 83a48f537c0084cb919e439989aae4473f6a0c0e8b953815d85018da88759f82. Verify against the adjacent checksum manifest before integration. Its frozen clauses supersede any ambiguous wording in descriptive README examples. Changes to the doctrine require an explicitly approved, newly versioned amendment; do not silently rewrite v1.0. A checksum detects changes but is not itself cryptographic signing or access-control enforcement.
 
-> **Impact:** Turns your vault system into a *traceable, stateful, observable engine*. No code lock-in – fill with JSON/YAML/JS/Python as needed.
+Canonical design intent and host-specific deployment
+The Vault Logic System is a complete, reusable framework for organizing, evaluating, resolving, and tracing logic defined by a host application. Its architecture is independent of the subject matter placed in its vaults. The system may serve an AI assistant, an orchestration platform, a communications service, a business application, or another host without becoming a different kind of engine.
 
----
+Canonical reuse rule: Deploy the entire Vault Logic System architecture. Change the host-specific title, names, data folders, vault categories, saved-record labels, configuration contents, and database namespaces to reflect the receiving product. Do not cherry-pick individual files, substitute a simplified rules folder, or rebuild the architecture for each application. Names and contents adapt; architectural responsibilities and functional design remain.
 
-```
+Responsibilities of the complete Vault Logic System
+Architectural area	Design intent
+Configuration	Define the host environment, vault registration, priorities, applicable rule metadata, and declared telemetry settings.
+Logic vaults	Contain bounded groups of host-defined logic with metadata, rule definitions, supporting explanations, and validation cases. Vaults are logic containers, not A.I.M.S. evidence ledgers.
+Evaluation engine	Determine applicable vaults, evaluate their declared conditions, resolve or expose conflicts according to the configured rules, and return a traceable result to the host.
+Glyph tracing	Produce symbolic evaluation breadcrumbs for decisions, transitions, conflicts, and other meaningful events. These glyphs are observability artifacts, not proof of cryptographic integrity.
+Memory matrix	Retain the Vault Logic System's own working or persistent context and prior evaluation references according to its specified configuration and lifecycle. It remains part of the complete Vault Logic System even when A.I.M.S. is also deployed.
+Telemetry	Expose evaluations, timing, error and anomaly signals, and diagnostic traces so operators can inspect what occurred.
+Interfaces	Expose host integration surfaces, including documented API/CLI contracts and optional presentation interfaces.
+Tests, docs, scripts, examples	Define expected behavior, verify deployment adaptations, and support maintenance. These are not dispensable merely because a host has its own tooling.
+Intended operating flow
+Host input: The host supplies a request or operational condition with its own context, identity, and declared constraints.
+Determine applicable logic: The Vault Logic System loads the corresponding host-named vault definitions and configuration.
+Evaluate: The engine applies matching rule logic and determines applicable findings, conflicts, and evaluation results.
+Remember local evaluation context: The system consults and updates its own memory matrix as configured, without treating that matrix as an A.I.M.S. substitute.
+Trace and observe: Glyphs and telemetry expose the evaluation path, timing, and noteworthy outcomes.
+Return to host: The host receives the evaluation and supporting trace through a defined interface. Final authorization and external execution remain with the host's separately defined authority.
+The Vault Logic System evaluates logic; it does not automatically acquire the host's power to execute arbitrary actions. A host can choose to use its evaluated results as input to a distinct policy or execution authority.
+
+What changes from one deployment to another
+Host adaptation	Permitted when references and integrity are preserved
+System title and root data-folder name	HARO Vault Logic System, ORBOT Vault Logic System, VIV Vault Logic System, etc.
+Vault and category labels	Capability rules, scheduling rules, relationship rules, communications rules, and future domain-specific classifications.
+Saved content	Rules, documents, conditions, metadata, validation examples, and evaluation history relevant to the host.
+Data namespaces and storage paths	Host-owned records, matrix names, file collections, and database namespaces.
+Configuration and environment values	Host-specific settings and declared interfaces, within the system's supported contracts.
+What must not change merely for a new host: the complete component design; the distinction between vaults, engine, glyph tracing, memory matrix, telemetry, and interfaces; existing functional contracts; or persisted integrity references. Renaming an internal file or code module that other modules import is a software migration, not simply a host-content rename. Such changes require compatibility checks and tests.
+
+Relationship to A.I.M.S. (Agnostic Immutable Memory System)
+A.I.M.S. is a separate, complete memory system that may sit alongside the Vault Logic System in the same host. Do not embed only selected A.I.M.S. files inside this template or replace this template's own memory matrix with a reduced version of A.I.M.S.
+
+Vault Logic System: What host-defined logic applies, how was it evaluated, and what trace resulted?
+A.I.M.S.: What evidence and experience were retained, how are they organized and retrieved, and what provenance supports them?
+Host application: Which actions are authorized, and which evaluated results or memories may be used for the current operation?
+The Vault Logic System's logic vaults and A.I.M.S.' immutable evidence Vault are different constructs. Likewise, Vault Logic System trace glyphs and A.I.M.S. integrity Glyphs have different jobs. Preserve both roles rather than merging them because of naming overlap.
+
+HARO host example
+A HARO deployment might title its complete instance HARO Vault Logic System and populate its vaults with capability eligibility rules, admission constraints, reservation policy, model-residency conditions, recovery rules, and configuration validation logic. HARO's separately governed scheduler remains responsible for real resource admission and execution. A complete A.I.M.S. instance can sit alongside the HARO Vault Logic System to retain historical configurations, measured workload outcomes, and relevant experience.
+
+The host changes the records and titles; neither underlying architecture is rebuilt.
+
+Implementation-status boundary
+This repository is a template and example framework. Some committed engine functions, memory hooks, interfaces, and telemetry examples are illustrative or placeholders. The design intent above defines the complete architectural pattern; it does not assert that every documented example is a production-ready implementation. Each host deployment must validate its integrated behavior, traceability, retention, error handling, and recovery against its actual code.
+
+Cross-product rule: Reuse the whole Vault Logic System. Adapt the host-specific names and content. Keep A.I.M.S. whole and independent when installed beside it.
+
+What's New:
+
+Glyph Trace: Symbolic "breadcrumbs" for visualizing decision paths – like attention glyphs in cross-model AI interpretability or recursive symbols for conceptual drift .
+Memory Matrix: A dynamic, external store for stateful recall – drawing from cognitive architectures like Jarvis or DNCs .
+Telemetry: Real-time metrics & traces for monitoring – adapted from Vault observability and multi-agent LLM strategies .
+Impact: Turns your vault system into a traceable, stateful, observable engine. No code lock-in – fill with JSON/YAML/JS/Python as needed.
+
 vault_logic_system_template/
 │
 ├── README.md                              # Usage guide + new: integration examples for glyphs/memory/telemetry
@@ -214,14 +271,8 @@ vault_logic_system_template/
     ├── consolidate_memory.py               # New: Offline replay
     ├── export_telemetry.js                 # New: To Prometheus/Grafana
     └── export_to_json.lua
-```
-
----
-
-## Enhanced File Examples
-
-### File: `vaults/_template/vault.json` (Updated)
-```json
+Enhanced File Examples
+File: vaults/_template/vault.json (Updated)
 {
   "name": "TemplateVault",
   "id": "template-001",
@@ -236,19 +287,13 @@ vault_logic_system_template/
   "glyph_tags": ["decision_point", "⚠️"],  // New: Symbols for tracing
   "memory_key": "template_matrix"          // New: Links to memory store
 }
-```
-
-### File: `glyphs/glyph_map.json` (New Core File)
-```json
+File: glyphs/glyph_map.json (New Core File)
 {
   "decision_escalate": { "symbol": "⚠️", "meaning": "High-risk vault trigger", "color": "#ff6b6b" },
   "memory_recall": { "symbol": "🧠", "meaning": "Matrix query hit", "color": "#4ecdc4" },
   "drift_detected": { "symbol": "∞", "meaning": "Recursive conceptual drift ", "color": "#ffe66d" }
 }
-```
-
-### File: `memory/matrix_store.yaml` (New Core File)
-```yaml
+File: memory/matrix_store.yaml (New Core File)
 matrices:
   default:
     type: "key-value"  # or "vector" for embeddings
@@ -257,10 +302,7 @@ matrices:
     consolidation:     # Inspired by sleep replay
       schedule: "daily"
       method: "replay_and_hash"
-```
-
-### File: `telemetry/telemetry.yaml` (New Core File)
-```yaml
+File: telemetry/telemetry.yaml (New Core File)
 metrics:
   endpoints: ["/metrics"]  # Prometheus-compatible
   intervals: 10s
@@ -268,10 +310,7 @@ alerts:
   high_drift: { threshold: 0.7, action: "notify" }  # e.g., glyph anomaly
 traces:
   format: "json"  # Include glyphs + memory states
-```
-
-### File: `engine/resolver.js` (Snippet Update)
-```js
+File: engine/resolver.js (Snippet Update)
 // Enhanced resolver with integrations
 function resolve(inputs) {
   const glyphs = generateTrace(inputs);  // Embed symbols
@@ -281,82 +320,53 @@ function resolve(inputs) {
   logTelemetry({ glyphs, memoryHit, verdict });  // Observability hook
   return { ...verdict, trace: glyphs };
 }
-```
-
----
-
-## How These Additions Work Together
-
-| Component | Purpose | Integration | Real-World Inspo |
-|-----------|---------|-------------|------------------|
-| **Glyph Trace** | Symbolic visualization of logic paths (e.g., "⚠️" for escalations) | Auto-embeds in vault outputs; export to SVG for dashboards | Cross-model latent mapping ; recursive symbols  |
-| **Memory Matrix** | Stateful storage/retrieval across sessions (e.g., recall past verdicts) | Vaults query/write via keys; consolidates offline | Neural Turing Machines ; Jarvis architecture  |
-| **Telemetry** | Metrics, traces, alerts (e.g., latency per vault, anomaly detection) | Hooks in engine; scrapes to external tools | Modular AI observability ; Vault metrics  |
-
-**Example Flow:**  
+How These Additions Work Together
+Component	Purpose	Integration	Real-World Inspo
+Glyph Trace	Symbolic visualization of logic paths (e.g., "⚠️" for escalations)	Auto-embeds in vault outputs; export to SVG for dashboards	Cross-model latent mapping ; recursive symbols
+Memory Matrix	Stateful storage/retrieval across sessions (e.g., recall past verdicts)	Vaults query/write via keys; consolidates offline	Neural Turing Machines ; Jarvis architecture
+Telemetry	Metrics, traces, alerts (e.g., latency per vault, anomaly detection)	Hooks in engine; scrapes to external tools	Modular AI observability ; Vault metrics
+Example Flow:
 Input → Vault Apply (embeds glyphs) → Memory Write (stores verdict) → Telemetry Log (traces path) → Output with traceable response.
 
----
-
-## How to Use the Enhanced Template
-
-### 1. **Setup**
-```bash
+How to Use the Enhanced Template
+1. Setup
 cp -r vault_logic_system_template my_enhanced_system
 cd my_enhanced_system
 # Init (e.g., npm/yarn for JS parts, pip for Py)
 npm init -y  # For glyphs/telemetry
 pip install pyyaml  # For memory
-```
-
-### 2. **Add Glyph-Tracked Vault**
-```bash
+2. Add Glyph-Tracked Vault
 cp -r vaults/_template vaults/custom/my_traced_vault
 # Edit vault.json: Add "glyph_tags": ["escalate", "🛑"]
 # In rules/condition.js: return { action: "escalate", glyph: "🛑" };
-```
-
-### 3. **Query with Memory & Telemetry**
-```bash
+3. Query with Memory & Telemetry
 # CLI example
 ./scripts/apply.sh --input "ethical dilemma" --memory-key "user_history" --trace-glyphs
 
 # API
 curl -X POST http://localhost:8000/apply \
   -d '{"input": "query", "enable_trace": true, "memory_domain": "long_term"}'
-```
+Sample Output:
 
-**Sample Output:**
-```json
 {
   "verdict": "escalate",
   "glyph_trace": ["🧠 (memory_hit)", "⚠️ (vault_kant)"],
   "memory_matrix_update": {"key": "history_001", "value": "stored"},
   "telemetry": {"latency_ms": 45, "drift_score": 0.12}
 }
-```
+Extensibility Boost
+Glyphs: Extend glyph_map.json for domain-specific symbols (e.g., game quests: "🎯").
+Memory: Scale matrices to vector DBs (e.g., FAISS) for semantic search .
+Telemetry: Plug into Grafana/Prometheus; add AI-driven anomaly detection .
+Pro Tip: For cognitive drift monitoring, chain glyphs with memory replays – detects "hallucinations" in logic flows .
 
----
-
-## Extensibility Boost
-
-- **Glyphs:** Extend `glyph_map.json` for domain-specific symbols (e.g., game quests: "🎯").  
-- **Memory:** Scale matrices to vector DBs (e.g., FAISS) for semantic search .  
-- **Telemetry:** Plug into Grafana/Prometheus; add AI-driven anomaly detection .  
-
-**Pro Tip:** For cognitive drift monitoring, chain glyphs with memory replays – detects "hallucinations" in logic flows .
-
----
-
-**This evolution makes your vault system *alive*: traceable like a neural net, persistent like human memory, observable like prod-grade infra.**
+This evolution makes your vault system alive: traceable like a neural net, persistent like human memory, observable like prod-grade infra.
 
 One command to visualize a run:
-```bash
+
 node glyphs/trace_engine.js --input examples/input_career_change.json --output trace.svg
-```
+Copy → Enhance → Observe.
 
-Copy → Enhance → Observe.  
+You're not just templating logic anymore – you're architecting cognition.
 
-You're not just templating logic anymore – you're architecting *cognition*.  
-
-Let me know: Want a **live demo script** or **vector memory extension** next? 🚀
+Let me know: Want a live demo script or vector memory extension next? 🚀
