@@ -1,0 +1,43 @@
+HARO-One-Inference-Engine/
+├── .gitignore
+├── README.md
+├── haro_inference_probe.code-workspace
+├── inference_probe.py
+├── claude_haro/
+│   ├── READMEHAROClaude.md
+│   ├── haroclaude.py
+│   └── test_haroclaude.py
+└── HARO-Test-Lab/
+    ├── README.md
+    ├── compare_inference.py
+    ├── run_lab.py
+    ├── service_trial.py
+    ├── inference-engine/
+    │   ├── README.md
+    │   └── inference_probe.py
+    ├── candidates/
+    │   ├── haro-claude/
+    │   │   ├── README.md
+    │   │   ├── haro.py
+    │   │   ├── test_haro.py
+    │   │   └── worker.py
+    │   └── haro-grok/
+    │       ├── README.md
+    │       ├── haro.py
+    │       ├── test_haro.py
+    │       └── worker.py
+    ├── test-config/
+    │   └── common-workload.json
+    └── results/
+        └── RTX-5060-8GB/
+            ├── RESULTS.md
+            ├── FOLLOWUP.md
+            ├── source-integrity.json
+            ├── report-*.json
+            ├── claude/
+            ├── grok/
+            ├── direct-baseline/
+            ├── comparison-*/
+            └── diagnosis/
+
+Note: results/ contains generated benchmark, audit, service-trial, and comparison artifacts.
