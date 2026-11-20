@@ -7,10 +7,13 @@ from engine_adapters.contracts import (AdmissionExplanation, DecisionRecord, Lea
 
 class ContractTests(unittest.TestCase):
     def setUp(self):
-        self.provenance = ProvenanceRecord("device_measured", "test", "2026-11-20T00:00:00Z", {"device": "gpu"})
+        self.fingerprint = {"device_id": "gpu", "driver_version": "d", "runtime_version": "r",
+                            "model_digest": "m", "quantization": "q", "context_size": "c", "binding_config_hash": "h"}
+        self.provenance = ProvenanceRecord("device_measured", "test", "2026-11-20T00:00:00Z", self.fingerprint)
 
     def test_decision_and_explanation_are_structural(self):
-        decision = DecisionRecord(request={"capability": CAP_CHAT}, reason_codes=("approved",))
+        decision = DecisionRecord(request={"capability": CAP_CHAT}, reason_codes=("approved",),
+                                  rules_hash="rh", verdicts=({"decision": "allow"},))
         explanation = AdmissionExplanation(decision.decision_id, "allow", ("approved",), "adapter/model")
         self.assertIn("approved", explanation.text())
 
@@ -21,7 +24,8 @@ class ContractTests(unittest.TestCase):
             ticket.transition("received")
 
     def test_lease_generation_and_legal_transitions(self):
-        lease = LeaseRecord("l", 3).transition("release_pending").transition("release_unverified").transition("release_attested").transition("released")
+        lease = LeaseRecord("l", 3).transition("release_pending").transition("release_unverified").transition("release_attested", owner_attestation="owner")
+        lease = lease.transition("released", release_basis="telemetry_returned")
         self.assertEqual((lease.generation, lease.state), (3, "released"))
         with self.assertRaises(ValueError):
             lease.transition("held")
@@ -34,9 +38,9 @@ class ContractTests(unittest.TestCase):
                               cancellation_semantics=(("requested", "verified"),)).validate()
 
     def test_observation_and_quality_evidence_validate(self):
-        observation = ObservationRecord("e", self.provenance, {"device": "gpu"}, "all_attempts", False, "failed")
+        observation = ObservationRecord("e", self.provenance, self.fingerprint, "all_attempts", False, "failed")
         self.assertEqual(observation.event_id, "e")
-        quality = QualityEvidenceRecord("q", "task", "evaluator", 0.8, 2, self.provenance, {"device": "gpu"})
+        quality = QualityEvidenceRecord("q", "task", "evaluator", 0.8, 2, self.provenance, self.fingerprint, "accuracy", "0-1")
         self.assertEqual(quality.sample_count, 2)
 
     def test_memory_model_is_separate_from_gating(self):
@@ -45,6 +49,18 @@ class ContractTests(unittest.TestCase):
                           memory_gating="tracked_unmeasured", memory_model="standing_service")
         binding.validate()
         self.assertEqual(binding.memory_model, "standing_service")
+
+    def test_strict_evidence_and_decision_requirements(self):
+        with self.assertRaises(ValueError):
+            ProvenanceRecord("invented", "test", "now", self.fingerprint)
+        with self.assertRaises(ValueError):
+            ObservationRecord("e", self.provenance, {"device_id": "gpu"}, "all", True, "ok")
+        with self.assertRaises(ValueError):
+            DecisionRecord(test_mode=False)
+        with self.assertRaises(ValueError):
+            LeaseRecord("l", 1).transition("release_pending").transition("release_unverified").transition("released")
+        with self.assertRaises(ValueError):
+            QualityEvidenceRecord("q", "task", "evaluator", 0.8, 2, self.provenance, self.fingerprint, "", "0-1")
 
 
 if __name__ == "__main__":
