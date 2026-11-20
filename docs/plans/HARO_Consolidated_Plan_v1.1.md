@@ -1,6 +1,6 @@
-# HARO — Consolidated Implementation Plan v1 (draft)
+# HARO — Consolidated Implementation Plan v1.1 (draft)
 
-**Status:** Draft by Claude for GPT-6 review → owner approval → Codex implementation.
+**Status:** Draft by Claude, revised after GPT-6 review (v1.1: knowledge projection, lease recovery, side-effect-free governance) → owner approval → Codex implementation.
 **Repository:** `Spruked/HARO`, base `e3269a8`.
 **Doctrine:** PPSAI-CSD-001 v1.0. Verify both local copies hash to
 `83a48f537c0084cb919e439989aae4473f6a0c0e8b953815d85018da88759f82` before every checkpoint.
@@ -43,7 +43,8 @@ Hard invariants live in code and no rule file can weaken them: live device memor
 
 **Lease:** `held → release_pending → released`, plus `suspect` after a restart.
 - Every lease carries a **generation number**. Every slow operation carries `(ticket_id, lease_generation)`, and the loop discards events whose pair is stale.
-- A lease is released only when the adapter's declared cancellation semantics are verified, or telemetry shows the memory returned. Otherwise it stays counted in admission as `release_pending` until a time limit expires, then is recorded as `release_unverified`.
+- A lease is released only when the adapter's declared cancellation semantics are verified, or telemetry shows the memory returned. Otherwise it stays `release_pending`. When a time limit expires it is marked `release_unverified`. **That marking is diagnostic only.** The reserved capacity stays counted in admission and the device stays restricted. Time passing never makes capacity available. Only one of these resolves it: an engine idle report, telemetry showing the memory returned, or an explicit recorded owner attestation (`release_attested`).
+- **Stale events.** An event whose `(ticket_id, lease_generation)` is stale has no authority over any lease. Its physical facts are still real, though: a stale `load_completed` means a model may now be resident. Those facts go to residency reconciliation as observations. Such a model is adopted as a HARO-owned orphan with no ticket, and becomes subject to governed unload/eviction.
 
 **Cancellation semantics** are declared per adapter and verified by live validation: `requested`, `transport_closed`, `engine_acknowledged`, `computation_stopped`, `resources_released`. Admission depends only on `resources_released`.
 
@@ -52,7 +53,7 @@ Hard invariants live in code and no rule file can weaken them: live device memor
 **Restart reconciliation:**
 1. Read journal ownership hints: PIDs of processes HARO started, models it loaded, leases in flight.
 2. Reconcile with reality. Live recorded processes are adopted as HARO-owned. Engine-reported resident models are adopted with their journal owner, or as `external`.
-3. Engines that had in-flight work are `suspect`. Admit no new accelerator work on that device until the engine reports idle or device telemetry is stable for a set period. If neither can be confirmed, the device stays restricted and the reason is recorded.
+3. Engines that had in-flight work are `suspect`. Admit no new accelerator work on that device until the engine reports idle, or telemetry shows the in-flight memory resolved, or the owner records an attestation. Elapsed time alone never clears it. While restricted, the reason is visible in every refusal.
 4. Non-terminal tickets become `abandoned`. Leases are **never** assumed released.
 5. Intent with no observed outcome becomes an `outcome_unknown` event. A completion is never fabricated.
 
@@ -86,6 +87,11 @@ When the selected engine for a work type changes because evidence changed, the d
 
 - **Three call points.** (1) Candidate policy, inside resolver eligibility, per candidate. (2) Before remote dispatch. (3) Before any autonomous lifecycle action: eviction, preemption, HARO-initiated unload.
 - **Facts in, verdict out.** HARO supplies typed facts. Vault Logic returns verdict, matched rules, rules hash, glyph trace. Owner preference order is policy *data* the resolver reads.
+- **Evaluation is separated from recording.** Today `evaluate_haro_context` / `HaroSubsystems.evaluate_and_record()` evaluate and then synchronously write to the matrix, telemetry and A.I.M.S. Split them:
+  - a **pure** `evaluate(policy_snapshot, facts) -> verdict`: no I/O, against rules loaded and pinned by hash;
+  - a **recording** step that delivers the verdict to the Vault matrix, Vault telemetry and A.I.M.S. through the outbox, keyed by decision ID.
+
+  The verdict itself goes into the decision journal. The resolver and runtime call only the pure function. `evaluate_and_record()` and `evaluate_condition()` stay as compatibility entry points for existing callers and tests. Matrix-based diagnostics (flapping, blanket denial) become asynchronous, which is acceptable because they are diagnostic.
 - **Typed declarative predicates** in JSON: numeric comparisons, set membership, and an ordered privacy-class lattice (request data class ≤ provider clearance). No executable code in rules. Unsupported predicates fail rule-set validation.
 - **Versioned rules.** Loaded once at startup or on an explicit reload, identified by content hash. Every verdict records the hash.
 - **Policy content:** work-type approvals, privacy clearances, latency targets per work type/latency class, required evidence maturity per priority class, remote-provider rules, eviction and preemption eligibility.
@@ -104,13 +110,20 @@ When the selected engine for a work type changes because evidence changed, the d
 - **Owner declarations — versioned ledger records, NOT A Priori atoms.** A.I.M.S. A Priori atoms are foundational axioms: active on assertion and not retirable. Each config/policy version is committed as a ledger record (version, hash, effective time) so A.I.M.S. preserves what was authorized then. Current authority is the live config and Vault Logic policy. A Priori is reserved for genuinely foundational principles; none are required now.
 - **A Posteriori atoms — derived operational knowledge.** HARO computes statistics from the ledger (`long_term.search_entries`) and commits each consolidation via `derive_aposteriori`, linked to its source entries. Atoms **start on probation**. A later consolidation that agrees within tolerance reinforces the atom, which A.I.M.S. promotes to active at its own confidence and support thresholds. A contradicting consolidation or a fingerprint change retires it. Probationary means experimental maturity; active plus the sample threshold means operational.
 - **Knowledge-graph links:** runs-on-fingerprint, corroborated-by / contradicted-by (engine-reported vs. device-measured), superseded-by (driver/runtime change).
-- **Retrieval receipts.** The knowledge cache is refreshed off the event loop via `retrieve()`. Each decision record cites the receipt of the refresh it used.
-- **Retrieval feedback.** When an observed outcome falls outside the prediction of the atom used, record feedback against that retrieval.
+- **Operational knowledge projection — two read paths, never conflated.** `retrieve()` / `VaultIndexes.search()` return only ACTIVE atoms. That is A.I.M.S.'s validated knowledge, and the receipts it produces are A.I.M.S.'s record of returning it.
+  - HARO's projection additionally reads its own probationary consolidations through the public Vault interfaces (`memory.vault.all_atoms()` / `get()`, filtered by HARO's atom metadata kind and fingerprint; provenance via `provenance_for()` / `memory.trace()`). Off the event loop.
+  - Each atom keeps its A.I.M.S. status. A probationary atom is used **only** as experimental evidence and is never presented as promoted.
+  - Each refresh produces a **projection snapshot**: atom IDs, status, confidence and support at refresh time, plus the retrieval receipt for the ACTIVE part, hashed. Decisions cite the snapshot hash. The snapshot is stored in the journal, and its hash goes in the A.I.M.S. summary.
+- **Prediction vs. outcome.** When an observed outcome falls outside an atom's prediction:
+  - ACTIVE atom: `record_retrieval_feedback` against the receipt that returned it, plus `vault.challenge(atom_id)`.
+  - Probationary atom: `vault.challenge(atom_id)` only.
+
+  Agreement reinforces through the next consolidation. Promotion and retirement remain A.I.M.S.'s own transitions.
 - **No A.I.M.S. call on the hot path.** Measure ledger growth and commit latency during live validation; set consolidation frequency from those measurements.
 
 ## 8. Decisions, snapshots and crash consistency
 
-**Frozen snapshot.** A decision binds the Vault Logic rules hash and the knowledge snapshot (retrieval receipt) in force at admission. Policy or knowledge changes during execution affect the next decision only. Physical invariants are not frozen: the runtime still reacts to live device and engine state. **Emergency revocation** is a separate explicit owner command. It cancels affected in-flight tickets through the normal cancellation path and is recorded as a revocation event.
+**Frozen snapshot.** A decision binds the Vault Logic rules hash and the knowledge projection snapshot hash in force at admission (which includes the retrieval receipt of its ACTIVE part). Policy or knowledge changes during execution affect the next decision only. Physical invariants are not frozen: the runtime still reacts to live device and engine state. **Emergency revocation** is a separate explicit owner command. It cancels affected in-flight tickets through the normal cancellation path and is recorded as a revocation event.
 
 **Decision record:** request intent and constraints, principal, candidates and eligibility results, evidence IDs and maturity, rules hash and verdicts, resource snapshot and reservations, ordering reasons, selected plan, admission result, lifecycle transitions, observed outcome, predicted vs. observed. The human-readable explanation is generated from the record.
 
@@ -149,11 +162,11 @@ When the selected engine for a work type changes because evidence changed, the d
 | **0** | **Owner: live validation on the RTX 5060**, in parallel with C1. `python -m engine_adapters.live_validation --config deployment\test-machine.json --voice 40d388b3 --allow-remote` (add `--ollama-model` after the first run lists the inventory). | **Live.** Answers: engine-reported vs. device memory, Voice Studio memory behaviour (standing vs. transient), cancellation effect on each engine, A.I.M.S. commit latency |
 | **1** | **Foundation corrections.** Remove the `("conversation",)` approval default; make `work_type` required everywhere; declare approvals in `deployment/test-machine.json` (Nemotron chat: reasoning, analysis, planning; STT: transcription; TTS: voice_output); enforce strict `MetricSummary` validation (reject measured/engine_reported without value or with 0 samples, unmeasured with any value, p50 > p95); validate resolver latency/privacy values; move `Binding` into contracts; re-save `structure_tree.txt` as UTF-8; replace `not_evaluated` with an explicit test-mode flag | One test per rejected case; no binding eligible without declared approval |
 | **2** | **Contracts.** Decision record, explanation, provenance, ticket/lease states with generations, cancellation-semantics declarations on `AdapterDescriptor`, observation schema (event_id, provenance, fingerprint, population fields), quality-evidence record schema, memory model per binding | Contract validation tests; round-trip serialization |
-| **3** | **Runtime.** Event-loop single writer, pure `feasible()`, residency manager, leases with generation checks, journal + outbox (at-least-once, idempotent IDs), restart reconciliation. Existing fabric behaviour ported; existing tests ported | Stale event ignored after reassignment; restart with live owned process → adopted; restart with in-flight load → device suspect; duplicate outbox delivery → no duplicate statistic; external models never evicted |
+| **3** | **Runtime.** Event-loop single writer, pure `feasible()`, residency manager, leases with generation checks, journal + outbox (at-least-once, idempotent IDs), restart reconciliation. Existing fabric behaviour ported; existing tests ported | Stale event cannot touch the reassigned lease but its loaded model is adopted as an orphan; `release_unverified` keeps capacity reserved and the device restricted indefinitely until idle report / telemetry / owner attestation; restart with live owned process → adopted; restart with in-flight load → device suspect; duplicate outbox delivery → no duplicate statistic; external models never evicted |
 | **4** | **Service.** Loopback daemon, principals, single-instance lock, cancel authority, `cancel_on_disconnect` | Two client processes cannot over-admit one device; cross-principal cancel refused; second daemon refused |
-| **5** | **Vault Logic completion** (§6) | Typed predicates; rules hash on every verdict; agreeing allows → allow; matrix bounded by TTL; production start refused without governance |
+| **5** | **Vault Logic completion** (§6) | Pure evaluation performs no I/O (asserted); verdict journaled, matrix/telemetry/A.I.M.S. writes delivered via outbox; typed predicates; rules hash on every verdict; agreeing allows → allow; matrix bounded by TTL; production start refused without governance |
 | **6** | **Resolver as the only routing path** + three governance call points + frozen snapshots + decision records | Resident candidate preferred for interactive work; targets evaluated only with sufficient maturity; preference change recorded; revocation cancels in-flight work |
-| **7** | **A.I.M.S. evidence pipeline** (§7): owner declarations as versioned ledger records, consolidations as probationary atoms, reinforcement/retirement, graph links, receipts, feedback | Restart → knowledge rebuilt; probation → active only via A.I.M.S. thresholds; fingerprint change retires; failures included in reliability |
+| **7** | **A.I.M.S. evidence pipeline** (§7): owner declarations as versioned ledger records, consolidations as probationary atoms, reinforcement/retirement, graph links, receipts, feedback | Restart → knowledge rebuilt; probationary atoms in the projection but labelled experimental and absent from `retrieve()`; probation → active only via A.I.M.S. thresholds; contradicted prediction → `challenge()`; fingerprint change retires; failures included in reliability |
 | **8** | **Provider status** (§9) | 429 + Retry-After → cooldown → resolver skips → recovery clears |
 | **9** | **Cooperative preemption** (§9) | Interactive admitted only after verified release; non-interruptible work bounded |
 | **10** | **Integrated acceptance — live on the RTX 5060** | Canonical HARO demonstration: execute with measured resources → record in A.I.M.S. → restart → retrieve and reuse the strategy → revalidate live state → execute again → new provenance, reporting resident weights, per-request memory, historical estimates and live measurements separately. Plus: two client processes sharing one daemon |
