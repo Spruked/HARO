@@ -430,7 +430,7 @@ class FabricTests(unittest.TestCase):
         fabric = Fabric({"local": Holding(self.local, order)},
                         [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100,
                                  approved_work_types=("conversation",))],
-                        telemetry=self.device, safety_margin_mib=0)
+                        telemetry=self.device, safety_margin_mib=0, test_mode=True)
         gate = fabric._gates[self.device.device_id]
 
         def wait_until(condition, what):
