@@ -9,15 +9,15 @@ import time
 from dataclasses import asdict, dataclass, field
 from typing import Any, Callable, Mapping
 
-from .contract import LOCATION_REMOTE, WORK_CONVERSATION, KNOWN_CAPABILITIES, KNOWN_WORK_TYPES
-from .fabric import Binding
+from .contract import (Binding, LOCATION_REMOTE, KNOWN_CAPABILITIES, KNOWN_LATENCY_CLASSES,
+                       KNOWN_PRIVACY_CLASSES, KNOWN_WORK_TYPES)
 from .profiles import CapabilityProfile
 
 
 @dataclass(frozen=True)
 class ResolutionRequest:
     capability: str
-    work_type: str = WORK_CONVERSATION
+    work_type: str
     latency: str = "interactive"
     privacy: str = "local_only"
     allow_remote: bool = False
@@ -70,6 +70,10 @@ class CapabilityResolver:
             raise ValueError(f"unknown capability {request.capability!r}")
         if request.work_type not in KNOWN_WORK_TYPES:
             raise ValueError(f"unknown work_type {request.work_type!r}")
+        if request.latency not in KNOWN_LATENCY_CLASSES:
+            raise ValueError(f"unknown latency class {request.latency!r}")
+        if request.privacy not in KNOWN_PRIVACY_CLASSES:
+            raise ValueError(f"unknown privacy class {request.privacy!r}")
         candidates = [self._evaluate(binding, request) for binding in self.bindings if binding.capability == request.capability]
         eligible = [candidate for candidate in candidates if candidate.eligible]
         eligible.sort(key=lambda candidate: self._rank(candidate, request), reverse=True)

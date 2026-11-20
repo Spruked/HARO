@@ -19,8 +19,8 @@
      "location": "remote", "api_key_env": "NVIDIA_API_KEY"}
   ],
   "bindings": [
-    {"capability": "chat", "adapter": "remote-openai-compatible", "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"},
-    {"capability": "speech_synthesis", "adapter": "voice-studio", "model": "omnivoice"},
-    {"capability": "speech_recognition", "adapter": "voice-studio", "model": "Systran/faster-whisper-large-v3"}
+    {"capability": "chat", "adapter": "remote-openai-compatible", "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning", "approved_work_types": ["reasoning", "analysis", "planning"]},
+    {"capability": "speech_synthesis", "adapter": "voice-studio", "model": "omnivoice", "approved_work_types": ["voice_output"]},
+    {"capability": "speech_recognition", "adapter": "voice-studio", "model": "Systran/faster-whisper-large-v3", "approved_work_types": ["transcription"]}
   ]
 }

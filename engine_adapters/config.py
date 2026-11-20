@@ -13,9 +13,9 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
-from .contract import EngineAdapter, LOCATION_LOCAL, LOCATION_REMOTE
+from .contract import Binding, EngineAdapter, LOCATION_LOCAL, LOCATION_REMOTE
 from .device_telemetry import DeviceTelemetry, NvidiaSmiTelemetry
-from .fabric import Binding, Fabric
+from .fabric import Fabric
 from .llama_cpp import LlamaServerAdapter
 from .ollama import OllamaAdapter
 from .openai_audio import OpenAIAudioAdapter
@@ -125,7 +125,7 @@ def build_fabric(config: Mapping[str, Any], *, subsystems: Any = None) -> Fabric
     bindings = [Binding(capability=b["capability"], adapter_id=b["adapter"], model=b["model"],
                         resident_mib=b.get("resident_mib"), transient_mib=b.get("transient_mib"),
                         keep_alive_s=b.get("keep_alive_s"),
-                        approved_work_types=tuple(b.get("approved_work_types", ("conversation",))))
+                        approved_work_types=tuple(b["approved_work_types"]))
                 for b in config.get("bindings", [])]
     options = config.get("fabric", {})
     device_concurrency = {}
@@ -134,4 +134,5 @@ def build_fabric(config: Mapping[str, Any], *, subsystems: Any = None) -> Fabric
     return Fabric(adapters, bindings, telemetry=telemetry, subsystems=subsystems,
                   device_concurrency=device_concurrency,
                   safety_margin_mib=int(options.get("safety_margin_mib", 256)),
-                  allow_eviction=bool(options.get("allow_eviction", False)))
+                  allow_eviction=bool(options.get("allow_eviction", False)),
+                  test_mode=bool(options.get("test_mode", False)))

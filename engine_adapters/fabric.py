@@ -29,8 +29,8 @@ from typing import Any, Callable, Mapping
 from .contract import (
     LIFECYCLE_ENGINE_MANAGED, LIFECYCLE_NONE, LIFECYCLE_OWNED_PROCESS, LOCATION_REMOTE,
     RESIDENCY_RESIDENT, STATUS_CANCELLED, STATUS_ERROR, STATUS_OK, STATUS_REFUSED, AdapterError, CancelToken,
-    EngineAdapter, InferenceRequest, InferenceResult, KNOWN_CAPABILITIES, KNOWN_WORK_TYPES,
-    WORK_CONVERSATION, UnsupportedOperation,
+    Binding, EngineAdapter, InferenceRequest, InferenceResult, KNOWN_CAPABILITIES, KNOWN_WORK_TYPES,
+    UnsupportedOperation,
     new_request_id,
 )
 from .device_telemetry import DeviceSampler, DeviceTelemetry, find_device
@@ -40,31 +40,6 @@ PRIORITY_USER_TASK = 1     # user-requested work
 PRIORITY_BACKGROUND = 2    # indexing, batch generation
 
 
-@dataclass(frozen=True)
-class Binding:
-    """Deployment configuration: which adapter+model provides a capability."""
-
-    capability: str
-    adapter_id: str
-    model: str
-    # Planning figures for admission (MiB). Required for local accelerator work.
-    resident_mib: int | None = None     # memory the model occupies once loaded
-    transient_mib: int | None = None    # extra memory one request needs (KV cache, scratch)
-    keep_alive_s: float | None = None   # residency hint passed to engine-managed adapters
-    approved_work_types: tuple[str, ...] = (WORK_CONVERSATION,)
-
-    def validate(self) -> None:
-        if self.capability not in KNOWN_CAPABILITIES:
-            raise ValueError(f"binding has unknown capability {self.capability!r}")
-        unknown_work = set(self.approved_work_types) - KNOWN_WORK_TYPES
-        if unknown_work:
-            raise ValueError(f"binding {self.adapter_id}/{self.model}: unknown work types {sorted(unknown_work)}")
-        for name in ("resident_mib", "transient_mib"):
-            value = getattr(self, name)
-            if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
-                raise ValueError(f"binding {self.adapter_id}/{self.model}: {name} must be a non-negative integer")
-
-
 @dataclass
 class CapabilityRequest:
     """What an application submits. It never names an engine, device or provider."""
@@ -72,7 +47,7 @@ class CapabilityRequest:
     capability: str
     inputs: dict[str, Any]
     client_id: str
-    work_type: str = WORK_CONVERSATION
+    work_type: str
     priority: int = PRIORITY_USER_TASK
     allow_remote: bool = False
     allow_fallback: bool = False
@@ -105,6 +80,7 @@ class FabricOutcome:
     device: dict[str, Any] | None = None
     error: str | None = None
     evidence_entry_ids: list[str] = field(default_factory=list)
+    test_mode: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -225,7 +201,7 @@ class Fabric:
     def __init__(self, adapters: Mapping[str, EngineAdapter], bindings: list[Binding], *,
                  telemetry: DeviceTelemetry | None = None, subsystems: Any = None,
                  device_concurrency: Mapping[str, int] | None = None, safety_margin_mib: int = 256,
-                 allow_eviction: bool = False, max_workers: int = 8, sample_interval_s: float = 0.25):
+                 allow_eviction: bool = False, test_mode: bool = False, max_workers: int = 8, sample_interval_s: float = 0.25):
         self.adapters = dict(adapters)
         self.bindings = list(bindings)
         for binding in self.bindings:
@@ -237,6 +213,7 @@ class Fabric:
         self.telemetry = telemetry
         self.subsystems = subsystems
         self.allow_eviction = allow_eviction
+        self.test_mode = test_mode
         self.sample_interval_s = sample_interval_s
         self._gates: dict[str, _DeviceGate] = {}
         for adapter in self.adapters.values():
@@ -307,12 +284,14 @@ class Fabric:
 
     def _govern(self, context: dict[str, Any], request_id: str) -> dict[str, Any]:
         if self.subsystems is None:
-            return {"decision": "not_evaluated", "allowed": True,
-                    "reason": "no Vault Logic subsystem configured for this fabric"}
+            return {"decision": "allow", "allowed": True,
+                    "reason": "no Vault Logic subsystem configured for this fabric",
+                    "test_mode": self.test_mode}
         with self._record_lock:
             outcome = self.subsystems.evaluate_and_record(
                 context, provenance={"source": "haro.fabric", "request_id": request_id})
-        return {**outcome["evaluation"], "evidence_entry_id": outcome["evidence_entry_id"]}
+        return {**outcome["evaluation"], "evidence_entry_id": outcome["evidence_entry_id"],
+                "test_mode": self.test_mode}
 
     def _candidates(self, request: CapabilityRequest, outcome: FabricOutcome) -> list[Binding]:
         eligible = []
@@ -372,7 +351,8 @@ class Fabric:
 
     def _run(self, request: CapabilityRequest, cancel: CancelToken) -> FabricOutcome:
         started = time.monotonic()
-        outcome = FabricOutcome(request.request_id, request.capability, request.client_id, STATUS_REFUSED, None, None)
+        outcome = FabricOutcome(request.request_id, request.capability, request.client_id, STATUS_REFUSED, None, None,
+                                test_mode=self.test_mode)
         try:
             if request.capability not in KNOWN_CAPABILITIES:
                 raise _Refused(f"unknown capability {request.capability!r}")

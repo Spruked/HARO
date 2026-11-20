@@ -39,7 +39,7 @@ RTX5060_ROW = "0, GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c, NVIDIA GeForce RTX 5
 
 
 def chat_request(model="model-a", **kw):
-    return InferenceRequest(CAP_CHAT, model, {"messages": [{"role": "user", "content": "hi"}]}, **kw)
+    return InferenceRequest(CAP_CHAT, model, {"messages": [{"role": "user", "content": "hi"}]}, "conversation", **kw)
 
 
 class TelemetryTests(unittest.TestCase):
@@ -132,7 +132,7 @@ class OllamaProtocolTests(unittest.TestCase):
 
     def test_unserved_capability_is_refused(self):
         with SimulatedEngine() as engine:
-            req = InferenceRequest(CAP_SPEECH_SYNTHESIS, "model-a", {"text": "x"})
+            req = InferenceRequest(CAP_SPEECH_SYNTHESIS, "model-a", {"text": "x"}, "voice_output")
             self.assertEqual(OllamaAdapter("o", engine.url).execute(req, CancelToken()).status, STATUS_REFUSED)
 
 
@@ -183,20 +183,20 @@ class AudioProtocolTests(unittest.TestCase):
             adapter = OpenAIAudioAdapter("voice", engine.url + "/v1")
             out = Path(tmp) / "speech.wav"
             synth = adapter.execute(InferenceRequest(CAP_SPEECH_SYNTHESIS, "tts-model", {
-                "text": "Test of the speech adapter.", "voice": "profile-1", "output_path": str(out)}), CancelToken())
+                "text": "Test of the speech adapter.", "voice": "profile-1", "output_path": str(out)}, "voice_output"), CancelToken())
             self.assertEqual(synth.status, STATUS_OK)
             self.assertTrue(out.is_file())
             self.assertAlmostEqual(synth.output["duration_s"], 0.5, places=2)
             self.assertIsNotNone(synth.engine_metrics["real_time_factor"])
             stt = adapter.execute(InferenceRequest(CAP_SPEECH_RECOGNITION, "stt-model",
-                                                   {"audio_path": str(out)}), CancelToken())
+                                                   {"audio_path": str(out)}, "transcription"), CancelToken())
             self.assertEqual(stt.status, STATUS_OK)
             self.assertEqual(stt.output["text"], "simulated transcript")
 
     def test_voice_is_never_defaulted(self):
         with SimulatedEngine() as engine, tempfile.TemporaryDirectory() as tmp:
             result = OpenAIAudioAdapter("voice", engine.url + "/v1").execute(InferenceRequest(
-                CAP_SPEECH_SYNTHESIS, "tts", {"text": "x", "output_path": str(Path(tmp) / "a.wav")}), CancelToken())
+                CAP_SPEECH_SYNTHESIS, "tts", {"text": "x", "output_path": str(Path(tmp) / "a.wav")}, "voice_output"), CancelToken())
             self.assertEqual(result.status, STATUS_REFUSED)
 
     def test_invalid_wav_is_rejected(self):
@@ -256,14 +256,14 @@ class OwnedProcessTests(unittest.TestCase):
     def test_load_execute_unload_and_process_is_gone(self):
         adapter = self.adapter(free_port())
         self.assertEqual(adapter.describe().lifecycle, LIFECYCLE_OWNED_PROCESS)
-        refused = adapter.execute(InferenceRequest(CAP_CHAT, "m1", {"messages": [{"role": "user", "content": "x"}]},
+        refused = adapter.execute(InferenceRequest(CAP_CHAT, "m1", {"messages": [{"role": "user", "content": "x"}]}, "conversation",
                                                    stream=False), CancelToken())
         self.assertEqual(refused.status, STATUS_REFUSED)    # no implicit load
         loaded = adapter.load("m1")
         self.assertEqual(loaded.status, STATUS_OK, loaded.error)
         pid = loaded.details["pid"]
         self.assertEqual([s.residency for s in adapter.list_models()], [RESIDENCY_RESIDENT])
-        result = adapter.execute(InferenceRequest(CAP_CHAT, "m1", {"messages": [{"role": "user", "content": "x"}]},
+        result = adapter.execute(InferenceRequest(CAP_CHAT, "m1", {"messages": [{"role": "user", "content": "x"}]}, "conversation",
                                                   stream=False), CancelToken())
         self.assertEqual((result.status, result.output["text"]), (STATUS_OK, "owned reply"))
         unloaded = adapter.unload("m1")
@@ -324,12 +324,12 @@ class FabricTests(unittest.TestCase):
 
     def ask(self, **kw):
         defaults = dict(capability=CAP_CHAT, inputs={"messages": [{"role": "user", "content": "hi"}]},
-                        client_id="test-client", queue_timeout_s=2, timeout_s=10)
+                        client_id="test-client", work_type="conversation", queue_timeout_s=2, timeout_s=10)
         defaults.update(kw)
         return CapabilityRequest(**defaults)
 
     def test_remote_requires_explicit_permission_and_never_is_a_silent_fallback(self):
-        fabric = self.fabric([Binding(CAP_CHAT, "cloud", "remote-model")])
+        fabric = self.fabric([Binding(CAP_CHAT, "cloud", "remote-model", approved_work_types=("conversation",))])
         refused = fabric.run(self.ask())
         self.assertEqual(refused.status, STATUS_REFUSED)
         self.assertIn("remote execution not allowed", repr(refused.decisions))
@@ -338,8 +338,8 @@ class FabricTests(unittest.TestCase):
         fabric.close()
 
     def test_no_fallback_unless_requested(self):
-        bindings = [Binding(CAP_CHAT, "local", "model-a", resident_mib=None, transient_mib=100),
-                    Binding(CAP_CHAT, "cloud", "remote-model")]
+        bindings = [Binding(CAP_CHAT, "local", "model-a", resident_mib=None, transient_mib=100, approved_work_types=("conversation",)),
+                    Binding(CAP_CHAT, "cloud", "remote-model", approved_work_types=("conversation",))]
         fabric = self.fabric(bindings)
         outcome = fabric.run(self.ask(allow_remote=True))
         self.assertEqual(outcome.status, STATUS_REFUSED)            # first binding lacks a memory figure
@@ -350,7 +350,7 @@ class FabricTests(unittest.TestCase):
         fabric.close()
 
     def test_loads_through_adapter_then_reuses_residency(self):
-        fabric = self.fabric([Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=200)])
+        fabric = self.fabric([Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=200, approved_work_types=("conversation",))])
         first = fabric.run(self.ask())
         self.assertEqual(first.status, STATUS_OK, first.error)
         self.assertTrue(any("load" in d for d in first.decisions))
@@ -362,7 +362,7 @@ class FabricTests(unittest.TestCase):
 
     def test_insufficient_memory_is_refused_not_overcommitted(self):
         self.device.used_mib = 8000      # 151 MiB free
-        fabric = self.fabric([Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=200)])
+        fabric = self.fabric([Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=200, approved_work_types=("conversation",))])
         outcome = fabric.run(self.ask(queue_timeout_s=0.5))
         self.assertEqual(outcome.status, STATUS_REFUSED)
         self.assertIn("not admitted", outcome.error)
@@ -370,7 +370,7 @@ class FabricTests(unittest.TestCase):
         fabric.close()
 
     def test_telemetry_outage_fails_closed(self):
-        fabric = self.fabric([Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=200)])
+        fabric = self.fabric([Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=200, approved_work_types=("conversation",))])
         self.device.fail = True
         outcome = fabric.run(self.ask())
         self.assertNotEqual(outcome.status, STATUS_OK)
@@ -379,8 +379,8 @@ class FabricTests(unittest.TestCase):
 
     def test_eviction_only_of_idle_models_haro_loaded(self):
         self.device.used_mib = 6800      # 1351 MiB free
-        bindings = [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100),
-                    Binding(CAP_TEXT_GENERATION, "local", "model-b", resident_mib=900, transient_mib=100)]
+        bindings = [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100, approved_work_types=("conversation",)),
+                    Binding(CAP_TEXT_GENERATION, "local", "model-b", resident_mib=900, transient_mib=100, approved_work_types=("conversation",))]
         no_evict = self.fabric(bindings)
         self.assertEqual(no_evict.run(self.ask()).status, STATUS_OK)               # model-a resident: 951 free
         blocked = no_evict.run(self.ask(capability=CAP_TEXT_GENERATION, inputs={"prompt": "x"}, queue_timeout_s=0.5))
@@ -398,7 +398,7 @@ class FabricTests(unittest.TestCase):
     def test_interactive_work_is_admitted_before_background(self):
         order = []
         counting = _CountingAdapter(self.local, order)
-        fabric = Fabric({"local": counting}, [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100)],
+        fabric = Fabric({"local": counting}, [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100, approved_work_types=("conversation",))],
                         telemetry=self.device, safety_margin_mib=0)
         self.engine.slow_tokens_s = 0.05
         blocker = fabric.submit(self.ask(inputs={"messages": [{"role": "user", "content": "x"}], "tag": "first"}))
@@ -414,7 +414,7 @@ class FabricTests(unittest.TestCase):
         fabric.close()
 
     def test_cancel_while_queued_and_while_running(self):
-        fabric = self.fabric([Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100)])
+        fabric = self.fabric([Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100, approved_work_types=("conversation",))])
         self.engine.slow_tokens_s = 0.3
         running = fabric.submit(self.ask(timeout_s=30))
         time.sleep(0.4)
@@ -429,7 +429,7 @@ class FabricTests(unittest.TestCase):
     def test_experience_is_recorded_without_content_and_survives_restart(self):
         with tempfile.TemporaryDirectory() as tmp:
             subsystems = HaroSubsystems(Path(tmp))
-            fabric = Fabric({"local": self.local}, [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100)],
+            fabric = Fabric({"local": self.local}, [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100, approved_work_types=("conversation",))],
                             telemetry=self.device, subsystems=subsystems, safety_margin_mib=0)
             secret_prompt = "my private question"
             outcome = fabric.run(self.ask(inputs={"messages": [{"role": "user", "content": secret_prompt}]}))
@@ -454,7 +454,7 @@ class FabricTests(unittest.TestCase):
     def test_vault_logic_denial_blocks_execution(self):
         with tempfile.TemporaryDirectory() as tmp:
             subsystems = HaroSubsystems(Path(tmp))
-            fabric = Fabric({"local": self.local}, [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100)],
+            fabric = Fabric({"local": self.local}, [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100, approved_work_types=("conversation",))],
                             telemetry=self.device, subsystems=subsystems, safety_margin_mib=0)
             self.device.fail = True    # live free memory unknown -> governance receives -1 and denies
             outcome = fabric.run(self.ask())

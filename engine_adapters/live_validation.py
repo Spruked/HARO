@@ -38,7 +38,8 @@ from .contract import (
     InferenceRequest, RESIDENCY_RESIDENT,
 )
 from .device_telemetry import DeviceSampler, DeviceTelemetry
-from .fabric import PRIORITY_INTERACTIVE, Binding, CapabilityRequest, Fabric
+from .contract import Binding
+from .fabric import PRIORITY_INTERACTIVE, CapabilityRequest, Fabric
 from .llama_cpp import LlamaServerAdapter
 from .ollama import OllamaAdapter
 from .openai_audio import OpenAIAudioAdapter
@@ -216,6 +217,7 @@ def main(argv: list[str] | None = None) -> int:
             path = audio_dir / f"synthesis-{i + 1}.wav"
             req = InferenceRequest(CAP_SPEECH_SYNTHESIS, synth_binding["model"],
                                    {"text": TEST_SENTENCE, "voice": args.voice, "format": "wav", "output_path": str(path)},
+                                   work_type="voice_output",
                                    timeout_s=120, stream=False)
             result, dev = _sampled(telemetry, device_id, lambda: adapter.execute(req, CancelToken()))
             runs.append({"run": i + 1, "status": result.status, "error": result.error, "output": result.output,
@@ -229,6 +231,7 @@ def main(argv: list[str] | None = None) -> int:
         if stt_binding:
             stt = adapters[stt_binding["adapter"]]
             req = InferenceRequest(CAP_SPEECH_RECOGNITION, stt_binding["model"], {"audio_path": synthesized["path"]},
+                                   work_type="transcription",
                                    timeout_s=120, stream=False)
             result, dev = _sampled(telemetry, device_id, lambda: stt.execute(req, CancelToken()))
             out["transcription"] = {"status": result.status, "error": result.error, "text": result.output.get("text"),
@@ -267,14 +270,14 @@ def main(argv: list[str] | None = None) -> int:
             out["status"] = "failed"
             return out
         measured["ollama_resident_mib"] = loaded.device_memory_mib
-        chat = InferenceRequest(CAP_CHAT, model, {"messages": [{"role": "user", "content": CHAT_PROMPT}]},
+        chat = InferenceRequest(CAP_CHAT, model, {"messages": [{"role": "user", "content": CHAT_PROMPT}]}, "conversation",
                                 max_output_tokens=args.max_tokens, temperature=0, seed=7, timeout_s=120)
         result, dev = _sampled(telemetry, device_id, lambda: adapter.execute(chat, CancelToken()))
         out["chat"] = {"status": result.status, "error": result.error, "text": _text_brief(result.output.get("text")),
                        "timings": result.timings, "engine_metrics": result.engine_metrics, "device": _delta(dev)}
         if dev and dev["first_used_mib"] is not None:
             measured["ollama_transient_peak_mib"] = max(0, dev["max_used_mib"] - dev["first_used_mib"])
-        long = InferenceRequest(CAP_CHAT, model, {"messages": [{"role": "user", "content": LONG_PROMPT}]},
+        long = InferenceRequest(CAP_CHAT, model, {"messages": [{"role": "user", "content": LONG_PROMPT}]}, "conversation",
                                 max_output_tokens=600, temperature=0, seed=7, timeout_s=120)
         out["cancellation"] = cancel_probe(adapter, long, 1.5)
         recovery = adapter.execute(chat, CancelToken())
@@ -301,7 +304,7 @@ def main(argv: list[str] | None = None) -> int:
             models = adapter.list_models()
             if not models:
                 raise _Skip("server lists no model")
-            req = InferenceRequest(CAP_CHAT, models[0].model, {"messages": [{"role": "user", "content": CHAT_PROMPT}]},
+            req = InferenceRequest(CAP_CHAT, models[0].model, {"messages": [{"role": "user", "content": CHAT_PROMPT}]}, "conversation",
                                    max_output_tokens=args.max_tokens, temperature=0, seed=7, timeout_s=120)
             result, dev = _sampled(telemetry, device_id, lambda: adapter.execute(req, CancelToken()))
             return {"status": "passed" if result.status == STATUS_OK else "failed", "model": models[0].model,
@@ -328,12 +331,12 @@ def main(argv: list[str] | None = None) -> int:
             if loaded.status != STATUS_OK:
                 out["status"] = "failed"
                 return out
-            req = InferenceRequest(CAP_CHAT, "validation-model", {"messages": [{"role": "user", "content": CHAT_PROMPT}]},
+            req = InferenceRequest(CAP_CHAT, "validation-model", {"messages": [{"role": "user", "content": CHAT_PROMPT}]}, "conversation",
                                    max_output_tokens=args.max_tokens, temperature=0, seed=7, timeout_s=120)
             result, dev = _sampled(telemetry, device_id, lambda: adapter.execute(req, CancelToken()))
             out["chat"] = {"status": result.status, "error": result.error, "text": _text_brief(result.output.get("text")),
                            "timings": result.timings, "engine_metrics": result.engine_metrics, "device": _delta(dev)}
-            long = InferenceRequest(CAP_CHAT, "validation-model", {"messages": [{"role": "user", "content": LONG_PROMPT}]},
+            long = InferenceRequest(CAP_CHAT, "validation-model", {"messages": [{"role": "user", "content": LONG_PROMPT}]}, "conversation",
                                     max_output_tokens=600, temperature=0, seed=7, timeout_s=120)
             out["cancellation"] = cancel_probe(adapter, long, 1.5)
             out["health_after_cancel"] = adapter.health().to_dict()
@@ -356,7 +359,7 @@ def main(argv: list[str] | None = None) -> int:
                             and b["capability"] == CAP_CHAT), None)
             if binding is None:
                 raise _Skip("no chat binding for this remote provider")
-            req = InferenceRequest(CAP_CHAT, binding["model"], {"messages": [{"role": "user", "content": CHAT_PROMPT}]},
+            req = InferenceRequest(CAP_CHAT, binding["model"], {"messages": [{"role": "user", "content": CHAT_PROMPT}]}, "conversation",
                                    max_output_tokens=max(args.max_tokens, 256), temperature=0, timeout_s=120)
             result = adapters[adapter_id].execute(req, CancelToken())
             return {"status": "passed" if result.status == STATUS_OK else "failed", "model": binding["model"],
@@ -378,37 +381,41 @@ def main(argv: list[str] | None = None) -> int:
                 raise _Skip("no measured per-request figure for the local chat model")
             engine = by_type(OllamaAdapter)[0]
             chat_binding = Binding(CAP_CHAT, engine.adapter_id, args.ollama_model,
-                                   resident_mib=measured["ollama_resident_mib"], transient_mib=transient)
+                                   resident_mib=measured["ollama_resident_mib"], transient_mib=transient,
+                                   approved_work_types=("conversation",))
         elif args.allow_remote:
             spec = next((b for b in config.get("bindings", []) if b["capability"] == CAP_CHAT
                          and b["adapter"] in remote_ids), None)
             if spec:
-                chat_binding = Binding(CAP_CHAT, spec["adapter"], spec["model"])
+                chat_binding = Binding(CAP_CHAT, spec["adapter"], spec["model"],
+                                       approved_work_types=("conversation",))
         if chat_binding is None:
             raise _Skip("no measured local chat binding and remote not allowed")
         sys.path.insert(0, str(root))
         from haro_integration import HaroSubsystems
         memory_root = output / "haro-aims"
         subsystems = HaroSubsystems(memory_root)
-        bindings = [chat_binding, Binding(CAP_SPEECH_RECOGNITION, stt_binding["adapter"], stt_binding["model"]),
-                    Binding(CAP_SPEECH_SYNTHESIS, synth_binding["adapter"], synth_binding["model"])]
+        bindings = [chat_binding, Binding(CAP_SPEECH_RECOGNITION, stt_binding["adapter"], stt_binding["model"],
+                                          approved_work_types=("transcription",)),
+                    Binding(CAP_SPEECH_SYNTHESIS, synth_binding["adapter"], synth_binding["model"],
+                            approved_work_types=("voice_output",))]
         fabric = Fabric(adapters, bindings, telemetry=telemetry, subsystems=subsystems,
                         safety_margin_mib=int(config.get("fabric", {}).get("safety_margin_mib", 256)))
         turn: dict[str, Any] = {"chat_binding": f"{chat_binding.adapter_id}/{chat_binding.model}"}
         try:
             heard = fabric.run(CapabilityRequest(CAP_SPEECH_RECOGNITION, {"audio_path": synthesized["path"]},
-                                                 "live-validation", priority=PRIORITY_INTERACTIVE, stream=False))
+                                                 "live-validation", "transcription", priority=PRIORITY_INTERACTIVE, stream=False))
             turn["hear"] = {"status": heard.status, "error": heard.error, "timings": heard.timings}
             text = (heard.result or {}).get("output", {}).get("text") or TEST_SENTENCE
             reply = fabric.run(CapabilityRequest(CAP_CHAT, {"messages": [{"role": "user", "content": text}]},
-                                                 "live-validation", priority=PRIORITY_INTERACTIVE,
+                                                 "live-validation", "conversation", priority=PRIORITY_INTERACTIVE,
                                                  allow_remote=args.allow_remote, max_output_tokens=args.max_tokens))
             turn["reason"] = {"status": reply.status, "error": reply.error, "timings": reply.timings,
                               "decisions": reply.decisions, "device": reply.device}
             answer = (reply.result or {}).get("output", {}).get("text") or ""
             spoken = fabric.run(CapabilityRequest(CAP_SPEECH_SYNTHESIS, {
                 "text": answer[:400] or TEST_SENTENCE, "voice": args.voice, "format": "wav",
-                "output_path": str(audio_dir / "fabric-turn-reply.wav")}, "live-validation",
+                "output_path": str(audio_dir / "fabric-turn-reply.wav")}, "live-validation", "voice_output",
                 priority=PRIORITY_INTERACTIVE, stream=False))
             turn["speak"] = {"status": spoken.status, "error": spoken.error, "timings": spoken.timings}
         finally:

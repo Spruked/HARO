@@ -48,6 +48,8 @@ KNOWN_WORK_TYPES = frozenset({
     WORK_REASONING, WORK_ANALYSIS, WORK_PLANNING, WORK_CONVERSATION,
     WORK_TRANSCRIPTION, WORK_VOICE_OUTPUT, WORK_RETRIEVAL_EMBEDDING,
 })
+KNOWN_LATENCY_CLASSES = frozenset({"interactive", "user_task", "background"})
+KNOWN_PRIVACY_CLASSES = frozenset({"local_only", "remote_allowed"})
 
 # --- Execution location ----------------------------------------------------
 LOCATION_LOCAL = "local"
@@ -96,6 +98,30 @@ class EngineUnavailable(AdapterError):
 
 class CancelledByHost(AdapterError):
     """HARO cancelled the operation."""
+
+
+@dataclass(frozen=True)
+class Binding:
+    """Deployment configuration: which adapter and model provides a capability."""
+
+    capability: str
+    adapter_id: str
+    model: str
+    resident_mib: int | None = None
+    transient_mib: int | None = None
+    keep_alive_s: float | None = None
+    approved_work_types: tuple[str, ...] = ()
+
+    def validate(self) -> None:
+        if self.capability not in KNOWN_CAPABILITIES:
+            raise ValueError(f"binding has unknown capability {self.capability!r}")
+        unknown_work = set(self.approved_work_types) - KNOWN_WORK_TYPES
+        if unknown_work:
+            raise ValueError(f"binding {self.adapter_id}/{self.model}: unknown work types {sorted(unknown_work)}")
+        for name in ("resident_mib", "transient_mib"):
+            value = getattr(self, name)
+            if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
+                raise ValueError(f"binding {self.adapter_id}/{self.model}: {name} must be a non-negative integer")
 
 
 def new_request_id() -> str:
@@ -201,7 +227,7 @@ class InferenceRequest:
     capability: str
     model: str
     inputs: dict[str, Any]
-    work_type: str = WORK_CONVERSATION
+    work_type: str
     request_id: str = field(default_factory=new_request_id)
     max_output_tokens: int | None = None
     temperature: float | None = None

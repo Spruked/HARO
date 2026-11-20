@@ -6,6 +6,6 @@ engines, endpoints, models and devices of a particular machine.
 """
 from .contract import *  # noqa: F401,F403
 from .fabric import (  # noqa: F401
-    PRIORITY_BACKGROUND, PRIORITY_INTERACTIVE, PRIORITY_USER_TASK, Binding, CapabilityRequest,
-    Fabric, FabricOutcome, Ticket,
+    PRIORITY_BACKGROUND, PRIORITY_INTERACTIVE, PRIORITY_USER_TASK, CapabilityRequest, Fabric,
+    FabricOutcome, Ticket,
 )

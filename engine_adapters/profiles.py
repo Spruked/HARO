@@ -23,6 +23,15 @@ class MetricSummary:
             raise ValueError("sample_count must be non-negative")
         if self.source not in {"measured", "engine_reported", "owner_declared", "unmeasured"}:
             raise ValueError(f"unsupported metric source {self.source!r}")
+        values = (self.value, self.p50, self.p95)
+        if any(value is not None and (isinstance(value, bool) or value < 0) for value in values):
+            raise ValueError("metric values must be non-negative numbers")
+        if self.p50 is not None and self.p95 is not None and self.p50 > self.p95:
+            raise ValueError("p50 must not exceed p95")
+        if self.source in {"measured", "engine_reported"} and (self.value is None or self.sample_count == 0):
+            raise ValueError(f"{self.source} metrics require a value and at least one sample")
+        if self.source == "unmeasured" and any(value is not None for value in values):
+            raise ValueError("unmeasured metrics cannot contain values")
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

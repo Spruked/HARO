@@ -30,16 +30,23 @@ class ResolverTests(unittest.TestCase):
         self.assertTrue(any("work type" in reason for reason in result.candidates[0].reasons))
         self.assertTrue(any("remote" in reason for reason in result.candidates[1].reasons))
 
+    def test_latency_and_privacy_are_validated(self):
+        resolver = CapabilityResolver(self.adapters, [])
+        with self.assertRaises(ValueError):
+            resolver.resolve(ResolutionRequest(CAP_TEXT_GENERATION, WORK_CONVERSATION, latency="unknown"))
+        with self.assertRaises(ValueError):
+            resolver.resolve(ResolutionRequest(CAP_TEXT_GENERATION, WORK_CONVERSATION, privacy="unknown"))
+
     def test_measured_profile_ranks_before_unmeasured_and_cooldown_excludes(self):
         bindings = [
-            Binding(CAP_TEXT_GENERATION, "local", "fast", resident_mib=100, transient_mib=50),
-            Binding(CAP_TEXT_GENERATION, "local", "unknown", resident_mib=100, transient_mib=50),
+            Binding(CAP_TEXT_GENERATION, "local", "fast", resident_mib=100, transient_mib=50, approved_work_types=(WORK_CONVERSATION,)),
+            Binding(CAP_TEXT_GENERATION, "local", "unknown", resident_mib=100, transient_mib=50, approved_work_types=(WORK_CONVERSATION,)),
         ]
         profiles = {
-            ("local", "fast"): CapabilityProfile("local", "test", "fast", approved_work_types=(WORK_CONVERSATION,), quality_tier="high", metrics={"first_output_latency": MetricSummary(p95=0.2, sample_count=3, source="measured")}),
+            ("local", "fast"): CapabilityProfile("local", "test", "fast", approved_work_types=(WORK_CONVERSATION,), quality_tier="high", metrics={"first_output_latency": MetricSummary(value=0.2, p95=0.2, sample_count=3, source="measured")}),
             ("local", "unknown"): CapabilityProfile("local", "test", "unknown", approved_work_types=(WORK_CONVERSATION,), cooldown_until=time.time() + 60),
         }
-        result = CapabilityResolver(self.adapters, bindings, profiles, live_available_mib=lambda _: 1000).resolve(ResolutionRequest(CAP_TEXT_GENERATION))
+        result = CapabilityResolver(self.adapters, bindings, profiles, live_available_mib=lambda _: 1000).resolve(ResolutionRequest(CAP_TEXT_GENERATION, WORK_CONVERSATION))
         self.assertEqual(result.eligible[0].model, "fast")
         self.assertFalse(result.candidates[-1].eligible)
         self.assertIn("cooldown", result.candidates[-1].reasons[0])
