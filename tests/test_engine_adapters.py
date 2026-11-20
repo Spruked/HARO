@@ -504,6 +504,21 @@ class LiveValidationSmokeTests(unittest.TestCase):
             self.assertEqual(code, 0)
 
 
+    def test_tool_does_not_disturb_an_already_resident_model(self):
+        import json
+        from engine_adapters import live_validation
+        with SimulatedEngine() as ollama, tempfile.TemporaryDirectory() as tmp:
+            ollama.loaded["model-a:latest"] = ollama.installed["model-a:latest"]   # resident before the run
+            path = Path(tmp) / "config.json"
+            path.write_text(json.dumps({"telemetry": None, "adapters": [
+                {"id": "o", "type": "ollama", "base_url": ollama.url}], "bindings": []}))
+            live_validation.main(["--config", str(path), "--output", str(Path(tmp) / "out"),
+                                  "--ollama-model", "model-a"])
+            report = json.loads((Path(tmp) / "out" / "report.json").read_text())
+            self.assertEqual(report["summary"]["engine_managed:lifecycle"], "not_run")
+            self.assertIn("model-a:latest", ollama.loaded)
+            self.assertFalse(any(r[1] == "/api/generate" for r in ollama.requests))
+
 class ConfigTests(unittest.TestCase):
     def test_inline_secret_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:

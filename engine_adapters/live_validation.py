@@ -6,8 +6,9 @@ engine is unreachable are reported as not run, with the reason.
 
 What it touches:
   * Engine-managed models (Ollama): loads and unloads ONLY the model named by
-    --ollama-model. If that model was resident before the run, it is left
-    resident afterwards.
+    --ollama-model. If that model is already resident, someone else may be using
+    it, so the lifecycle step is NOT run unless --allow-disturb-resident is given
+    (then it is unloaded, exercised and restored).
   * HARO-owned llama-server: started on --llama-port only, stopped afterwards.
     A separately managed llama-server is only called, never started or stopped.
   * Speech service and remote provider: called only. The remote provider is
@@ -143,6 +144,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--voice", help="voice identifier for speech synthesis (required for the speech steps)")
     parser.add_argument("--ollama-model", help="installed model to load, run, cancel and unload")
     parser.add_argument("--allow-remote", action="store_true", help="permit calls to remote providers")
+    parser.add_argument("--allow-disturb-resident", action="store_true",
+                        help="permit the lifecycle step to unload a model that is already resident")
     parser.add_argument("--llama-server", help="llama-server executable for the HARO-owned process test")
     parser.add_argument("--llama-model", help="GGUF file for the HARO-owned process test")
     parser.add_argument("--llama-port", type=int, default=17667)
@@ -251,6 +254,9 @@ def main(argv: list[str] | None = None) -> int:
         model = args.ollama_model
         was_resident = any(m.residency == RESIDENCY_RESIDENT and m.model.split(":")[0] == model.split(":")[0]
                            for m in adapter.list_models())
+        if was_resident and not args.allow_disturb_resident:
+            raise _Skip(f"{model} is already resident and may be in use by another client; "
+                        "rerun with --allow-disturb-resident to exercise its lifecycle")
         out: dict[str, Any] = {"model": model, "resident_before_run": was_resident}
         if was_resident:
             unloaded, dev = _sampled(telemetry, device_id, lambda: adapter.unload(model))
