@@ -320,13 +320,34 @@ class FabricTests(unittest.TestCase):
 
     def fabric(self, bindings, **kw):
         return Fabric({"local": self.local, "cloud": self.cloud}, bindings, telemetry=self.device,
-                      safety_margin_mib=0, **kw)
+                      safety_margin_mib=0, test_mode=True, **kw)
 
     def ask(self, **kw):
         defaults = dict(capability=CAP_CHAT, inputs={"messages": [{"role": "user", "content": "hi"}]},
                         client_id="test-client", work_type="conversation", queue_timeout_s=2, timeout_s=10)
         defaults.update(kw)
         return CapabilityRequest(**defaults)
+
+    def test_governance_is_required_outside_explicit_test_mode(self):
+        fabric = Fabric({"local": self.local},
+                        [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100,
+                                 approved_work_types=("conversation",))], telemetry=self.device, safety_margin_mib=0)
+        outcome = fabric.run(self.ask())
+        self.assertEqual(outcome.status, STATUS_REFUSED)
+        self.assertIn("governance unavailable", outcome.error)
+        fabric.close()
+
+    def test_test_mode_records_not_evaluated_governance(self):
+        fabric = Fabric({"local": self.local},
+                        [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100,
+                                 approved_work_types=("conversation",))], telemetry=self.device, safety_margin_mib=0,
+                        test_mode=True)
+        outcome = fabric.run(self.ask())
+        self.assertEqual(outcome.status, STATUS_OK)
+        self.assertTrue(outcome.test_mode)
+        self.assertTrue(any(d.get("vault_logic", {}).get("decision") == "not_evaluated"
+                            for d in outcome.decisions))
+        fabric.close()
 
     def test_remote_requires_explicit_permission_and_never_is_a_silent_fallback(self):
         fabric = self.fabric([Binding(CAP_CHAT, "cloud", "remote-model", approved_work_types=("conversation",))])

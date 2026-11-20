@@ -32,6 +32,8 @@ class MetricSummary:
             raise ValueError(f"{self.source} metrics require a value and at least one sample")
         if self.source == "unmeasured" and any(value is not None for value in values):
             raise ValueError("unmeasured metrics cannot contain values")
+        if self.source == "unmeasured" and self.sample_count != 0:
+            raise ValueError("unmeasured metrics must have zero samples")
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

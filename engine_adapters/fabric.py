@@ -284,9 +284,11 @@ class Fabric:
 
     def _govern(self, context: dict[str, Any], request_id: str) -> dict[str, Any]:
         if self.subsystems is None:
-            return {"decision": "allow", "allowed": True,
-                    "reason": "no Vault Logic subsystem configured for this fabric",
-                    "test_mode": self.test_mode}
+            if not self.test_mode:
+                return {"decision": "deny", "allowed": False,
+                        "reason": "governance unavailable", "test_mode": False}
+            return {"decision": "not_evaluated", "allowed": True,
+                    "reason": "governance unavailable in explicit test mode", "test_mode": True}
         with self._record_lock:
             outcome = self.subsystems.evaluate_and_record(
                 context, provenance={"source": "haro.fabric", "request_id": request_id})
@@ -357,6 +359,8 @@ class Fabric:
             if request.capability not in KNOWN_CAPABILITIES:
                 raise _Refused(f"unknown capability {request.capability!r}")
             request.validate()
+            if self.subsystems is None and not self.test_mode:
+                raise _Refused("governance unavailable")
             candidates = self._candidates(request, outcome)
             if not candidates:
                 raise _Refused("no eligible binding for this capability")

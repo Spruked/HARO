@@ -25,6 +25,12 @@ class CapabilityProfileTests(unittest.TestCase):
             MetricSummary(source="unmeasured", value=1.0)
         with self.assertRaises(ValueError):
             MetricSummary(source="measured", value=1.0, p50=3.0, p95=2.0, sample_count=1)
+        with self.assertRaises(ValueError):
+            MetricSummary(source="unmeasured", sample_count=1)
+
+    def test_binding_requires_named_work_approval(self):
+        with self.assertRaisesRegex(ValueError, "adapter/model"):
+            Binding(CAP_TEXT_GENERATION, "adapter", "model").validate()
 
     def test_work_type_is_validated_and_binding_declares_approval(self):
         Binding(CAP_TEXT_GENERATION, "adapter", "model", approved_work_types=(WORK_ANALYSIS,)).validate()

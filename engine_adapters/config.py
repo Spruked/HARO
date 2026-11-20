@@ -122,11 +122,15 @@ def build_fabric(config: Mapping[str, Any], *, subsystems: Any = None) -> Fabric
         if spec["id"] in adapters:
             raise ValueError(f"duplicate adapter id {spec['id']!r}")
         adapters[spec["id"]] = adapter
-    bindings = [Binding(capability=b["capability"], adapter_id=b["adapter"], model=b["model"],
+    def make_binding(b: Mapping[str, Any]) -> Binding:
+        if "approved_work_types" not in b:
+            identity = f"{b.get('adapter', '<unknown-adapter>')}/{b.get('model', '<unknown-model>')}"
+            raise ValueError(f"binding {identity}: approved_work_types must be declared")
+        return Binding(capability=b["capability"], adapter_id=b["adapter"], model=b["model"],
                         resident_mib=b.get("resident_mib"), transient_mib=b.get("transient_mib"),
                         keep_alive_s=b.get("keep_alive_s"),
                         approved_work_types=tuple(b["approved_work_types"]))
-                for b in config.get("bindings", [])]
+    bindings = [make_binding(b) for b in config.get("bindings", [])]
     options = config.get("fabric", {})
     device_concurrency = {}
     for ref, limit in (options.get("device_concurrency") or {}).items():
