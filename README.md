@@ -1,63 +1,23 @@
-# HARO Real Inference Experiment — one llama.cpp engine
+# HARO — Hardware-Adaptive Runtime Orchestrator
 
-> **Canonical subsystem source map:** Before working on A.I.M.S. or Vault Logic, read [DOCTRINE_SOURCE_MAP.md](DOCTRINE_SOURCE_MAP.md). The independent reference repositories are **Spruked/AIMS** (private) and **Spruked/Vault-Logic-System-Template** (public), **not Spruked/Orbot**. Both complete HARO subsystem deployments include the verified frozen v1.0 doctrine and checksum locally. **Reuse the system, not the components.**
+HARO is an **application-agnostic and engine-agnostic** runtime. Named consumer applications, provider platforms, model families, personal endpoints and developer identities are not architectural dependencies.
 
-This experiment runs **one actual llama.cpp GGUF inference engine** and samples **real NVIDIA device VRAM** via `nvidia-smi`. The same script works on either Windows PC and does **not** edit HARO or Orbot. Python 3.11+ standard library only. No model is downloaded or installed.
+## Responsibilities
 
-## Best first test: owned, isolated server
+- **HARO host:** discovery, capabilities, resource accounting, admission, scheduling, process ownership, execution, cancellation and recovery. Execution authority stays with the host.
+- **A.I.M.S.** (`AIMS/`): complete independent operational memory and evidence system; immutable events, derived knowledge, retrieval receipts and restart recovery.
+- **Vault Logic** (`HARO_Vault_System/`): complete independent logic system; host rules, glyph traces, separate memory matrix and telemetry. Its evaluation results do not grant execution permission.
 
-Use an existing `llama-server.exe` and an existing GGUF model. In PowerShell, from this folder:
+See [DOCTRINE_SOURCE_MAP.md](DOCTRINE_SOURCE_MAP.md) for the two authoritative upstreams and frozen doctrine.
 
-```powershell
-python .\inference_probe.py --server-path "C:\path\to\llama-server.exe" --model "C:\path\to\model.gguf" --gpu-index 0 --output new-pc-result.json
-```
+## Agnostic engine adapter objective
 
-Run **the same command with local executable/model paths** on the old PC, using `--output old-pc-result.json`. Keep the **same GGUF model, prompt, max tokens, context size and GPU-layer count** to make results comparable. The model must fit the smaller 6 GB device for a meaningful same-model comparison. This does not change existing Windows services or Orbot processes. The script starts its own server on **localhost:17666**, and terminates **only that process** when done. It refuses to start if it detects a ready server at that address.
+A replaceable adapter should report capabilities, modalities, health, resource demands and measurements; expose supported load/unload, execute, cancel and recovery actions; and distinguish HARO-owned processes from externally managed services. Unsupported operations must be explicit. The scheduler must not know a vendor-specific route, named model or speech profile.
 
-For a different port, pass `--port 17667`. For a smaller GPU, test partial offload with `--gpu-layers 12` (for example); this changes the amount of work on the GPU and must be reported, not assumed equivalent to full offload.
+Remote execution is permitted only by explicit per-request governance, never as a silent fallback. Logical reservations are not observed device memory. Memory and logic evaluations cannot bypass current host authorization.
 
-## Alternative: connect to existing local llama-server (read-only)
+**Status:** `haro_integration.py` connects the two independent subsystems. An engine-neutral adapter registry and real multi-engine execution have not yet been proven or deployed.
 
-```powershell
-python .\inference_probe.py --url http://127.0.0.1:16520 --gpu-index 0 --output existing-server-result.json
-```
+## Verification and experiments
 
-This does not launch, stop or reconfigure the existing server. It **does send one inference request** to it. Use this mode only if that is acceptable for the service. Existing-server mode cannot measure model loading, and its VRAM delta is **not** the model's total residency.
-
-## Measurements
-
-The JSON report contains:
-
-- NVIDIA GPU identity and total/free/used VRAM at discovery
-- device-wide pre-server memory, device-wide peak memory, end-of-request memory
-- `peak_device_delta_from_pre_server_mib` (an *estimate* of the memory increment if no other GPU processes change)
-- server startup/readiness time in owned-server mode
-- first generated text latency, full request latency, generated response, and engine-reported timings when present
-- telemetry errors and sample count
-
-**Important:** `nvidia-smi` GPU memory totals cover the **whole card**. They do **not** prove which PID or model used memory. Other GPU users (desktop graphics, Orbot, other LLMs) can change the reading. Sampling can miss short-lived peaks. A Windows WDDM driver may report unavailable GPU memory fields; this script fails transparently rather than inventing measurements. `--gpu-index` chooses the telemetry device, while owned-server GPU selection uses its UUID via `CUDA_VISIBLE_DEVICES`.
-
-## Preflight
-
-1. Verify `nvidia-smi` runs in PowerShell and lists the NVIDIA GPU.
-2. Confirm a working `llama-server` binary and locally present GGUF model.
-3. Keep the GPU as idle as practical for the initial measurement; **do not stop services unless you decide to**.
-4. Use two distinct results filenames; share both JSON outputs for comparison.
-
-This is a **real inference baseline**, not yet HARO orchestration. After it works, a bounded adapter can wrap this same server endpoint and compare direct vs scheduled access. No claim is made that either PC was tested here; actual GPU testing happens on those machines.
-
-## HARO subsystem integration
-
-`haro_integration.py` is the explicit host boundary for the two complete sibling systems:
-
-- `AIMS/` receives committed HARO operational events under a caller-supplied isolated store path, preserving provenance, restart recovery, retrieval receipts, and feedback interfaces.
-- `HARO_Vault_System/` evaluates `vaults/haro/rules.json` through its existing evaluator, returning a deterministic decision, matched-rule trace, and telemetry. It fails closed when capability context is missing or no rule applies.
-- Vault Logic evaluations use its own glyph trace definitions, persistent memory matrix, and telemetry collector under `HARO_Vault_System/`; these remain separate from A.I.M.S. memory and retrieval.
-- Every evaluation outcome, including early denials and unresolved policy input, is passed through the native Vault Logic audit path. The matrix uses an append-only `matrices.haro_evaluations` history with atomic replacement, and telemetry records one JSONL event per evaluation.
-- HARO retains authority for authorization, live resource admission, scheduling, execution, cancellation, and hardware measurement. Neither subsystem executes work or grants permission by itself.
-
-The integration uses controlled events and does not claim live inference. See `tests/test_haro_integration.py` for isolated boundary verification.
-
-### Evidence-to-retrieval lifecycle
-
-`record_event()` writes an immutable A.I.M.S. long-term experience record only. It does not automatically create an authoritative or searchable claim. A host explicitly interprets a committed entry with `derive_aposteriori()`, validates it through the existing Vault reinforcement path, and rebuilds the derived indexes; only then can `retrieve_experience()` return it with an A.I.M.S. retrieval receipt. The original evidence, derived atom, confidence history, and retrieval receipt remain distinct and survive restart.
+`tests/test_haro_integration.py` and `AIMS/tests/` are the active subsystem regressions. `HARO-Test-Lab/` preserves historical scheduler candidates, provider-specific experimental probes and unmodified original benchmark evidence. A fixture's specific protocol does not constrain HARO's architecture.

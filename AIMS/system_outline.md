@@ -63,11 +63,9 @@ It is not tied to:
 * a particular cloud provider;
 * a particular blockchain;
 * a specific reasoning methodology;
-* Caleon Prime;
-* Prometheus Prime;
-* ORB;
-* ISS;
-* DLAS;
+* a specialized assistant;
+* an industrial controller;
+* a domain-specific workflow engine;
 * or any other mission-specific architecture.
 
 The layer exists to provide a cognitive system with five fundamental capabilities:
@@ -129,7 +127,7 @@ It is never permitted to make the earlier record disappear.
 
 ```text
                            COGNITIVE HOST
-                    LLM / Agent / ORB / Robot /
+                    LLM / Agent / Service / Robot /
                  Browser / Voice / Decision Engine
                                │
                                ▼
@@ -1007,7 +1005,7 @@ Potential consumers include:
 * local language models;
 * multimodal models;
 * autonomous software agents;
-* ORB systems;
+* interactive agent systems;
 * browser agents;
 * robots;
 * industrial systems;

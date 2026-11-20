@@ -2,7 +2,7 @@
 """One real llama.cpp inference backend + measured NVIDIA device VRAM.
 
 Python 3.11+, stdlib only. Runs an existing localhost llama-server or starts an
-isolated server that this script owns. No HARO or Orbot integration.
+isolated server that this script owns. No integration with unrelated applications or externally managed runtimes.
 """
 from __future__ import annotations
 import argparse

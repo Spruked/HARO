@@ -1,16 +1,16 @@
 # HARO Real Inference Experiment — one llama.cpp engine
 
-This experiment runs **one actual llama.cpp GGUF inference engine** and samples **real NVIDIA device VRAM** via `nvidia-smi`. The same script works on either Windows PC and does **not** edit HARO or Orbot. Python 3.11+ standard library only. No model is downloaded or installed.
+This experiment runs **one actual llama.cpp GGUF inference engine** and samples **real NVIDIA device VRAM** via `nvidia-smi`. The probe can run on separately configured test hosts without modifying unrelated applications or services. Python 3.11+ standard library only. No model is downloaded or installed.
 
 ## Best first test: owned, isolated server
 
 Use an existing `llama-server.exe` and an existing GGUF model. In PowerShell, from this folder:
 
 ```powershell
-python .\inference_probe.py --server-path "C:\path\to\llama-server.exe" --model "C:\path\to\model.gguf" --gpu-index 0 --output new-pc-result.json
+python .\inference_probe.py --server-path "C:\path\to\llama-server.exe" --model "C:\path\to\model.gguf" --gpu-index 0 --output host-a-result.json
 ```
 
-Run **the same command with local executable/model paths** on the old PC, using `--output old-pc-result.json`. Keep the **same GGUF model, prompt, max tokens, context size and GPU-layer count** to make results comparable. The model must fit the smaller 6 GB device for a meaningful same-model comparison. This does not change existing Windows services or Orbot processes. The script starts its own server on **localhost:17666**, and terminates **only that process** when done. It refuses to start if it detects a ready server at that address.
+Repeat on a second test host using local paths and `--output host-b-result.json`. Match model bytes, prompt, token settings, context and GPU offload; ensure the model fits the smallest tested device. Do not stop or change externally managed processes. The script starts its own server on **localhost:17666**, and terminates **only that process** when done. It refuses to start if it detects a ready server at that address.
 
 For a different port, pass `--port 17667`. For a smaller GPU, test partial offload with `--gpu-layers 12` (for example); this changes the amount of work on the GPU and must be reported, not assumed equivalent to full offload.
 
@@ -33,7 +33,7 @@ The JSON report contains:
 - first generated text latency, full request latency, generated response, and engine-reported timings when present
 - telemetry errors and sample count
 
-**Important:** `nvidia-smi` GPU memory totals cover the **whole card**. They do **not** prove which PID or model used memory. Other GPU users (desktop graphics, Orbot, other LLMs) can change the reading. Sampling can miss short-lived peaks. A Windows WDDM driver may report unavailable GPU memory fields; this script fails transparently rather than inventing measurements. `--gpu-index` chooses the telemetry device, while owned-server GPU selection uses its UUID via `CUDA_VISIBLE_DEVICES`.
+**Important:** `nvidia-smi` GPU memory totals cover the **whole card**. They do **not** prove which PID or model used memory. Other GPU users (desktop graphics, other inference processes, and unrelated applications) can change the reading. Sampling can miss short-lived peaks. A Windows WDDM driver may report unavailable GPU memory fields; this script fails transparently rather than inventing measurements. `--gpu-index` chooses the telemetry device, while owned-server GPU selection uses its UUID via `CUDA_VISIBLE_DEVICES`.
 
 ## Preflight
 

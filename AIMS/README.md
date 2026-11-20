@@ -17,7 +17,7 @@ rewriting historical truth.
 
 ## Canonical design intent and complete-system reuse
 
-**A.I.M.S. (Agnostic Immutable Memory System) is a complete, reusable memory architecture, not a collection of files or features to be selected per product.** It provides continuity across sessions and restarts by preserving evidence, distinguishing prior knowledge from observed experience, reconstructing current interpretations, and returning relevant information with provenance. Its host can be ORBOT, HARO, VIV, Communications, or a future product; its design intent does not change with the host.
+**A.I.M.S. (Agnostic Immutable Memory System) is a complete, reusable memory architecture, not a collection of files or features to be selected per product.** It provides continuity across sessions and restarts by preserving evidence, distinguishing prior knowledge from observed experience, reconstructing current interpretations, and returning relevant information with provenance. Its host can be an orchestrator, communications service, assistant, industrial controller, or another future application; its design intent does not change with the host.
 
 **Canonical reuse rule:** Preserve and deploy A.I.M.S. as one intact system. Adapt the names and locations of *host-owned data*—storage directories, database namespaces, matrix identifiers, collections, saved files, record categories, and display titles—to the receiving application. Do not rebuild A.I.M.S., cherry-pick its modules, remove architectural responsibilities, or alter the semantics of its ledgers and retrievals to accommodate that application. Renaming must preserve all references, historical record identifiers, cryptographic verification, and migration compatibility.
 
@@ -51,7 +51,7 @@ The full architecture includes these responsibilities even when particular plann
 
 ### Host identity is data identity, not architectural identity
 
-A deployment can be named and organized for its host—for example, *HARO Operational Memory* or *ORBOT Memory*—without changing the underlying A.I.M.S. architecture or implementation. Host-specific identifiers should be supplied through existing configuration and data conventions where available. Physical renames affecting imports, manifests, ledger paths, hashes, or stored references require a verified compatibility/migration procedure rather than a blind search-and-replace.
+A deployment can be named and organized for its host—for example, *Inference Workload Memory* or *Operational Evidence Store*—without changing the underlying A.I.M.S. architecture or implementation. Host-specific identifiers should be supplied through existing configuration and data conventions where available. Physical renames affecting imports, manifests, ledger paths, hashes, or stored references require a verified compatibility/migration procedure rather than a blind search-and-replace.
 
 Instances must preserve host and tenant boundaries. A HARO configuration history must not become another host's memory merely because both use A.I.M.S.
 

@@ -36,7 +36,7 @@ def run(command, cwd, target, timeout=180):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--url", default="http://127.0.0.1:16520")
+    parser.add_argument("--url", required=True, help="Explicitly authorized test service endpoint")
     parser.add_argument("--gpu-index", type=int, default=0)
     args = parser.parse_args()
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
@@ -50,9 +50,9 @@ def main():
     gpu_folder = "RTX-5060-8GB" if "5060" in name else "RTX-3050-6GB" if "3050" in name else name.replace(" ", "-")
     base = ROOT / "results" / gpu_folder
     summary = dict(timestamp=stamp, gpu=name, telemetry=telemetry.stdout,
-                   workload=config, candidates={}, inference_comparison="not_available: stock candidates execute host fixtures, not llama inference")
-    for label, entry in (("claude", "haro.py"), ("grok", "haro.py")):
-        source = ROOT / "candidates" / ("haro-" + label)
+                   workload=config, candidates={}, inference_comparison="not_available: stock candidates execute host fixtures, not hardware inference")
+    for label, entry in (("alpha", "haro.py"), ("beta", "haro.py")):
+        source = ROOT / "candidates" / ("candidate-" + label)
         out = base / label / stamp
         out.mkdir(parents=True)
         before = hashes(source)

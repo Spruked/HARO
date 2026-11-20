@@ -25,10 +25,10 @@ def http(url, data=None):
         return json.load(response)
 
 
-def service_call(kind, config, out):
+def service_call(kind, config, out, text_url, speech_url, speaker, language):
     started = time.perf_counter()
     if kind == "llm":
-        data = http("http://127.0.0.1:16520/completion", {
+        data = http(text_url, {
             "prompt": config["prompt"], "n_predict": config["max_tokens"],
             "temperature": config["temperature"], "seed": config["seed"],
             "stream": False, "cache_prompt": False})
@@ -37,14 +37,14 @@ def service_call(kind, config, out):
         result = {"text": data["content"], "timings": data.get("timings")}
     else:
         from gradio_client import Client
-        client = Client("http://127.0.0.1:8031", verbose=False)
+        client = Client(speech_url, verbose=False)
         audio, status = client.predict(text="Hello. The HARO test lab is ready.",
-                                      lang_disp="English", spk_disp="Ryan", instruct="",
+                                      lang_disp=language, spk_disp=speaker, instruct="",
                                       api_name="/run_instruct")
         (out / "tts-response.json").write_text(json.dumps({"audio": audio, "status": status}, indent=2), encoding="utf-8")
         if not audio:
             raise RuntimeError("TTS returned no audio: " + str(status))
-        target = out / "qwen-tts.wav"
+        target = out / "speech-output.wav"
         shutil.copyfile(audio, target)
         with wave.open(str(target), "rb") as wav:
             frames, rate = wav.getnframes(), wav.getframerate()
@@ -62,7 +62,7 @@ async def trial(args):
     config = json.loads((ROOT / "test-config/common-workload.json").read_text(encoding="utf-8-sig"))
     result = {"candidate": args.candidate, "adapter": "external host dispatch; no candidate source edits",
               "scope": "existing services; no HARO GPU residency/admission validation", "results": {}}
-    source = ROOT / "candidates" / ("haro-" + args.candidate) / "haro.py"
+    source = ROOT / "candidates" / ("candidate-" + args.candidate) / "haro.py"
     before = hashlib.sha256(source.read_bytes()).hexdigest()
     module_spec = importlib.util.spec_from_file_location("haro_trial", source)
     module = importlib.util.module_from_spec(module_spec)
@@ -73,7 +73,7 @@ async def trial(args):
         execution = "external_shared_service"
 
         async def execute(self, job):
-            return await asyncio.to_thread(service_call, job.payload["service"], config, out)
+            return await asyncio.to_thread(service_call, job.payload["service"], config, out, args.text_url, args.speech_url, args.speaker, args.language)
 
     scheduler = module.Scheduler([ServiceBackend(128, 1)], str(out / "audit.jsonl"))
     for kind in (["llm", "tts"] if args.tts else ["llm"]):
@@ -93,7 +93,14 @@ async def trial(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--candidate", choices=["claude", "grok"], required=True)
+    parser.add_argument("--candidate", choices=["alpha", "beta"], required=True)
+    parser.add_argument("--text-url", required=True, help="Authorized text completion endpoint")
+    parser.add_argument("--speech-url", help="Authorized speech fixture endpoint")
+    parser.add_argument("--speaker", help="Speech profile supplied by the operator")
+    parser.add_argument("--language", default="English")
     parser.add_argument("--output", required=True)
     parser.add_argument("--tts", action="store_true")
-    asyncio.run(trial(parser.parse_args()))
+    args = parser.parse_args()
+    if args.tts and (not args.speech_url or not args.speaker):
+        parser.error("--tts requires both --speech-url and --speaker")
+    asyncio.run(trial(args))

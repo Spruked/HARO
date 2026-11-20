@@ -13,7 +13,7 @@
 | `AIMS/` | [`Spruked/AIMS`](https://github.com/Spruked/AIMS) | Private; authenticated GitHub account required |
 | `HARO_Vault_System/` | [`Spruked/Vault-Logic-System-Template`](https://github.com/Spruked/Vault-Logic-System-Template) | Public |
 
-**`Spruked/Orbot` is NOT an upstream source repository for either subsystem.** Its installed copy of A.I.M.S. is part of ORBOT's own system. Do not use it as the canonical template, depend on its private URL for doctrine validation, or modify it for HARO integration.
+**Canonical-source independence:** Only the listed independent upstream repositories are authoritative. Deployed copies inside downstream consumer applications are not HARO source dependencies.
 
 ## Exact, local, versioned doctrine files
 
@@ -33,7 +33,7 @@ The canonical source locations are:
 - [A.I.M.S. doctrine](https://github.com/Spruked/AIMS/blob/main/docs/COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.md) (private; requires authenticated access)
 - [Vault Logic doctrine](https://github.com/Spruked/Vault-Logic-System-Template/blob/main/docs/COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.md) (public)
 
-**Do not substitute `Spruked/Orbot` when the A.I.M.S. upstream is inaccessible.** GitHub can return HTTP 404 for private repositories to clients without permission; that does not prove the file is missing.
+**Do not substitute a downstream consumer copy when the canonical upstream is inaccessible.** An HTTP 404 can indicate restricted access to a private canonical repository.
 
 ## Required verification before architectural integration
 
@@ -66,6 +66,8 @@ Get-Content .\HARO_Vault_System\docs\COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.sha256
 
 ## Correction record
 
-Earlier documentation incorrectly pointed integrators to `Spruked/Orbot` as an A.I.M.S. doctrine source, creating a private-repository access failure and confusing ORBOT's installed copy with the independent reference source. This map supersedes that mistaken lookup path. It does not rewrite frozen doctrine text or retroactively claim additional implementation capability.
+Earlier documentation confused a downstream consumer deployment with an independent upstream. This map corrects that error without rewriting frozen doctrine or asserting new runtime capabilities.
 
 **Canonical rule: REUSE THE SYSTEM, NOT THE COMPONENTS.**
+
+**Sealed-document exception:** Legacy product names within canonical v1.0 doctrine are historical examples only; they do not define HARO dependencies. The sealed texts remain byte-for-byte identical to upstream to preserve their SHA-256. Any textual amendment requires a separately ratified version.

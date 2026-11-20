@@ -1,72 +1,19 @@
-HARO-One-Inference-Engine/
-├── .gitignore
+HARO/
 ├── README.md
+├── DOCTRINE_SOURCE_MAP.md
 ├── haro_inference_probe.code-workspace
-├── inference_probe.py
 ├── haro_integration.py
-├── tests/
-│   └── test_haro_integration.py
-├── AIMS/
-│   ├── DEV_LOG.md
-│   ├── HARDENING_CONTRACT.md
-│   ├── LICENSE
-│   ├── README.md
-│   ├── docs/
-│   │   ├── architecture.md
-│   │   └── COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.md
-│   ├── memory_core/
-│   ├── tests/
-│   └── service.py
-├── claude_haro/
-│   ├── READMEHAROClaude.md
-│   ├── haroclaude.py
-│   └── test_haroclaude.py
-├── HARO_Vault_System/
-│   ├── README.md
-│   ├── engine/
-│   ├── glyphs/
-│   ├── interfaces/
-│   ├── memory/
-│   │   └── matrix.py
-│   ├── scripts/
-│   ├── telemetry/
-│   ├── tests/
-│   ├── vaults/
-│   │   └── haro/
-│   │       ├── vault.json
-│   │       └── rules.json
-│   └── examples/
-└── HARO-Test-Lab/
+├── tests/test_haro_integration.py
+├── AIMS/                      # complete independent memory subsystem; sealed doctrine
+├── HARO_Vault_System/         # complete independent logic subsystem; sealed doctrine
+└── HARO-Test-Lab/             # test fixtures and historical measurement evidence
     ├── README.md
     ├── compare_inference.py
     ├── run_lab.py
     ├── service_trial.py
+    ├── archive/initial-candidate-alpha/
+    ├── candidates/candidate-alpha/
+    ├── candidates/candidate-beta/
     ├── inference-engine/
-    │   ├── README.md
-    │   └── inference_probe.py
-    ├── candidates/
-    │   ├── haro-claude/
-    │   │   ├── README.md
-    │   │   ├── haro.py
-    │   │   ├── test_haro.py
-    │   │   └── worker.py
-    │   └── haro-grok/
-    │       ├── README.md
-    │       ├── haro.py
-    │       ├── test_haro.py
-    │       └── worker.py
     ├── test-config/
-    │   └── common-workload.json
-    └── results/
-        └── RTX-5060-8GB/
-            ├── RESULTS.md
-            ├── FOLLOWUP.md
-            ├── source-integrity.json
-            ├── report-*.json
-            ├── claude/
-            ├── grok/
-            ├── direct-baseline/
-            ├── comparison-*/
-            └── diagnosis/
-
-Note: results/ contains generated benchmark, audit, service-trial, and comparison artifacts.
+    └── results/              # preserved raw outputs, hashes and provenance

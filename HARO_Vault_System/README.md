@@ -13,11 +13,11 @@ REUSE THE SYSTEM, NOT THE COMPONENTS. A.I.M.S. and the Vault Logic System are ea
 
 - **Correct Vault Logic upstream:** `Spruked/Vault-Logic-System-Template`.
 - **Correct A.I.M.S. upstream:** `Spruked/AIMS` (private, independent sibling system).
-- **Never use as upstream:** `Spruked/Orbot`. ORBOT is an example host, not a source or required dependency. Never retrieve Vault Logic or A.I.M.S. doctrine from ORBOT or block this HARO deployment merely because ORBOT cannot be accessed.
+- **Not canonical upstreams:** Deployed copies inside consumer applications are neither independent source repositories nor HARO dependencies.
 
 The full Vault Logic architecture remains intact; only host-specific naming, saved logic, rule classifications, stored data, and supported configuration change. The complete `AIMS/` deployment stands beside `HARO_Vault_System/` as a separate system. Neither is rebuilt, cherry-picked, nor silently consolidated into a shared service.
 
-**Verification:** Before architectural work, read HARO's [repository-level source map](../DOCTRINE_SOURCE_MAP.md), this directory's [frozen doctrine](docs/COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.md) and [checksum manifest](docs/COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.sha256). The required source Markdown SHA-256 is `83a48f537c0084cb919e439989aae4473f6a0c0e8b953815d85018da88759f82`. Use the correct Vault template upstream if online comparison is possible; ORBOT access is never required for this check.
+**Verification:** Before architectural work, read HARO's [repository-level source map](../DOCTRINE_SOURCE_MAP.md), this directory's [frozen doctrine](docs/COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.md) and [checksum manifest](docs/COMPLETE_SYSTEM_REUSE_DOCTRINE_v1.0.sha256). The required source Markdown SHA-256 is `83a48f537c0084cb919e439989aae4473f6a0c0e8b953815d85018da88759f82`. Use the correct Vault template upstream if online comparison is possible; No downstream consumer application access is required for this check.
 
 **Canonical rule: REUSE THE SYSTEM, NOT THE COMPONENTS.**
 
@@ -71,7 +71,7 @@ The Vault Logic System evaluates logic; it does not automatically acquire the ho
 
 | Host adaptation | Permitted when references and integrity are preserved |
 | --- | --- |
-| System title and root data-folder name | HARO Vault Logic System, ORBOT Vault Logic System, VIV Vault Logic System, etc. |
+| System title and root data-folder name | HARO Vault Logic System, Operational Policy Engine, or another host-defined deployment. |
 | Vault and category labels | Capability rules, scheduling rules, relationship rules, communications rules, and future domain-specific classifications. |
 | Saved content | Rules, documents, conditions, metadata, validation examples, and evaluation history relevant to the host. |
 | Data namespaces and storage paths | Host-owned records, matrix names, file collections, and database namespaces. |
@@ -135,7 +135,7 @@ The Vault Logic System evaluates logic; it does not automatically acquire the ho
 
 What changes from one deployment to another
 Host adaptation	Permitted when references and integrity are preserved
-System title and root data-folder name	HARO Vault Logic System, ORBOT Vault Logic System, VIV Vault Logic System, etc.
+System title and root data-folder name	HARO Vault Logic System, Operational Policy Engine, or another host-defined deployment.
 Vault and category labels	Capability rules, scheduling rules, relationship rules, communications rules, and future domain-specific classifications.
 Saved content	Rules, documents, conditions, metadata, validation examples, and evaluation history relevant to the host.
 Data namespaces and storage paths	Host-owned records, matrix names, file collections, and database namespaces.

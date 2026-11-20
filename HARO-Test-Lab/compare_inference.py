@@ -21,20 +21,19 @@ def load(name, path):
     return module
 
 
-async def main():
+async def main(url):
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    folder = ROOT / "results/RTX-5060-8GB" / ("comparison-" + stamp)
+    folder = ROOT / "results" / ("comparison-" + stamp)
     folder.mkdir(parents=True)
     config = json.loads((ROOT / "test-config/common-workload.json").read_text(encoding="utf-8-sig"))
     probe = load("comparison_probe", ROOT / "inference-engine/inference_probe.py")
-    url = "http://127.0.0.1:16520"
     models = probe.http_json(url + "/v1/models")
     gpu = probe.available_gpus()[0]
-    modules = {name: load("compare_" + name, ROOT / "candidates" / ("haro-" + name) / "haro.py") for name in ("claude", "grok")}
-    sources = {name: hashlib.sha256((ROOT / "candidates" / ("haro-" + name) / "haro.py").read_bytes()).hexdigest() for name in modules}
+    modules = {name: load("compare_" + name, ROOT / "candidates" / ("candidate-" + name) / "haro.py") for name in ("alpha", "beta")}
+    sources = {name: hashlib.sha256((ROOT / "candidates" / ("candidate-" + name) / "haro.py").read_bytes()).hexdigest() for name in modules}
     rows = []
     # Rotate order to reduce systematic first/last-run bias. No service reconfiguration.
-    for repetition, order in enumerate((("direct", "claude", "grok"), ("grok", "direct", "claude"), ("claude", "grok", "direct")), 1):
+    for repetition, order in enumerate((("direct", "alpha", "beta"), ("beta", "direct", "alpha"), ("alpha", "beta", "direct")), 1):
         for name in order:
             samples, errors = [], []
             stop = threading.Event()
@@ -81,7 +80,7 @@ async def main():
             (folder / "runs.json").write_text(json.dumps(rows, indent=2), encoding="utf-8")
             print(name, repetition, row["status"], round(row.get("wall_s", 0), 3), flush=True)
     summary = {}
-    for name in ("direct", "claude", "grok"):
+    for name in ("direct", "alpha", "beta"):
         group = [r for r in rows if r["candidate"] == name and r["status"] == "ok"]
         summary[name] = dict(passed=len(group), total=3,
             median_wall_s=statistics.median(r["wall_s"] for r in group) if group else None,
@@ -98,4 +97,7 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--url", required=True, help="Explicitly authorized test service endpoint")
+    asyncio.run(main(parser.parse_args().url))

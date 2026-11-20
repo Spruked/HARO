@@ -33,14 +33,14 @@ class HaroIntegrationTests(unittest.TestCase):
             reopened.close()
 
     def test_vault_allows_safe_context_and_denies_unsafe_or_missing(self):
-        safe = evaluate_haro_context({"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024})
+        safe = evaluate_haro_context({"capability": "text_generation", "requested_memory_mib": 512, "available_memory_mib": 1024})
         self.assertTrue(safe["allowed"])
         self.assertTrue(safe["matched_rules"])
 
         with tempfile.TemporaryDirectory() as directory:
             system = HaroSubsystems(Path(directory))
             integrated = system.evaluate_and_record(
-                {"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024},
+                {"capability": "text_generation", "requested_memory_mib": 512, "available_memory_mib": 1024},
                 provenance={"source": "isolated-test", "operation_id": "op-2"},
             )
             self.assertTrue(integrated["evaluation"]["glyph_trace"] == [])
@@ -55,10 +55,10 @@ class HaroIntegrationTests(unittest.TestCase):
             root = Path(directory)
             system = HaroSubsystems(root)
             contexts = [
-                {"capability": "llama", "requested_memory_mib": 6800, "available_memory_mib": 751},
-                {"capability": "llama"},
-                {"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024, "requires_model_residency": True},
-                {"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024, "unsafe": "true"},
+                {"capability": "text_generation", "requested_memory_mib": 6800, "available_memory_mib": 751},
+                {"capability": "text_generation"},
+                {"capability": "text_generation", "requested_memory_mib": 512, "available_memory_mib": 1024, "requires_model_residency": True},
+                {"capability": "text_generation", "requested_memory_mib": 512, "available_memory_mib": 1024, "unsafe": "true"},
                 {"requested_memory_mib": 512, "available_memory_mib": 1024},
             ]
             for context in contexts:
@@ -70,25 +70,25 @@ class HaroIntegrationTests(unittest.TestCase):
             self.assertEqual(len(system.vault_memory._read()["matrices"]["haro_evaluations"]), len(contexts))
             system.close()
 
-        unsafe = evaluate_haro_context({"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024, "unsafe": True})
+        unsafe = evaluate_haro_context({"capability": "text_generation", "requested_memory_mib": 512, "available_memory_mib": 1024, "unsafe": True})
         self.assertFalse(unsafe["allowed"])
         self.assertEqual(unsafe["decision"], "deny")
 
         missing = evaluate_haro_context({"requested_memory_mib": 512, "available_memory_mib": 1024})
         self.assertEqual(missing["decision"], "deny")
 
-        oversized = evaluate_haro_context({"capability": "llama", "requested_memory_mib": 2048, "available_memory_mib": 1024})
+        oversized = evaluate_haro_context({"capability": "text_generation", "requested_memory_mib": 2048, "available_memory_mib": 1024})
         self.assertEqual(oversized["decision"], "deny")
 
-        invalid = evaluate_haro_context({"capability": "llama", "requested_memory_mib": "512", "available_memory_mib": 1024})
+        invalid = evaluate_haro_context({"capability": "text_generation", "requested_memory_mib": "512", "available_memory_mib": 1024})
         self.assertEqual(invalid["decision"], "deny")
 
-        residency = evaluate_haro_context({"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024, "requires_model_residency": True})
+        residency = evaluate_haro_context({"capability": "text_generation", "requested_memory_mib": 512, "available_memory_mib": 1024, "requires_model_residency": True})
         self.assertEqual(residency["decision"], "deny")
 
     def test_explicit_deny_precedes_allow_and_conflicting_allows_are_unresolved(self):
         result = evaluate_haro_context(
-            {"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024},
+            {"capability": "text_generation", "requested_memory_mib": 512, "available_memory_mib": 1024},
             [
                 {"id": "allow", "domain": "test", "when": {"capability_present": True}, "action": "allow"},
                 {"id": "deny", "domain": "test", "when": {"capability_present": True}, "action": "deny"},
@@ -98,7 +98,7 @@ class HaroIntegrationTests(unittest.TestCase):
         self.assertFalse(result["allowed"])
 
         unresolved = evaluate_haro_context(
-            {"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024},
+            {"capability": "text_generation", "requested_memory_mib": 512, "available_memory_mib": 1024},
             [
                 {"id": "allow-a", "domain": "test", "when": {"capability_present": True}, "action": "allow"},
                 {"id": "allow-b", "domain": "test", "when": {"capability_present": True}, "action": "allow"},
@@ -108,7 +108,7 @@ class HaroIntegrationTests(unittest.TestCase):
         self.assertFalse(unresolved["allowed"])
 
         malformed = evaluate_haro_context(
-            {"capability": "llama", "requested_memory_mib": 512, "available_memory_mib": 1024},
+            {"capability": "text_generation", "requested_memory_mib": 512, "available_memory_mib": 1024},
             [{"id": "bad", "domain": "test", "when": {}, "action": "approve"}],
         )
         self.assertEqual(malformed["decision"], "unresolved")
