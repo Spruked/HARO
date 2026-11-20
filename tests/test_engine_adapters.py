@@ -396,20 +396,39 @@ class FabricTests(unittest.TestCase):
         evicting.close()
 
     def test_interactive_work_is_admitted_before_background(self):
-        order = []
-        counting = _CountingAdapter(self.local, order)
-        fabric = Fabric({"local": counting}, [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100, approved_work_types=("conversation",))],
+        """Deterministic: the queue is arranged by observed state, not by sleeps."""
+        order, release = [], threading.Event()
+
+        class Holding(_CountingAdapter):
+            def execute(self, request, cancel):
+                self.log.append(request.inputs.get("tag"))
+                if request.inputs.get("tag") == "first":
+                    release.wait(15)          # hold the device until both others are queued
+                return self.inner.execute(request, cancel)
+
+        fabric = Fabric({"local": Holding(self.local, order)},
+                        [Binding(CAP_CHAT, "local", "model-a", resident_mib=400, transient_mib=100,
+                                 approved_work_types=("conversation",))],
                         telemetry=self.device, safety_margin_mib=0)
-        self.engine.slow_tokens_s = 0.05
-        blocker = fabric.submit(self.ask(inputs={"messages": [{"role": "user", "content": "x"}], "tag": "first"}))
-        time.sleep(0.2)
-        background = fabric.submit(self.ask(priority=PRIORITY_BACKGROUND,
-                                            inputs={"messages": [{"role": "user", "content": "x"}], "tag": "background"}))
-        time.sleep(0.1)
-        interactive = fabric.submit(self.ask(priority=PRIORITY_INTERACTIVE, queue_timeout_s=10,
-                                             inputs={"messages": [{"role": "user", "content": "x"}], "tag": "interactive"}))
+        gate = fabric._gates[self.device.device_id]
+
+        def wait_until(condition, what):
+            deadline = time.monotonic() + 15
+            while not condition():
+                if time.monotonic() > deadline:
+                    self.fail(f"timed out waiting for {what}")
+                time.sleep(0.01)
+
+        msg = lambda tag: {"messages": [{"role": "user", "content": "x"}], "tag": tag}
+        blocker = fabric.submit(self.ask(inputs=msg("first"), queue_timeout_s=15, timeout_s=20))
+        wait_until(lambda: order == ["first"], "blocker executing")
+        background = fabric.submit(self.ask(priority=PRIORITY_BACKGROUND, inputs=msg("background"), queue_timeout_s=15))
+        wait_until(lambda: gate.snapshot()["waiting"] == 1, "background queued")
+        interactive = fabric.submit(self.ask(priority=PRIORITY_INTERACTIVE, inputs=msg("interactive"), queue_timeout_s=15))
+        wait_until(lambda: gate.snapshot()["waiting"] == 2, "interactive queued")
+        release.set()
         for ticket in (blocker, background, interactive):
-            self.assertEqual(ticket.outcome(15).status, STATUS_OK)
+            self.assertEqual(ticket.outcome(20).status, STATUS_OK)
         self.assertEqual(order, ["first", "interactive", "background"])
         fabric.close()
 
