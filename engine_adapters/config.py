@@ -141,7 +141,8 @@ def build_fabric(config: Mapping[str, Any], *, subsystems: Any = None) -> Fabric
                         resident_mib=b.get("resident_mib"), transient_mib=b.get("transient_mib"),
                         keep_alive_s=b.get("keep_alive_s"),
                         approved_work_types=tuple(b["approved_work_types"]),
-                        memory_gating=b.get("memory_gating", "required"))
+                        memory_gating=b.get("memory_gating", "required"),
+                        memory_model=b.get("memory_model", "transient_per_request"))
     bindings = [make_binding(b) for b in config.get("bindings", [])]
     options = config.get("fabric", {})
     device_concurrency = {}

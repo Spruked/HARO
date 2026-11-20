@@ -112,6 +112,7 @@ class Binding:
     keep_alive_s: float | None = None
     approved_work_types: tuple[str, ...] = ()
     memory_gating: str = "required"
+    memory_model: str = "transient_per_request"
 
     def validate(self) -> None:
         if self.capability not in KNOWN_CAPABILITIES:
@@ -120,6 +121,8 @@ class Binding:
             raise ValueError(f"binding {self.adapter_id}/{self.model}: approved_work_types must be declared")
         if self.memory_gating not in {"required", "tracked_unmeasured"}:
             raise ValueError(f"binding {self.adapter_id}/{self.model}: unsupported memory_gating {self.memory_gating!r}")
+        if self.memory_model not in {"engine_managed_residency", "standing_service", "transient_per_request"}:
+            raise ValueError(f"binding {self.adapter_id}/{self.model}: unsupported memory_model {self.memory_model!r}")
         unknown_work = set(self.approved_work_types) - KNOWN_WORK_TYPES
         if unknown_work:
             raise ValueError(f"binding {self.adapter_id}/{self.model}: unknown work types {sorted(unknown_work)}")
@@ -172,6 +175,18 @@ class AdapterDescriptor:
     # True when executing against a non-resident model makes the engine load it
     # implicitly. HARO must then admit the load before dispatching the request.
     implicit_load_on_execute: bool = False
+    cancellation_semantics: tuple[tuple[str, str], ...] = (
+        ("requested", "unverified"), ("transport_closed", "unverified"),
+        ("engine_acknowledged", "unsupported"), ("computation_stopped", "unsupported"),
+        ("resources_released", "unverified"),
+    )
+
+    def validate(self) -> None:
+        levels = {"requested", "transport_closed", "engine_acknowledged", "computation_stopped", "resources_released"}
+        statuses = {"verified", "unverified", "unsupported"}
+        declared = dict(self.cancellation_semantics)
+        if set(declared) != levels or any(value not in statuses for value in declared.values()):
+            raise ValueError("cancellation_semantics must declare every cancellation level with a valid status")
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
