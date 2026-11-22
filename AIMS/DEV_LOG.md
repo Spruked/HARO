@@ -1,5 +1,22 @@
 # A.I.M.S. Development Log
 
+## 2026-11-21 — HARO-related services left stopped
+
+- Shutdown requested at 2026-11-21T18:47:59.8587857-06:00 America/Chicago.
+- `ORB Qwen 7B Server` was stopped at 18:48:11.0472812 and is now `Ready`; it remains enabled for its normal future trigger.
+- `Shared Qwen3 TTS` was stopped at 18:48:11.0667102 and is now `Ready`; it remains enabled for its normal future trigger.
+- No listeners were present on HARO-related ports 8031, 11434, 16520 or 3900 at the shutdown checks. No Ollama process was present.
+- Final shutdown evidence is recorded in `HARO-Test-Lab/results/RTX-5060/SHUTDOWN-STATE-20261121.md`.
+
+## 2026-11-21 — HARO Checkpoint 0 live evidence reconciliation
+
+- Corrected the Windows Hugging Face cache interpretation: the Q4_K_M snapshot entries are symbolic links whose targets contain 3,993,201,344 and 689,872,288 bytes.
+- The matching Q4_K_M pair was merged locally for the Ollama comparison; no model download was used. The merged test artifact and its digest are preserved in Test-Lab evidence, not in the HARO source tree.
+- Targeted Ollama Q4 lifecycle passed: health, inventory, load, chat, recovery and unload. Device memory sampling was continuous at 200 ms; engine-reported residency was 5,219 MiB and peak device usage was 7,659 MiB.
+- Restoring `ORB Qwen 7B Server` returned port 16520 to HTTP 200. The full Checkpoint 0 remains incomplete because the earlier orchestration stopped after inventory before speech, cancellation, remote Nemotron and A.I.M.S. restart evidence.
+- Ollama is optional. An absent local Ollama installation is recorded as an unavailable/not-run binding with its connection reason, not as a validation failure.
+- Owner-declared fingerprint fact: NVIDIA CUDA Sysmem Fallback Policy = Prefer No Sysmem Fallback (Global), applied 2026-11-20T14:24:45.1616126-06:00 America/Chicago.
+
 ## 2026-09-13 — Initial repository
 
 - Created and pushed root commit `1204914` to `Spruked/AIMS` on `main`.

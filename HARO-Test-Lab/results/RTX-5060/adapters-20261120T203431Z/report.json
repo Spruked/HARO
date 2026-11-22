@@ -1,0 +1,1017 @@
+{
+  "schema": "haro-live-validation/1",
+  "steps": [
+    {
+      "step": "inventory:local-ollama",
+      "source": "live",
+      "health": {
+        "healthy": true,
+        "latency_s": 0.032,
+        "detail": "HTTP 200",
+        "checked_at_monotonic": 7561.75
+      },
+      "models": [
+        {
+          "model": "haro-qwen25-7b-q5:latest",
+          "residency": "cold",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {
+            "size_on_disk_mib": 5193,
+            "digest": "8dc2fd5f9e2b0c367aef7ca76cbe40f9367fc5888a64d6eecc78691512db166b",
+            "parameter_size": "7.6B",
+            "quantization": "Q5_K_M"
+          }
+        }
+      ],
+      "status": "passed",
+      "wall_s": 0.938
+    },
+    {
+      "step": "inventory:local-llama-server",
+      "source": "live",
+      "health": {
+        "healthy": true,
+        "latency_s": 1.188,
+        "detail": "HTTP 200",
+        "checked_at_monotonic": 7563.859
+      },
+      "models": [
+        {
+          "model": "C:\\Users\\bryan\\.cache\\huggingface\\hub\\models--Qwen--Qwen2.5-7B-Instruct-GGUF\\snapshots\\bb5d59e06d9551d752d08b292a50eb208b07ab1f\\qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf",
+          "residency": "resident",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {
+            "owned_by": "llamacpp"
+          }
+        }
+      ],
+      "status": "passed",
+      "wall_s": 2.016
+    },
+    {
+      "step": "inventory:voice-studio",
+      "source": "live",
+      "health": {
+        "healthy": true,
+        "latency_s": 2.328,
+        "detail": "HTTP 200",
+        "checked_at_monotonic": 7567.015
+      },
+      "models": [
+        {
+          "model": "tts-1",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "tts-1-hd",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "gpt-4o-mini-tts",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "whisper-1",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "gpt-4o-transcribe",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "gpt-4o-mini-transcribe",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "omnivoice",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "kittentts",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "omnivoice-subprocess",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "whisperx",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        }
+      ],
+      "status": "passed",
+      "wall_s": 4.516
+    },
+    {
+      "step": "inventory:remote-openai-compatible",
+      "source": "live",
+      "health": {
+        "healthy": true,
+        "latency_s": 0.312,
+        "detail": "HTTP 200",
+        "checked_at_monotonic": 7569.515
+      },
+      "models": [
+        {
+          "model": "bigcode/starcoder2-15b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "bigcode"
+          }
+        },
+        {
+          "model": "fastino/gliner2-pii",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "fastino"
+          }
+        },
+        {
+          "model": "google/gemma-3-12b-it",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "google"
+          }
+        },
+        {
+          "model": "google/gemma-3-4b-it",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "google"
+          }
+        },
+        {
+          "model": "google/gemma-4-31b-it",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "google"
+          }
+        },
+        {
+          "model": "meta/muse-glimmer-30b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "meta"
+          }
+        },
+        {
+          "model": "minimaxai/minimax-m3.1-flash",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "minimaxai"
+          }
+        },
+        {
+          "model": "mistralai/mistral-large-4-1t-a52b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "mistralai"
+          }
+        },
+        {
+          "model": "moonshotai/kimi-k3.1-pro",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "moonshotai"
+          }
+        },
+        {
+          "model": "nvidia/ai-synthetic-video-detector",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/cosmos-reason2-8b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/embed-qa-4",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/ising-calibration-1.5-31b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/llama-3.1-nemoguard-8b-topic-control",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/llama-3.1-nemotron-safety-guard-8b-v3",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/llama-3.2-nemoretriever-1b-vlm-embed-v1",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/llama-3.2-nv-embedqa-1b-v1",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nemotron-3-embed-1b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nemotron-3-ultra-550b-a55b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nemotron-3.5-bolt-e4b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nemotron-3.5-content-safety",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nemotron-3.5-embed-1b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nemotron-3.5-embed-8b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nemotron-3.5-lightning-30b-a3b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nemotron-3.5-super-vl-120b-a12b",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nv-embedqa-mistral-7b-v2",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/nvclip",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "nvidia/riva-translate-4b-instruct-v2",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "nvidia"
+          }
+        },
+        {
+          "model": "poolside/laguna-xs-2.1",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "poolside"
+          }
+        },
+        {
+          "model": "snowflake/arctic-embed-l",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "snowflake"
+          }
+        },
+        {
+          "model": "stepfun-ai/step-5-preview",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "stepfun-ai"
+          }
+        },
+        {
+          "model": "z-ai/glm-5.3-flash",
+          "residency": "remote",
+          "device_memory_mib": null,
+          "memory_measurement": "not_applicable",
+          "details": {
+            "owned_by": "z-ai"
+          }
+        }
+      ],
+      "status": "passed",
+      "wall_s": 0.515
+    },
+    {
+      "step": "speech:round_trip",
+      "source": "live",
+      "synthesis": [
+        {
+          "run": 1,
+          "status": "ok",
+          "error": null,
+          "output": {
+            "audio_path": "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060\\adapters-20261120T203431Z\\audio\\synthesis-1.wav",
+            "bytes": 95462,
+            "format": "wav",
+            "voice": "40d388b3",
+            "sample_rate": 24000,
+            "channels": 1,
+            "sample_width_bytes": 2,
+            "frames": 47709,
+            "duration_s": 1.9879
+          },
+          "timings": {
+            "total_s": 25.031
+          },
+          "engine_metrics": {
+            "real_time_factor": 12.5917
+          },
+          "device": {
+            "peak_minus_before_mib": 18,
+            "after_minus_before_mib": 4,
+            "measurement": "device_delta",
+            "summary": {
+              "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+              "sample_count": 59,
+              "interval_s": 0.2,
+              "min_used_mib": 7162,
+              "max_used_mib": 7184,
+              "first_used_mib": 7166,
+              "last_used_mib": 7170,
+              "error_count": 0,
+              "errors": [],
+              "kind": "whole_device",
+              "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+            }
+          }
+        },
+        {
+          "run": 2,
+          "status": "ok",
+          "error": null,
+          "output": {
+            "audio_path": "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060\\adapters-20261120T203431Z\\audio\\synthesis-2.wav",
+            "bytes": 93654,
+            "format": "wav",
+            "voice": "40d388b3",
+            "sample_rate": 24000,
+            "channels": 1,
+            "sample_width_bytes": 2,
+            "frames": 46805,
+            "duration_s": 1.9502
+          },
+          "timings": {
+            "total_s": 38.953
+          },
+          "engine_metrics": {
+            "real_time_factor": 19.9738
+          },
+          "device": {
+            "peak_minus_before_mib": 13,
+            "after_minus_before_mib": -15,
+            "measurement": "device_delta",
+            "summary": {
+              "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+              "sample_count": 66,
+              "interval_s": 0.2,
+              "min_used_mib": 7154,
+              "max_used_mib": 7183,
+              "first_used_mib": 7170,
+              "last_used_mib": 7155,
+              "error_count": 0,
+              "errors": [],
+              "kind": "whole_device",
+              "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+            }
+          }
+        }
+      ],
+      "transcription": {
+        "status": "ok",
+        "error": null,
+        "text": "This is a test of the speech adapter.",
+        "word_overlap_with_input": 1.0,
+        "timings": {
+          "total_s": 8.281
+        },
+        "device": {
+          "peak_minus_before_mib": 312,
+          "after_minus_before_mib": 25,
+          "measurement": "device_delta",
+          "summary": {
+            "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+            "sample_count": 18,
+            "interval_s": 0.2,
+            "min_used_mib": 7153,
+            "max_used_mib": 7465,
+            "first_used_mib": 7153,
+            "last_used_mib": 7178,
+            "error_count": 0,
+            "errors": [],
+            "kind": "whole_device",
+            "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+          }
+        }
+      },
+      "status": "passed",
+      "wall_s": 74.25
+    },
+    {
+      "step": "engine_managed:lifecycle",
+      "source": "live",
+      "model": "haro-qwen25-7b-q5",
+      "resident_before_run": false,
+      "load": {
+        "model": "haro-qwen25-7b-q5",
+        "operation": "load",
+        "status": "ok",
+        "duration_s": 104.281,
+        "residency_after": "resident",
+        "device_memory_mib": 5881,
+        "memory_measurement": "engine_reported",
+        "error": null,
+        "details": {
+          "engine_load_duration_ns": null,
+          "size_total_mib": 5881,
+          "accelerator_fraction": 1.0,
+          "expires_at": "2319-03-02T14:24:55.927638107-06:00",
+          "digest": "8dc2fd5f9e2b0c367aef7ca76cbe40f9367fc5888a64d6eecc78691512db166b",
+          "parameter_size": "7.6B",
+          "quantization": "Q5_K_M"
+        },
+        "device": {
+          "peak_minus_before_mib": 580,
+          "after_minus_before_mib": 533,
+          "measurement": "device_delta",
+          "summary": {
+            "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+            "sample_count": 70,
+            "interval_s": 0.2,
+            "min_used_mib": 7162,
+            "max_used_mib": 7758,
+            "first_used_mib": 7178,
+            "last_used_mib": 7711,
+            "error_count": 5,
+            "errors": [
+              "TimeoutExpired: Command '['nvidia-smi', '--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,driver_version', '--format=csv,noheader,nounits']' timed out after 4.0 seconds",
+              "TimeoutExpired: Command '['nvidia-smi', '--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,driver_version', '--format=csv,noheader,nounits']' timed out after 4.0 seconds",
+              "TimeoutExpired: Command '['nvidia-smi', '--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,driver_version', '--format=csv,noheader,nounits']' timed out after 4.0 seconds",
+              "TimeoutExpired: Command '['nvidia-smi', '--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,driver_version', '--format=csv,noheader,nounits']' timed out after 4.0 seconds",
+              "TimeoutExpired: Command '['nvidia-smi', '--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,driver_version', '--format=csv,noheader,nounits']' timed out after 4.0 seconds"
+            ],
+            "kind": "whole_device",
+            "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+          }
+        }
+      },
+      "chat": {
+        "status": "ok",
+        "error": null,
+        "text": {
+          "chars": 218,
+          "preview": "Reliable resource accounting ensures efficient management and optimization of computational, storage, and energy resources, which is crucial for the performance, scalability, and cost-effectiveness of"
+        },
+        "timings": {
+          "first_output_s": 59.484,
+          "total_s": 61.937
+        },
+        "engine_metrics": {
+          "total_duration": 61931350300,
+          "load_duration": 3043477200,
+          "prompt_eval_count": 43,
+          "prompt_eval_duration": 55171373000,
+          "eval_count": 36,
+          "eval_duration": 2455467000,
+          "implicit_load_ns": 3043477200
+        },
+        "device": {
+          "peak_minus_before_mib": 15,
+          "after_minus_before_mib": -5941,
+          "measurement": "device_delta",
+          "summary": {
+            "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+            "sample_count": 182,
+            "interval_s": 0.2,
+            "min_used_mib": 1770,
+            "max_used_mib": 7726,
+            "first_used_mib": 7711,
+            "last_used_mib": 1770,
+            "error_count": 0,
+            "errors": [],
+            "kind": "whole_device",
+            "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+          }
+        }
+      },
+      "cancellation": {
+        "result_status": "cancelled",
+        "cancel_issued_after_s": 1.516,
+        "control_returned_after_cancel_s": 0.203,
+        "completed_before_cancel": false,
+        "engine_stopped_work": "unverified (client disconnect observed only)"
+      },
+      "recovery_after_cancel": {
+        "status": "ok",
+        "error": null,
+        "text": {
+          "chars": 218,
+          "preview": "Reliable resource accounting ensures efficient management and optimization of computational, storage, and energy resources, which is crucial for the performance, scalability, and cost-effectiveness of"
+        }
+      },
+      "unload": {
+        "model": "haro-qwen25-7b-q5",
+        "operation": "unload",
+        "status": "ok",
+        "duration_s": 0.344,
+        "residency_after": "cold",
+        "device_memory_mib": 5881,
+        "memory_measurement": "engine_reported",
+        "error": null,
+        "details": {
+          "note": "device_memory_mib is the engine-reported residency released"
+        },
+        "device": {
+          "peak_minus_before_mib": 0,
+          "after_minus_before_mib": -2075,
+          "measurement": "device_delta",
+          "summary": {
+            "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+            "sample_count": 3,
+            "interval_s": 0.2,
+            "min_used_mib": 1804,
+            "max_used_mib": 7644,
+            "first_used_mib": 7644,
+            "last_used_mib": 5569,
+            "error_count": 0,
+            "errors": [],
+            "kind": "whole_device",
+            "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+          }
+        }
+      },
+      "status": "passed",
+      "wall_s": 180.094
+    },
+    {
+      "step": "external_server:local-llama-server",
+      "source": "live",
+      "status": "passed",
+      "model": "C:\\Users\\bryan\\.cache\\huggingface\\hub\\models--Qwen--Qwen2.5-7B-Instruct-GGUF\\snapshots\\bb5d59e06d9551d752d08b292a50eb208b07ab1f\\qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf",
+      "result_status": "ok",
+      "error": null,
+      "text": {
+        "chars": 181,
+        "preview": "A voice assistant needs reliable resource accounting to ensure efficient management and optimization of computational resources, thereby improving performance and user satisfaction."
+      },
+      "timings": {
+        "first_output_s": 18.89,
+        "total_s": 19.64
+      },
+      "engine_metrics": {
+        "usage": null,
+        "timings": {
+          "cache_n": 42,
+          "prompt_n": 1,
+          "prompt_ms": 18417.766,
+          "prompt_per_token_ms": 18417.766,
+          "prompt_per_second": 0.054295401516123075,
+          "predicted_n": 25,
+          "predicted_ms": 758.618,
+          "predicted_per_token_ms": 31.609083333333334,
+          "predicted_per_second": 31.63647580205057
+        }
+      },
+      "device": {
+        "peak_minus_before_mib": 1977,
+        "after_minus_before_mib": 1956,
+        "measurement": "device_delta",
+        "summary": {
+          "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+          "sample_count": 27,
+          "interval_s": 0.2,
+          "min_used_mib": 5570,
+          "max_used_mib": 7559,
+          "first_used_mib": 5582,
+          "last_used_mib": 7538,
+          "error_count": 1,
+          "errors": [
+            "TimeoutExpired: Command '['nvidia-smi', '--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,driver_version', '--format=csv,noheader,nounits']' timed out after 4.0 seconds"
+          ],
+          "kind": "whole_device",
+          "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+        }
+      },
+      "wall_s": 21.907
+    },
+    {
+      "step": "owned_process:lifecycle",
+      "source": "live",
+      "status": "not_run",
+      "reason": "--llama-server and --llama-model not given",
+      "wall_s": 0.0
+    },
+    {
+      "step": "remote:remote-openai-compatible",
+      "source": "live",
+      "status": "passed",
+      "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning",
+      "result_status": "ok",
+      "error": null,
+      "text": {
+        "chars": 213,
+        "preview": "A voice assistant needs reliable resource accounting to accurately monitor and allocate its limited computational, memory, and energy resources, preventing overload and ensuring consistent, responsive"
+      },
+      "reasoning_chars": 511,
+      "timings": {
+        "first_output_s": 0.437,
+        "total_s": 1.093
+      },
+      "engine_metrics": {
+        "usage": null,
+        "timings": null
+      },
+      "local_device_memory": "not_applicable (remote execution)",
+      "wall_s": 1.093
+    },
+    {
+      "step": "fabric:voice_turn",
+      "source": "live",
+      "chat_binding": "local-ollama/haro-qwen25-7b-q5",
+      "hear": {
+        "status": "refused",
+        "error": "no per-request memory figure configured for local accelerator work",
+        "timings": {
+          "total_s": 0.0
+        }
+      },
+      "reason": {
+        "status": "refused",
+        "error": "Vault Logic decision deny: mandatory HARO conditions were not satisfied",
+        "timings": {
+          "total_s": 0.094
+        },
+        "decisions": [
+          {
+            "vault_logic": {
+              "decision": "deny",
+              "allowed": false,
+              "reason": "mandatory HARO conditions were not satisfied",
+              "matched_rules": [],
+              "telemetry": {
+                "evaluation_ms": 1.902,
+                "rule_count": 4
+              },
+              "execution_authority": "HARO host; Vault Logic does not execute or admit resources",
+              "glyph_trace": [
+                "\u26a0\ufe0f"
+              ],
+              "memory_matrix_key": "last_haro_evaluation",
+              "telemetry_recorded": true,
+              "evidence_entry_id": "4f8e2245-05b1-41d3-a121-25d96e8e19a9",
+              "test_mode": false
+            }
+          },
+          {
+            "binding": "local-ollama/haro-qwen25-7b-q5",
+            "refused": "Vault Logic decision deny: mandatory HARO conditions were not satisfied"
+          }
+        ],
+        "device": null
+      },
+      "speak": {
+        "status": "refused",
+        "error": "no per-request memory figure configured for local accelerator work",
+        "timings": {
+          "total_s": 0.0
+        }
+      },
+      "aims_entries_before_restart": 5,
+      "aims_entries_after_restart": 5,
+      "aims_integrity_after_restart": {
+        "chain_valid": true,
+        "broken_sequences": []
+      },
+      "status": "failed",
+      "wall_s": 0.266
+    }
+  ],
+  "environment": {
+    "started_utc": "20261120T203431Z",
+    "python": "3.11.9",
+    "platform": "Windows-10-10.0.26300-SP0",
+    "haro_commit": "5a5b26b5bcee2aae77f74d4df59ae5301ddecbca",
+    "config": "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\deployment\\test-machine.json",
+    "devices": [
+      {
+        "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+        "index": "0",
+        "name": "NVIDIA GeForce RTX 5060",
+        "vendor": "nvidia",
+        "total_mib": 8151,
+        "used_mib": 7185,
+        "free_mib": 711,
+        "driver": "621.24"
+      }
+    ],
+    "measurement_device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+    "allow_remote": true
+  },
+  "adapters": {
+    "local-ollama": {
+      "adapter_id": "local-ollama",
+      "protocol": "ollama-native",
+      "location": "local",
+      "lifecycle": "engine_managed",
+      "capabilities": [
+        "chat",
+        "text_generation",
+        "embedding"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": true,
+      "reports_device_memory": true,
+      "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+      "endpoint": "http://127.0.0.1:11434",
+      "implicit_load_on_execute": true,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    },
+    "local-llama-server": {
+      "adapter_id": "local-llama-server",
+      "protocol": "llama.cpp-server",
+      "location": "local",
+      "lifecycle": "none",
+      "capabilities": [
+        "chat",
+        "text_generation"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": true,
+      "reports_device_memory": false,
+      "device_id": null,
+      "endpoint": "http://127.0.0.1:16520",
+      "implicit_load_on_execute": false,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    },
+    "voice-studio": {
+      "adapter_id": "voice-studio",
+      "protocol": "openai-audio",
+      "location": "local",
+      "lifecycle": "none",
+      "capabilities": [
+        "speech_synthesis",
+        "speech_recognition"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": false,
+      "reports_device_memory": false,
+      "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+      "endpoint": "http://127.0.0.1:3900/v1",
+      "implicit_load_on_execute": false,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    },
+    "remote-openai-compatible": {
+      "adapter_id": "remote-openai-compatible",
+      "protocol": "openai-chat",
+      "location": "remote",
+      "lifecycle": "none",
+      "capabilities": [
+        "chat"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": true,
+      "reports_device_memory": false,
+      "device_id": null,
+      "endpoint": "https://integrate.api.nvidia.com/v1",
+      "implicit_load_on_execute": false,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,331 @@
+{
+  "schema": "haro-live-validation/1",
+  "steps": [
+    {
+      "step": "inventory:local-ollama",
+      "source": "live",
+      "health": {
+        "healthy": false,
+        "latency_s": null,
+        "detail": "EngineUnavailable: cannot connect to http://127.0.0.1:11434: ConnectionRefusedError",
+        "checked_at_monotonic": 3402.609
+      },
+      "status": "failed",
+      "wall_s": 2.047
+    },
+    {
+      "step": "inventory:local-llama-server",
+      "source": "live",
+      "health": {
+        "healthy": true,
+        "latency_s": 0.016,
+        "detail": "HTTP 200",
+        "checked_at_monotonic": 3402.625
+      },
+      "models": [
+        {
+          "model": "C:\\Users\\bryan\\.cache\\huggingface\\hub\\models--Qwen--Qwen2.5-7B-Instruct-GGUF\\snapshots\\bb5d59e06d9551d752d08b292a50eb208b07ab1f\\qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf",
+          "residency": "resident",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {
+            "owned_by": "llamacpp"
+          }
+        }
+      ],
+      "status": "passed",
+      "wall_s": 0.031
+    },
+    {
+      "step": "inventory:voice-studio",
+      "source": "live",
+      "health": {
+        "healthy": false,
+        "latency_s": null,
+        "detail": "EngineUnavailable: cannot connect to http://127.0.0.1:3900/v1: ConnectionRefusedError",
+        "checked_at_monotonic": 3404.687
+      },
+      "status": "failed",
+      "wall_s": 2.047
+    },
+    {
+      "step": "inventory:remote-openai-compatible",
+      "source": "live",
+      "status": "not_run",
+      "reason": "remote provider not contacted without --allow-remote",
+      "wall_s": 0.0
+    },
+    {
+      "step": "speech:round_trip",
+      "source": "live",
+      "status": "not_run",
+      "reason": "--voice not given; voice identity is never defaulted",
+      "wall_s": 0.0
+    },
+    {
+      "step": "engine_managed:lifecycle",
+      "source": "live",
+      "status": "not_run",
+      "reason": "--ollama-model not given; inventory step lists installed models",
+      "wall_s": 0.0
+    },
+    {
+      "step": "external_server:local-llama-server",
+      "source": "live",
+      "status": "passed",
+      "model": "C:\\Users\\bryan\\.cache\\huggingface\\hub\\models--Qwen--Qwen2.5-7B-Instruct-GGUF\\snapshots\\bb5d59e06d9551d752d08b292a50eb208b07ab1f\\qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf",
+      "result_status": "ok",
+      "error": null,
+      "text": {
+        "chars": 181,
+        "preview": "A voice assistant needs reliable resource accounting to ensure efficient management and optimization of computational resources, thereby improving performance and user satisfaction."
+      },
+      "timings": {
+        "first_output_s": 0.218,
+        "total_s": 0.562
+      },
+      "engine_metrics": {
+        "usage": null,
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 43,
+          "prompt_ms": 222.949,
+          "prompt_per_token_ms": 5.184860465116279,
+          "prompt_per_second": 192.86922121202605,
+          "predicted_n": 25,
+          "predicted_ms": 329.934,
+          "predicted_per_token_ms": 13.747250000000001,
+          "predicted_per_second": 72.74182109149102
+        }
+      },
+      "device": {
+        "peak_minus_before_mib": 0,
+        "after_minus_before_mib": 0,
+        "measurement": "device_delta",
+        "summary": {
+          "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+          "sample_count": 6,
+          "interval_s": 0.1,
+          "min_used_mib": 6014,
+          "max_used_mib": 6014,
+          "first_used_mib": 6014,
+          "last_used_mib": 6014,
+          "error_count": 0,
+          "errors": [],
+          "kind": "whole_device",
+          "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+        }
+      },
+      "wall_s": 0.703
+    },
+    {
+      "step": "owned_process:lifecycle",
+      "source": "live",
+      "status": "not_run",
+      "reason": "--llama-server and --llama-model not given",
+      "wall_s": 0.0
+    },
+    {
+      "step": "remote:remote-openai-compatible",
+      "source": "live",
+      "status": "not_run",
+      "reason": "--allow-remote not given",
+      "wall_s": 0.0
+    },
+    {
+      "step": "fabric:voice_turn",
+      "source": "live",
+      "status": "not_run",
+      "reason": "speech round trip did not produce audio",
+      "wall_s": 0.0
+    }
+  ],
+  "environment": {
+    "started_utc": "20261120T192511Z",
+    "python": "3.11.9",
+    "platform": "Windows-10-10.0.26300-SP0",
+    "haro_commit": "5a5b26b5bcee2aae77f74d4df59ae5301ddecbca",
+    "config": "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\deployment\\test-machine.json",
+    "devices": [
+      {
+        "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+        "index": "0",
+        "name": "NVIDIA GeForce RTX 5060",
+        "vendor": "nvidia",
+        "total_mib": 8151,
+        "used_mib": 6012,
+        "free_mib": 1884,
+        "driver": "621.24"
+      }
+    ],
+    "measurement_device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+    "allow_remote": false
+  },
+  "adapters": {
+    "local-ollama": {
+      "adapter_id": "local-ollama",
+      "protocol": "ollama-native",
+      "location": "local",
+      "lifecycle": "engine_managed",
+      "capabilities": [
+        "chat",
+        "text_generation",
+        "embedding"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": true,
+      "reports_device_memory": true,
+      "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+      "endpoint": "http://127.0.0.1:11434",
+      "implicit_load_on_execute": true,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    },
+    "local-llama-server": {
+      "adapter_id": "local-llama-server",
+      "protocol": "llama.cpp-server",
+      "location": "local",
+      "lifecycle": "none",
+      "capabilities": [
+        "chat",
+        "text_generation"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": true,
+      "reports_device_memory": false,
+      "device_id": null,
+      "endpoint": "http://127.0.0.1:16520",
+      "implicit_load_on_execute": false,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    },
+    "voice-studio": {
+      "adapter_id": "voice-studio",
+      "protocol": "openai-audio",
+      "location": "local",
+      "lifecycle": "none",
+      "capabilities": [
+        "speech_synthesis",
+        "speech_recognition"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": false,
+      "reports_device_memory": false,
+      "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+      "endpoint": "http://127.0.0.1:3900/v1",
+      "implicit_load_on_execute": false,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    },
+    "remote-openai-compatible": {
+      "adapter_id": "remote-openai-compatible",
+      "protocol": "openai-chat",
+      "location": "remote",
+      "lifecycle": "none",
+      "capabilities": [
+        "chat"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": true,
+      "reports_device_memory": false,
+      "device_id": null,
+      "endpoint": "https://integrate.api.nvidia.com/v1",
+      "implicit_load_on_execute": false,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    }
+  },
+  "finished_utc": "20261120T192516Z",
+  "summary": {
+    "inventory:local-ollama": "failed",
+    "inventory:local-llama-server": "passed",
+    "inventory:voice-studio": "failed",
+    "inventory:remote-openai-compatible": "not_run",
+    "speech:round_trip": "not_run",
+    "engine_managed:lifecycle": "not_run",
+    "external_server:local-llama-server": "passed",
+    "owned_process:lifecycle": "not_run",
+    "remote:remote-openai-compatible": "not_run",
+    "fabric:voice_turn": "not_run"
+  }
+}

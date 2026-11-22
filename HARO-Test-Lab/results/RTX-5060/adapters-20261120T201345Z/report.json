@@ -1,0 +1,511 @@
+{
+  "schema": "haro-live-validation/1",
+  "steps": [
+    {
+      "step": "inventory:local-ollama",
+      "source": "live",
+      "health": {
+        "healthy": false,
+        "latency_s": null,
+        "detail": "EngineUnavailable: cannot connect to http://127.0.0.1:11434: ConnectionRefusedError",
+        "checked_at_monotonic": 6316.671
+      },
+      "status": "failed",
+      "wall_s": 2.046
+    },
+    {
+      "step": "inventory:local-llama-server",
+      "source": "live",
+      "health": {
+        "healthy": true,
+        "latency_s": 0.0,
+        "detail": "HTTP 200",
+        "checked_at_monotonic": 6316.671
+      },
+      "models": [
+        {
+          "model": "C:\\Users\\bryan\\.cache\\huggingface\\hub\\models--Qwen--Qwen2.5-7B-Instruct-GGUF\\snapshots\\bb5d59e06d9551d752d08b292a50eb208b07ab1f\\qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf",
+          "residency": "resident",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {
+            "owned_by": "llamacpp"
+          }
+        }
+      ],
+      "status": "passed",
+      "wall_s": 0.0
+    },
+    {
+      "step": "inventory:voice-studio",
+      "source": "live",
+      "health": {
+        "healthy": true,
+        "latency_s": 2.063,
+        "detail": "HTTP 200",
+        "checked_at_monotonic": 6318.734
+      },
+      "models": [
+        {
+          "model": "tts-1",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "tts-1-hd",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "gpt-4o-mini-tts",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "whisper-1",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "gpt-4o-transcribe",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "gpt-4o-mini-transcribe",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "omnivoice",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "kittentts",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "omnivoice-subprocess",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        },
+        {
+          "model": "whisperx",
+          "residency": "unknown",
+          "device_memory_mib": null,
+          "memory_measurement": "not_measurable",
+          "details": {}
+        }
+      ],
+      "status": "passed",
+      "wall_s": 4.11
+    },
+    {
+      "step": "inventory:remote-openai-compatible",
+      "source": "live",
+      "status": "not_run",
+      "reason": "remote provider not contacted without --allow-remote",
+      "wall_s": 0.0
+    },
+    {
+      "step": "speech:round_trip",
+      "source": "live",
+      "synthesis": [
+        {
+          "run": 1,
+          "status": "ok",
+          "error": null,
+          "output": {
+            "audio_path": "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060\\adapters-20261120T201345Z\\audio\\synthesis-1.wav",
+            "bytes": 87866,
+            "format": "wav",
+            "voice": "40d388b3",
+            "sample_rate": 24000,
+            "channels": 1,
+            "sample_width_bytes": 2,
+            "frames": 43911,
+            "duration_s": 1.8296
+          },
+          "timings": {
+            "total_s": 20.157
+          },
+          "engine_metrics": {
+            "real_time_factor": 11.0172
+          },
+          "device": {
+            "peak_minus_before_mib": 115,
+            "after_minus_before_mib": 99,
+            "measurement": "device_delta",
+            "summary": {
+              "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+              "sample_count": 130,
+              "interval_s": 0.1,
+              "min_used_mib": 7463,
+              "max_used_mib": 7584,
+              "first_used_mib": 7469,
+              "last_used_mib": 7568,
+              "error_count": 0,
+              "errors": [],
+              "kind": "whole_device",
+              "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+            }
+          }
+        },
+        {
+          "run": 2,
+          "status": "ok",
+          "error": null,
+          "output": {
+            "audio_path": "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\HARO-Test-Lab\\results\\RTX-5060\\adapters-20261120T201345Z\\audio\\synthesis-2.wav",
+            "bytes": 89048,
+            "format": "wav",
+            "voice": "40d388b3",
+            "sample_rate": 24000,
+            "channels": 1,
+            "sample_width_bytes": 2,
+            "frames": 44502,
+            "duration_s": 1.8542
+          },
+          "timings": {
+            "total_s": 1.235
+          },
+          "engine_metrics": {
+            "real_time_factor": 0.6661
+          },
+          "device": {
+            "peak_minus_before_mib": 0,
+            "after_minus_before_mib": -6,
+            "measurement": "device_delta",
+            "summary": {
+              "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+              "sample_count": 10,
+              "interval_s": 0.1,
+              "min_used_mib": 7562,
+              "max_used_mib": 7568,
+              "first_used_mib": 7568,
+              "last_used_mib": 7562,
+              "error_count": 0,
+              "errors": [],
+              "kind": "whole_device",
+              "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+            }
+          }
+        }
+      ],
+      "transcription": {
+        "status": "ok",
+        "error": null,
+        "text": "This is a test of the speech adapter.",
+        "word_overlap_with_input": 1.0,
+        "timings": {
+          "total_s": 17.922
+        },
+        "device": {
+          "peak_minus_before_mib": 35,
+          "after_minus_before_mib": -268,
+          "measurement": "device_delta",
+          "summary": {
+            "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+            "sample_count": 109,
+            "interval_s": 0.1,
+            "min_used_mib": 7294,
+            "max_used_mib": 7597,
+            "first_used_mib": 7562,
+            "last_used_mib": 7294,
+            "error_count": 0,
+            "errors": [],
+            "kind": "whole_device",
+            "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+          }
+        }
+      },
+      "status": "passed",
+      "wall_s": 39.64
+    },
+    {
+      "step": "engine_managed:lifecycle",
+      "source": "live",
+      "status": "not_run",
+      "reason": "--ollama-model not given; inventory step lists installed models",
+      "wall_s": 0.0
+    },
+    {
+      "step": "external_server:local-llama-server",
+      "source": "live",
+      "status": "passed",
+      "model": "C:\\Users\\bryan\\.cache\\huggingface\\hub\\models--Qwen--Qwen2.5-7B-Instruct-GGUF\\snapshots\\bb5d59e06d9551d752d08b292a50eb208b07ab1f\\qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf",
+      "result_status": "ok",
+      "error": null,
+      "text": {
+        "chars": 181,
+        "preview": "A voice assistant needs reliable resource accounting to ensure efficient management and optimization of computational resources, thereby improving performance and user satisfaction."
+      },
+      "timings": {
+        "first_output_s": 2.469,
+        "total_s": 2.797
+      },
+      "engine_metrics": {
+        "usage": null,
+        "timings": {
+          "cache_n": 42,
+          "prompt_n": 1,
+          "prompt_ms": 2406.634,
+          "prompt_per_token_ms": 2406.634,
+          "prompt_per_second": 0.4155181053704053,
+          "predicted_n": 25,
+          "predicted_ms": 359.546,
+          "predicted_per_token_ms": 14.981083333333332,
+          "predicted_per_second": 66.75084690137007
+        }
+      },
+      "device": {
+        "peak_minus_before_mib": 297,
+        "after_minus_before_mib": 275,
+        "measurement": "device_delta",
+        "summary": {
+          "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+          "sample_count": 7,
+          "interval_s": 0.1,
+          "min_used_mib": 7294,
+          "max_used_mib": 7591,
+          "first_used_mib": 7294,
+          "last_used_mib": 7569,
+          "error_count": 0,
+          "errors": [],
+          "kind": "whole_device",
+          "note": "Whole-device memory; includes other processes; sampling can miss short peaks."
+        }
+      },
+      "wall_s": 2.922
+    },
+    {
+      "step": "owned_process:lifecycle",
+      "source": "live",
+      "status": "not_run",
+      "reason": "--llama-server and --llama-model not given",
+      "wall_s": 0.0
+    },
+    {
+      "step": "remote:remote-openai-compatible",
+      "source": "live",
+      "status": "not_run",
+      "reason": "--allow-remote not given",
+      "wall_s": 0.0
+    },
+    {
+      "step": "fabric:voice_turn",
+      "source": "live",
+      "status": "not_run",
+      "reason": "no measured local chat binding and remote not allowed",
+      "wall_s": 0.0
+    }
+  ],
+  "environment": {
+    "started_utc": "20261120T201345Z",
+    "python": "3.11.9",
+    "platform": "Windows-10-10.0.26300-SP0",
+    "haro_commit": "5a5b26b5bcee2aae77f74d4df59ae5301ddecbca",
+    "config": "C:\\Users\\bryan\\Desktop\\HARO-One-Inference-Engine\\haro_inference_probe\\deployment\\test-machine.json",
+    "devices": [
+      {
+        "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+        "index": "0",
+        "name": "NVIDIA GeForce RTX 5060",
+        "vendor": "nvidia",
+        "total_mib": 8151,
+        "used_mib": 7470,
+        "free_mib": 426,
+        "driver": "621.24"
+      }
+    ],
+    "measurement_device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+    "allow_remote": false
+  },
+  "adapters": {
+    "local-ollama": {
+      "adapter_id": "local-ollama",
+      "protocol": "ollama-native",
+      "location": "local",
+      "lifecycle": "engine_managed",
+      "capabilities": [
+        "chat",
+        "text_generation",
+        "embedding"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": true,
+      "reports_device_memory": true,
+      "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+      "endpoint": "http://127.0.0.1:11434",
+      "implicit_load_on_execute": true,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    },
+    "local-llama-server": {
+      "adapter_id": "local-llama-server",
+      "protocol": "llama.cpp-server",
+      "location": "local",
+      "lifecycle": "none",
+      "capabilities": [
+        "chat",
+        "text_generation"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": true,
+      "reports_device_memory": false,
+      "device_id": null,
+      "endpoint": "http://127.0.0.1:16520",
+      "implicit_load_on_execute": false,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    },
+    "voice-studio": {
+      "adapter_id": "voice-studio",
+      "protocol": "openai-audio",
+      "location": "local",
+      "lifecycle": "none",
+      "capabilities": [
+        "speech_synthesis",
+        "speech_recognition"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": false,
+      "reports_device_memory": false,
+      "device_id": "GPU-a96299dc-a636-f16a-1a96-46b39f5fe64c",
+      "endpoint": "http://127.0.0.1:3900/v1",
+      "implicit_load_on_execute": false,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    },
+    "remote-openai-compatible": {
+      "adapter_id": "remote-openai-compatible",
+      "protocol": "openai-chat",
+      "location": "remote",
+      "lifecycle": "none",
+      "capabilities": [
+        "chat"
+      ],
+      "supports_cancel": true,
+      "supports_streaming": true,
+      "reports_device_memory": false,
+      "device_id": null,
+      "endpoint": "https://integrate.api.nvidia.com/v1",
+      "implicit_load_on_execute": false,
+      "cancellation_semantics": [
+        [
+          "requested",
+          "unverified"
+        ],
+        [
+          "transport_closed",
+          "unverified"
+        ],
+        [
+          "engine_acknowledged",
+          "unsupported"
+        ],
+        [
+          "computation_stopped",
+          "unsupported"
+        ],
+        [
+          "resources_released",
+          "unverified"
+        ]
+      ]
+    }
+  },
+  "finished_utc": "20261120T201434Z",
+  "summary": {
+    "inventory:local-ollama": "failed",
+    "inventory:local-llama-server": "passed",
+    "inventory:voice-studio": "passed",
+    "inventory:remote-openai-compatible": "not_run",
+    "speech:round_trip": "passed",
+    "engine_managed:lifecycle": "not_run",
+    "external_server:local-llama-server": "passed",
+    "owned_process:lifecycle": "not_run",
+    "remote:remote-openai-compatible": "not_run",
+    "fabric:voice_turn": "not_run"
+  }
+}

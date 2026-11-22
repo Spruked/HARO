@@ -16,7 +16,7 @@ A replaceable adapter should report capabilities, modalities, health, resource d
 
 Remote execution is permitted only by explicit per-request governance, never as a silent fallback. Logical reservations are not observed device memory. Memory and logic evaluations cannot bypass current host authorization.
 
-**Status:** `haro_integration.py` connects the two independent subsystems. `engine_adapters/` implements the engine-neutral contract, four protocol adapters and the capability fabric; they are tested against simulated protocol servers only. Real multi-engine execution is unproven until `engine_adapters.live_validation` has been run on a machine with the engines.
+**Status:** `haro_integration.py` connects the two independent subsystems. `engine_adapters/` implements the engine-neutral contract, four protocol adapters and the capability fabric. Live RTX 5060 evidence is recorded under `HARO-Test-Lab/results/RTX-5060/`; the full multi-engine Checkpoint 0 remains incomplete. Ollama is optional: when it is not installed, live validation records the binding as unavailable/not-run with the connection reason rather than as a test failure.
 
 ## Engine adapters and capability fabric
 
@@ -36,7 +36,7 @@ python -m engine_adapters.live_validation --config deployment\test-machine.json 
 #   --llama-server C:\path\to\llama-server.exe --llama-model C:\path\to\model.gguf --llama-port 17667
 ```
 
-It writes `HARO-Test-Lab/results/<device>/adapters-<timestamp>/report.json`, labelling every figure by source. It loads and unloads only the model named by `--ollama-model` (restoring prior residency), starts a llama-server only on `--llama-port`, and only calls the speech service, any separately managed llama-server and (with `--allow-remote`) the remote provider.
+It writes `HARO-Test-Lab/results/<device>/adapters-<timestamp>/report.json`, labelling every figure by source. Device memory is sampled continuously at 200 ms during measured operations. It loads and unloads only the model named by `--ollama-model` (restoring prior residency), starts a llama-server only on `--llama-port`, and only calls the speech service, any separately managed llama-server and (with `--allow-remote`) the remote provider.
 
 ## Verification and experiments
 

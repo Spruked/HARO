@@ -1,0 +1,13 @@
+{
+  "matrices": {
+    "haro_evaluations": [
+      {
+        "decision": "deny",
+        "glyph_trace": [
+          "\u26a0\ufe0f"
+        ],
+        "matched_rules": []
+      }
+    ]
+  }
+}
